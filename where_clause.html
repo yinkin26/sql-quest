@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en" class="pixel-art dark-theme">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Quest - SQL WHERE Clause</title>
+    <link rel="stylesheet" href="stylesheets/style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <script src="javascripts/loadComponents.js" defer></script>
+    <script src="javascripts/script.js" defer></script>
+    <script src="javascripts/lessonTracker.js" defer></script>
+
+</head>
+<body class="pixel-art dark-theme">
+    <div id="header"></div>
+    <div class="lesson-layout">
+        <div id="sidebar"></div>
+
+        <section class="lesson-content">
+            <h2>📌 SQL WHERE Clause</h2>
+
+            <!-- Add bookmark buttons -->
+            <div class="bookmark-container">
+                <button id="bookmarkBtn" style="display: none;">🔖 Bookmark</button>
+                <button id="unbookmarkBtn" style="display: none;">❌ Remove Bookmark</button>
+                <span id="bookmarkStatus"></span>
+            </div>
+
+            <h3>🔍 What is WHERE?</h3>
+            <p>The <code class="tooltip" title="Used to filter records based on specific conditions">WHERE</code> clause is used in SQL to filter records and return only those that meet a specified condition.</p>
+
+            <h3>🧠 Basic Syntax</h3>
+            <pre><code>SELECT column1, column2 FROM table_name
+WHERE condition;</code></pre>
+
+            <h3>💡 Example</h3>
+            <pre><code>SELECT * FROM customers
+WHERE city = 'Tokyo';</code></pre>
+
+            <h3>🧪 Try It Yourself</h3>
+            <div class="code-block">
+                <textarea class="code-editor" id="queryInput">SELECT name, city FROM customers WHERE city = 'Paris';</textarea>
+                <button class="neon-button run-btn" onclick="validateWhereQuery()">Run</button>
+                <div class="query-output"></div>
+                <!-- SQL Validator will be automatically added here -->
+            </div>
+
+            <h3>⚙️ Common Operators with WHERE</h3>
+            <ul>
+                <li><code>=</code> (equal)</li>
+                <li><code>!=</code> or <code>&lt;&gt;</code> (not equal)</li>
+                <li><code>&gt;, &lt;, &gt;=, &lt;=</code> (greater/less than)</li>
+                <li><code>LIKE</code> (pattern match)</li>
+                <li><code>IN</code> (match any from a list)</li>
+                <li><code>BETWEEN</code> (between two values)</li>
+            </ul>
+
+            <h3>🌍 Real-World Use Case</h3>
+            <p>You want to find customers from cities in Japan. Assuming Tokyo and Osaka are the options:</p>
+            <pre><code>SELECT name FROM customers
+WHERE city IN ('Tokyo', 'Osaka');</code></pre>
+
+            <h3>💡 Helpful Tips</h3>
+            <ul>
+                <li><code>WHERE</code> is case-insensitive in most databases, but ensure values match the case stored in the database for accuracy.</li>
+                <li>You can combine conditions with <code>AND</code> / <code>OR</code> operators.</li>
+                <li>Use <code>'value'</code> for string comparisons and no quotes for numbers.</li>
+            </ul>
+
+
+            <h3>🧠 Summary</h3>
+            <ul>
+                <li><code>WHERE</code> filters rows returned by a <code>SELECT</code>, <code>UPDATE</code>, or <code>DELETE</code> query.</li>
+                <li>Use comparison operators like =, &lt;&gt;, &gt;, etc.</li>
+                <li>Combine multiple conditions with <code>AND</code> or <code>OR</code>.</li>
+            </ul>
+
+            <h3>🧪 Practice: Use WHERE to Filter Data</h3>
+            <p>Write a <code>SELECT</code> statement to select the <code>product_name</code> and <code>price</code> from the <code>products</code> table where the price is greater than 100:</p>
+            <ul>
+                <li><code>product_name</code> (VARCHAR(100))</li>
+                <li><code>price</code> (DECIMAL(8, 2))</li>
+            </ul>
+
+            <div class="editor-container">
+                <textarea class="code-editor" id="exerciseInput" placeholder="Write your SELECT query with WHERE clause here..."></textarea>
+                <button class="neon-button" onclick="validateWherePractice()">Submit</button>
+                <div id="exerciseFeedback" style="margin-top: 15px;"></div>
+                <!-- SQL Validator will be automatically added here -->
+            </div>
+
+            <!-- Mock Table for Displaying After Submit -->
+            <div class="mock-table" id="mockTable" style="display: none;">
+                <h4>Preview: What the table would look like when queried:</h4>
+                <h5>After Query (Example Result):</h5>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>product_name</th>
+                            <th>price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Laptop</td>
+                            <td>999.99</td>
+                        </tr>
+                        <tr>
+                            <td>Smartphone</td>
+                            <td>799.49</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>🎯 Quiz</h3>
+            <p><strong>Which command filters results for customers who live in London?</strong></p>
+            <div class="quiz">
+                <button onclick="checkAnswer(this, false)">A) SELECT * FROM customers WHERE city = 'Tokyo';</button>
+                <button onclick="checkAnswer(this, false)">B) SELECT * FROM customers WHERE city = 'Paris';</button>
+                <button onclick="checkAnswer(this, true)">C) SELECT * FROM customers WHERE city = 'London';</button>
+                <button onclick="checkAnswer(this, false)">D) SELECT * FROM customers;</button>
+                <p class="quiz-feedback"></p>
+                <div id="quizExplanation" class="quiz-explanation" style="display: none;"></div>
+            </div>
+
+        </section>
+    </div>
+
+    <div id="footer"></div>
+
+
+    <!-- Include SQL Validator -->
+    <script src="javascripts/sqlValidator.js"></script>
+    
+    <script>
+        // Function to validate the user's WHERE query
+        function validateWhereQuery() {
+            const userSQL = document.getElementById("queryInput").value.trim().toLowerCase().replace(/\s+/g, " ");
+            const feedback = document.getElementById("queryOutput");
+
+            const expected =
+                "select name, city from customers where city = 'london';";
+
+            if (userSQL === expected) {
+                feedback.style.color = "lightgreen";
+                feedback.innerHTML = "✅ Correct!";
+
+                // Show the mock table after a correct submission
+                document.getElementById("mockTable").style.display = "block";
+                // Scroll the mock table into view
+                document.getElementById("mockTable").scrollIntoView({ behavior: "smooth" });
+            } else {
+                feedback.style.color = "red";
+                feedback.innerHTML = "❌ Incorrect! Double-check the SQL syntax.";
+            }
+        }
+
+        // Function to validate the user's practice WHERE query
+        function validateWherePractice() {
+            const userSQL = document.getElementById("exerciseInput").value.trim().toLowerCase().replace(/\s+/g, " ");
+            const feedback = document.getElementById("exerciseFeedback");
+
+            const expected =
+                "select product_name, price from products where price > 100;";
+
+            if (userSQL === expected) {
+                feedback.style.color = "lightgreen";
+                feedback.innerHTML = "✅ Perfect! Your WHERE clause works.";
+
+                // Show the mock table after a correct submission
+                document.getElementById("mockTable").style.display = "block";
+                document.getElementById("mockTable").scrollIntoView({ behavior: "smooth" });
+            } else {
+                feedback.style.color = "red";
+                feedback.innerHTML = "❌ That's not quite right. Double-check your query syntax.";
+            }
+        }
+
+        let quizCompleted = false;
+        
+        // Function to check the quiz answer
+        function checkAnswer(button, isCorrect) {
+            // If quiz is already completed, don't allow further clicks
+            if (quizCompleted) {
+                return;
+            }
+
+            const feedback = button.parentElement.querySelector(".quiz-feedback");
+            const explanationBox = document.getElementById("quizExplanation");
+            const quizContainer = button.parentElement;
+
+            feedback.innerHTML = "";
+            explanationBox.style.display = "block";
+
+            if (isCorrect) {
+                // Correct answer - disable all buttons and mark as completed
+                quizCompleted = true;
+                const allButtons = quizContainer.querySelectorAll('button');
+                allButtons.forEach(btn => {
+                    btn.disabled = true;
+                    if (btn === button) {
+                        btn.style.backgroundColor = '#44ff44';
+                        btn.style.boxShadow = '0 0 15px rgba(68, 255, 68, 0.5)';
+                    }
+                });
+                
+                feedback.style.color = "lightgreen";
+                feedback.innerHTML = "✅ Correct! Quiz completed!";
+                explanationBox.innerHTML = `
+                  <p><strong>Explanation:</strong></p>
+                  <ul>
+                    <li><code>SELECT * FROM customers WHERE city = 'London';</code> is the correct way to filter results by a specific condition using <code>WHERE</code>.</li>
+                  </ul>`;
+                // Automatically scroll to mock table after correct answer
+                document.getElementById("mockTable").scrollIntoView({ behavior: "smooth" });
+            } else {
+                // Incorrect answer - disable this button only
+                button.disabled = true;
+                button.style.backgroundColor = '#ff4444';
+                button.style.opacity = '0.6';
+                button.style.cursor = 'not-allowed';
+                
+                feedback.style.color = "red";
+                feedback.innerHTML = "❌ Incorrect. Try another answer!";
+                
+                // Add retry message if not already present
+                let retryMsg = quizContainer.querySelector('.retry-message');
+                if (!retryMsg) {
+                    retryMsg = document.createElement('p');
+                    retryMsg.className = 'retry-message';
+                    retryMsg.style.color = '#ffd700';
+                    retryMsg.style.fontWeight = 'bold';
+                    retryMsg.style.marginTop = '10px';
+                    retryMsg.innerHTML = '💡 Keep trying! Choose another answer.';
+                    feedback.parentNode.insertBefore(retryMsg, feedback.nextSibling);
+                }
+                
+                let explanation = "";
+                switch (button.innerText.trim().charAt(0)) {
+                    case "A":
+                        explanation = `
+                      <p><strong>Explanation:</strong></p>
+                      <ul>
+                        <li>This query filters for customers in Tokyo, not London.</li>
+                        <li>The WHERE clause should specify <code>city = 'London'</code> to get the correct results.</li>
+                      </ul>`;
+                        break;
+                    case "B":
+                        explanation = `
+                      <p><strong>Explanation:</strong></p>
+                      <ul>
+                        <li>This query filters for customers in Paris, not London.</li>
+                        <li>The WHERE clause should specify <code>city = 'London'</code> to get the correct results.</li>
+                      </ul>`;
+                        break;
+                    case "D":
+                        explanation = `
+                      <p><strong>Explanation:</strong></p>
+                      <ul>
+                        <li>This query has no WHERE clause, so it returns all customers regardless of city.</li>
+                        <li>To filter for London customers, you need <code>WHERE city = 'London'</code>.</li>
+                      </ul>`;
+                        break;
+                }
+
+                explanationBox.innerHTML = explanation;
+            }
+
+            explanationBox.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+
+        // Bookmark functionality
+        const lessonId = "Where_Clause";
+        const bookmarkBtn = document.getElementById("bookmarkBtn");
+        const unbookmarkBtn = document.getElementById("unbookmarkBtn");
+        const statusText = document.getElementById("bookmarkStatus");
+
+        // Function to check bookmark status with retry
+        function checkBookmarkStatus(retries = 3) {
+            fetch(`http://localhost:5000/bookmark-status?lessonId=${lessonId}`, {
+                credentials: 'include',
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+                .then(res => {
+                    if (!res.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return res.json();
+                })
+                .then(data => {
+                    if (data.bookmarked) {
+                        bookmarkBtn.style.display = "none";
+                        unbookmarkBtn.style.display = "inline-block";
+                        statusText.textContent = "📌 Bookmarked";
+                    } else {
+                        bookmarkBtn.style.display = "inline-block";
+                        unbookmarkBtn.style.display = "none";
+                        statusText.textContent = "";
+                    }
+                })
+                .catch(error => {
+                    console.error('Error checking bookmark status:', error);
+                    if (retries > 0) {
+                        setTimeout(() => checkBookmarkStatus(retries - 1), 1000);
+                    }
+                });
+        }
+
+        // Add bookmark
+        bookmarkBtn.addEventListener("click", () => {
+            fetch("http://localhost:5000/bookmark", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                    lessonId: lessonId,
+                    bookmarked: true
+                })
+            })
+                .then(res => res.json())
+                .then(() => {
+                    checkBookmarkStatus();
+                });
+        });
+
+        // Remove bookmark
+        unbookmarkBtn.addEventListener("click", () => {
+            fetch("http://localhost:5000/bookmark", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                    lessonId: lessonId,
+                    bookmarked: false
+                })
+            })
+                .then(res => res.json())
+                .then(() => {
+                    checkBookmarkStatus();
+                });
+        });
+
+        // Check initial status when page loads
+        checkBookmarkStatus();
+    </script>
+</body>
+</html>

@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en" class="pixel-art dark-theme">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Quest - NOT NULL Constraint</title>
+    <link rel="stylesheet" href="stylesheets/style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <script src="javascripts/loadComponents.js" defer></script>
+    <script src="javascripts/script.js" defer></script>
+    <script src="javascripts/lessonTracker.js" defer></script>
+    <script type="module" src="javascripts/mockTables.js"></script>
+</head>
+<body class="pixel-art dark-theme">
+    <div id="header"></div>
+    <div class="lesson-layout">
+        <div id="sidebar"></div>
+
+        <section class="lesson-content">
+            <h2>🚫 NOT NULL Constraint</h2>
+
+            <!-- Bookmark buttons -->
+            <div class="bookmark-container">
+                <button id="bookmarkBtn" style="display: none;">🔖 Bookmark</button>
+                <button id="unbookmarkBtn" style="display: none;">❌ Remove Bookmark</button>
+                <span id="bookmarkStatus"></span>
+            </div>
+
+            <div class="callout-box">
+                <p>🚫 The data guardian! NOT NULL constraint ensures that critical columns always contain meaningful data.</p>
+            </div>
+
+            <h3>📌 What is a NOT NULL Constraint?</h3>
+            <p>A <code class="tooltip" title="Prevents empty values">NOT NULL</code> constraint ensures that a column cannot have an empty (NULL) value. It's like having a 🛡️ security guard that prevents incomplete data from entering your database!</p>
+
+            <h3>🎯 NOT NULL Constraint Features</h3>
+            <div style="background: rgba(34, 139, 34, 0.1); border: 2px solid #228b22; border-radius: 8px; padding: 15px; margin: 15px 0;">
+                <h4 style="color: #228b22; margin-top: 0;">🔍 Key Features</h4>
+                <ul style="color: #90ee90;">
+                    <li>🚫 <strong>NO EMPTY VALUES</strong> - Prevents NULL values in columns</li>
+                    <li>🛡️ <strong>DATA INTEGRITY</strong> - Ensures critical data is always present</li>
+                    <li>⚡ <strong>FAST VALIDATION</strong> - Simple and efficient constraint checking</li>
+                    <li>🎯 <strong>BUSINESS RULES</strong> - Enforces required field logic</li>
+                    <li>📊 <strong>QUERY OPTIMIZATION</strong> - Helps database optimize queries</li>
+                </ul>
+            </div>
+
+            <h3>🧠 Basic Syntax</h3>
+
+            <h4>Method 1: Column Definition with NOT NULL</h4>
+            <pre><code>CREATE TABLE <span style="color: #00ffff;">users</span> (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    <span style="color: #ffd700;">username</span> VARCHAR(50) <span style="color: #dc3545;">NOT NULL</span>,
+    <span style="color: #ffd700;">email</span> VARCHAR(100) <span style="color: #dc3545;">NOT NULL</span>,
+    <span style="color: #ffd700;">password</span> VARCHAR(255) <span style="color: #dc3545;">NOT NULL</span>,
+    phone VARCHAR(20),  -- This can be NULL
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP <span style="color: #dc3545;">NOT NULL</span>
+);</code></pre>
+
+            <h4>Method 2: Adding NOT NULL to Existing Column</h4>
+            <pre><code>-- Add NOT NULL to existing column (must have no NULL values first)
+ALTER TABLE <span style="color: #00ffff;">users</span>
+MODIFY COLUMN <span style="color: #ffd700;">phone</span> VARCHAR(20) <span style="color: #dc3545;">NOT NULL</span>;
+
+-- Remove NOT NULL from column
+ALTER TABLE <span style="color: #00ffff;">users</span>
+MODIFY COLUMN <span style="color: #ffd700;">phone</span> VARCHAR(20) NULL;</code></pre>
+
+
+
+            <h3>📊 Mock Table: customers (With NOT NULL Constraints)</h3>
+            <div class="mock-table">
+                <h4>Valid and Invalid Data Examples</h4>
+                <button class="neon-button" onclick="displayMockTable('customers')">View Customers Table</button>
+                <div class="query-output" id="query-output"></div>
+                <div style="background: rgba(220, 53, 69, 0.1); border: 1px solid #dc3545; border-radius: 6px; padding: 10px; margin-top: 10px;">
+                    <h5 style="color: #dc3545; margin: 0 0 5px 0;">❌ These would be REJECTED:</h5>
+                    <ul style="color: #f8d7da; margin: 5px 0 0 20px; font-size: 0.9em;">
+                        <li>first_name: NULL or empty string</li>
+                        <li>last_name: NULL or empty string</li>
+                        <li>email: NULL or empty string</li>
+                        <li>created_at: NULL (but has DEFAULT)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>🔍 NOT NULL vs NULL Behavior</h3>
+            
+            <h4>✅ Valid INSERT Operations</h4>
+            <pre><code>-- All required fields provided
+INSERT INTO <span style="color: #00ffff;">customers</span> (first_name, last_name, email, phone, address)
+VALUES ('Alice', 'Johnson', 'alice@email.com', '+1-555-0789', '456 Oak Ave');
+
+-- Optional fields omitted (phone, address can be NULL)
+INSERT INTO <span style="color: #00ffff;">customers</span> (first_name, last_name, email)
+VALUES ('Charlie', 'Brown', 'charlie@email.com');
+
+-- Explicit NULL for optional fields
+INSERT INTO <span style="color: #00ffff;">customers</span> (first_name, last_name, email, phone, address)
+VALUES ('David', 'Miller', 'david@email.com', NULL, NULL);</code></pre>
+
+            <h4>❌ Invalid INSERT Operations</h4>
+            <pre><code>-- Missing required field (first_name)
+INSERT INTO <span style="color: #00ffff;">customers</span> (last_name, email)
+VALUES ('Smith', 'missing@email.com');  -- <span style="color: #dc3545;">ERROR!</span>
+
+-- Explicit NULL for NOT NULL field
+INSERT INTO <span style="color: #00ffff;">customers</span> (first_name, last_name, email)
+VALUES (NULL, 'Johnson', 'null@email.com');  -- <span style="color: #dc3545;">ERROR!</span>
+
+-- Empty string might be allowed (depends on SQL mode)
+INSERT INTO <span style="color: #00ffff;">customers</span> (first_name, last_name, email)
+VALUES ('', 'Empty', 'empty@email.com');  -- <span style="color: #ffc107;">May work, but not recommended</span></code></pre>
+
+            <h3>📋 NOT NULL Constraint Examples</h3>
+            <button class="neon-button" onclick="showNotNullExamples()">Show NOT NULL Examples</button>
+            <div id="notNullExamplesOutput" class="query-output" style="margin-top: 10px;"></div>
+
+            <h3>🌍 Real-World NOT NULL Examples</h3>
+            
+            <h4>👥 User Authentication System</h4>
+            <pre><code>CREATE TABLE <span style="color: #00ffff;">users</span> (
+    user_id INT PRIMARY KEY AUTO_INCREMENT,
+    <span style="color: #ffd700;">username</span> VARCHAR(50) UNIQUE <span style="color: #dc3545;">NOT NULL</span>,     -- 🎯 Required for login
+    <span style="color: #ffd700;">email</span> VARCHAR(100) UNIQUE <span style="color: #dc3545;">NOT NULL</span>,        -- 📧 Required for communication
+    <span style="color: #ffd700;">password_hash</span> VARCHAR(255) <span style="color: #dc3545;">NOT NULL</span>,     -- 🔒 Required for security
+    <span style="color: #ffd700;">first_name</span> VARCHAR(50) <span style="color: #dc3545;">NOT NULL</span>,          -- 👤 Required personal info
+    <span style="color: #ffd700;">last_name</span> VARCHAR(50) <span style="color: #dc3545;">NOT NULL</span>,           -- 👤 Required personal info
+    phone VARCHAR(20),                              -- 📞 Optional contact
+    date_of_birth DATE,                             -- 🎂 Optional info
+    profile_picture VARCHAR(255),                   -- 🖼️ Optional image
+    <span style="color: #ffd700;">status</span> VARCHAR(20) DEFAULT 'active' <span style="color: #dc3545;">NOT NULL</span>, -- 📊 Always has status
+    <span style="color: #ffd700;">created_at</span> TIMESTAMP DEFAULT CURRENT_TIMESTAMP <span style="color: #dc3545;">NOT NULL</span>, -- 📅 Audit trail
+    <span style="color: #ffd700;">updated_at</span> TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP <span style="color: #dc3545;">NOT NULL</span> -- 🔄 Change tracking
+);</code></pre>
+
+            <h4>🛒 E-commerce Product Catalog</h4>
+            <pre><code>CREATE TABLE <span style="color: #00ffff;">products</span> (
+    product_id INT PRIMARY KEY AUTO_INCREMENT,
+    <span style="color: #ffd700;">name</span> VARCHAR(200) <span style="color: #dc3545;">NOT NULL</span>,                 -- 🏷️ Product must have name
+    <span style="color: #ffd700;">sku</span> VARCHAR(50) UNIQUE <span style="color: #dc3545;">NOT NULL</span>,           -- 📦 Stock keeping unit required
+    <span style="color: #ffd700;">price</span> DECIMAL(10,2) <span style="color: #dc3545;">NOT NULL</span>,            -- 💰 Price is mandatory
+    <span style="color: #ffd700;">category_id</span> INT <span style="color: #dc3545;">NOT NULL</span>,             -- 📂 Must belong to category
+    <span style="color: #ffd700;">brand_id</span> INT <span style="color: #dc3545;">NOT NULL</span>,                -- 🏢 Must have brand
+    description TEXT,                               -- 📝 Optional description
+    specifications JSON,                            -- 🔧 Optional tech specs
+    weight DECIMAL(8,3),                           -- ⚖️ Optional weight
+    dimensions VARCHAR(50),                         -- 📏 Optional size info
+    <span style="color: #ffd700;">stock_quantity</span> INT DEFAULT 0 <span style="color: #dc3545;">NOT NULL</span>,  -- 📦 Always track stock
+    <span style="color: #ffd700;">status</span> VARCHAR(20) DEFAULT 'active' <span style="color: #dc3545;">NOT NULL</span>, -- 📊 Product status required
+    <span style="color: #ffd700;">created_at</span> TIMESTAMP DEFAULT CURRENT_TIMESTAMP <span style="color: #dc3545;">NOT NULL</span>, -- 📅 Creation time
+    <span style="color: #ffd700;">updated_at</span> TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP <span style="color: #dc3545;">NOT NULL</span> -- 🔄 Update tracking
+);</code></pre>
+
+            <h4>🏦 Banking Transaction System</h4>
+            <pre><code>CREATE TABLE <span style="color: #00ffff;">transactions</span> (
+    transaction_id INT PRIMARY KEY AUTO_INCREMENT,
+    <span style="color: #ffd700;">account_id</span> INT <span style="color: #dc3545;">NOT NULL</span>,               -- 🏦 Must belong to account
+    <span style="color: #ffd700;">transaction_type</span> VARCHAR(20) <span style="color: #dc3545;">NOT NULL</span>, -- 💳 Type required (debit/credit)
+    <span style="color: #ffd700;">amount</span> DECIMAL(15,2) <span style="color: #dc3545;">NOT NULL</span>,          -- 💰 Amount is mandatory
+    <span style="color: #ffd700;">currency</span> CHAR(3) DEFAULT 'USD' <span style="color: #dc3545;">NOT NULL</span>, -- 💱 Currency required
+    <span style="color: #ffd700;">status</span> VARCHAR(20) DEFAULT 'pending' <span style="color: #dc3545;">NOT NULL</span>, -- 📊 Status tracking
+    reference_number VARCHAR(50),                   -- 📄 Optional reference
+    description TEXT,                               -- 📝 Optional description
+    merchant_id INT,                                -- 🏪 Optional merchant
+    <span style="color: #ffd700;">transaction_date</span> TIMESTAMP DEFAULT CURRENT_TIMESTAMP <span style="color: #dc3545;">NOT NULL</span>, -- 📅 When it happened
+    <span style="color: #ffd700;">processed_by</span> INT <span style="color: #dc3545;">NOT NULL</span>,            -- 👤 Who processed it
+    <span style="color: #ffd700;">created_at</span> TIMESTAMP DEFAULT CURRENT_TIMESTAMP <span style="color: #dc3545;">NOT NULL</span> -- 📅 Record creation
+);</code></pre>
+
+            <h4>📚 Educational Course Management</h4>
+            <pre><code>CREATE TABLE <span style="color: #00ffff;">courses</span> (
+    course_id INT PRIMARY KEY AUTO_INCREMENT,
+    <span style="color: #ffd700;">course_code</span> VARCHAR(20) UNIQUE <span style="color: #dc3545;">NOT NULL</span>,  -- 📚 Course identifier
+    <span style="color: #ffd700;">title</span> VARCHAR(200) <span style="color: #dc3545;">NOT NULL</span>,             -- 📖 Course title required
+    <span style="color: #ffd700;">instructor_id</span> INT <span style="color: #dc3545;">NOT NULL</span>,           -- 👨‍🏫 Must have instructor
+    <span style="color: #ffd700;">department_id</span> INT <span style="color: #dc3545;">NOT NULL</span>,           -- 🏢 Department assignment
+    <span style="color: #ffd700;">credits</span> INT <span style="color: #dc3545;">NOT NULL</span>,                  -- 🎓 Credit hours required
+    <span style="color: #ffd700;">semester</span> VARCHAR(20) <span style="color: #dc3545;">NOT NULL</span>,          -- 📅 Semester info required
+    <span style="color: #ffd700;">year</span> INT <span style="color: #dc3545;">NOT NULL</span>,                     -- 📅 Academic year
+    description TEXT,                               -- 📝 Optional description
+    prerequisites TEXT,                             -- 📋 Optional requirements
+    syllabus_url VARCHAR(255),                      -- 🔗 Optional syllabus link
+    <span style="color: #ffd700;">max_enrollment</span> INT DEFAULT 30 <span style="color: #dc3545;">NOT NULL</span>, -- 👥 Enrollment limit
+    <span style="color: #ffd700;">status</span> VARCHAR(20) DEFAULT 'active' <span style="color: #dc3545;">NOT NULL</span>, -- 📊 Course status
+    <span style="color: #ffd700;">created_at</span> TIMESTAMP DEFAULT CURRENT_TIMESTAMP <span style="color: #dc3545;">NOT NULL</span> -- 📅 Creation time
+);</code></pre>
+
+            <h4>🏥 Healthcare Patient Records</h4>
+            <pre><code>CREATE TABLE <span style="color: #00ffff;">patients</span> (
+    patient_id INT PRIMARY KEY AUTO_INCREMENT,
+    <span style="color: #ffd700;">first_name</span> VARCHAR(50) <span style="color: #dc3545;">NOT NULL</span>,          -- 👤 Required identification
+    <span style="color: #ffd700;">last_name</span> VARCHAR(50) <span style="color: #dc3545;">NOT NULL</span>,           -- 👤 Required identification
+    <span style="color: #ffd700;">date_of_birth</span> DATE <span style="color: #dc3545;">NOT NULL</span>,          -- 🎂 Critical for medical care
+    <span style="color: #ffd700;">gender</span> CHAR(1) <span style="color: #dc3545;">NOT NULL</span>,                -- ⚧ Important for treatment
+    <span style="color: #ffd700;">blood_type</span> VARCHAR(5) <span style="color: #dc3545;">NOT NULL</span>,         -- 🩸 Critical for emergencies
+    <span style="color: #ffd700;">emergency_contact_name</span> VARCHAR(100) <span style="color: #dc3545;">NOT NULL</span>, -- 🚨 Emergency contact required
+    <span style="color: #ffd700;">emergency_contact_phone</span> VARCHAR(20) <span style="color: #dc3545;">NOT NULL</span>, -- 📞 Emergency contact number
+    email VARCHAR(100),                             -- 📧 Optional communication
+    phone VARCHAR(20),                              -- 📞 Optional contact
+    address TEXT,                                   -- 🏠 Optional address
+    insurance_provider VARCHAR(100),                -- 🏥 Optional insurance
+    insurance_policy_number VARCHAR(50),            -- 📄 Optional policy
+    allergies TEXT,                                 -- ⚠️ Optional but important
+    medical_conditions TEXT,                        -- 🏥 Optional conditions
+    <span style="color: #ffd700;">status</span> VARCHAR(20) DEFAULT 'active' <span style="color: #dc3545;">NOT NULL</span>, -- 📊 Patient status
+    <span style="color: #ffd700;">created_at</span> TIMESTAMP DEFAULT CURRENT_TIMESTAMP <span style="color: #dc3545;">NOT NULL</span>, -- 📅 Registration time
+    <span style="color: #ffd700;">updated_at</span> TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP <span style="color: #dc3545;">NOT NULL</span> -- 🔄 Update tracking
+);</code></pre>
+
+            <h3>🔧 Managing NOT NULL Constraints</h3>
+            
+            <h4>Adding NOT NULL to Existing Column</h4>
+            <pre><code>-- Step 1: Update existing NULL values (if any)
+UPDATE <span style="color: #00ffff;">users</span> 
+SET phone = 'Unknown' 
+WHERE phone IS NULL;
+
+-- Step 2: Add NOT NULL constraint
+ALTER TABLE <span style="color: #00ffff;">users</span>
+MODIFY COLUMN <span style="color: #ffd700;">phone</span> VARCHAR(20) <span style="color: #dc3545;">NOT NULL</span>;</code></pre>
+
+            <h4>Removing NOT NULL Constraint</h4>
+            <pre><code>-- Allow NULL values in previously NOT NULL column
+ALTER TABLE <span style="color: #00ffff;">users</span>
+MODIFY COLUMN <span style="color: #ffd700;">phone</span> VARCHAR(20) NULL;</code></pre>
+
+            <h4>Checking for NULL Values</h4>
+            <pre><code>-- Find rows with NULL values
+SELECT * FROM <span style="color: #00ffff;">users</span> WHERE phone IS NULL;
+
+-- Count NULL values
+SELECT COUNT(*) FROM <span style="color: #00ffff;">users</span> WHERE phone IS NULL;
+
+-- Find columns that can accept NULL
+SELECT COLUMN_NAME, IS_NULLABLE 
+FROM INFORMATION_SCHEMA.COLUMNS 
+WHERE TABLE_NAME = 'users' AND TABLE_SCHEMA = 'your_database';</code></pre>
+
+            <h3>⚠️ NOT NULL Constraint Best Practices</h3>
+            <div style="background: rgba(40, 167, 69, 0.2); border: 2px solid #28a745; border-radius: 8px; padding: 15px; margin: 15px 0;">
+                <h4 style="color: #28a745; margin-top: 0;">✅ Do's</h4>
+                <ul style="color: #d4edda;">
+                    <li>🎯 <strong>Critical fields</strong> - use NOT NULL for essential business data</li>
+                    <li>🔑 <strong>Identifiers</strong> - usernames, emails, IDs should be NOT NULL</li>
+                    <li>📊 <strong>Status fields</strong> - use NOT NULL with DEFAULT values</li>
+                    <li>📅 <strong>Timestamps</strong> - audit fields should be NOT NULL</li>
+                    <li>💰 <strong>Financial data</strong> - amounts, prices should be NOT NULL</li>
+                    <li>🛡️ <strong>Security fields</strong> - passwords, tokens should be NOT NULL</li>
+                </ul>
+            </div>
+
+            <div style="background: rgba(220, 53, 69, 0.2); border: 2px solid #dc3545; border-radius: 8px; padding: 15px; margin: 15px 0;">
+                <h4 style="color: #dc3545; margin-top: 0;">❌ Don'ts</h4>
+                <ul style="color: #f8d7da;">
+                    <li>🚫 <strong>Don't overuse</strong> - not every field needs to be NOT NULL</li>
+                    <li>📞 <strong>Don't force optional data</strong> - phone numbers, addresses can be optional</li>
+                    <li>🎨 <strong>Don't require cosmetic fields</strong> - profile pictures, descriptions</li>
+                    <li>🔄 <strong>Don't add NOT NULL without planning</strong> - consider existing data</li>
+                    <li>📝 <strong>Don't use empty strings</strong> - prefer NULL for truly missing data</li>
+                </ul>
+            </div>
+
+            <h3>🔍 NULL vs Empty String vs Zero</h3>
+            <div style="background: rgba(26, 32, 44, 0.8); border: 1px solid #4a5568; border-radius: 8px; padding: 15px; margin: 15px 0;">
+                <h4 style="color: #ffd700; margin-top: 0;">Understanding the Differences</h4>
+                <ul style="color: #e2e8f0;">
+                    <li>🚫 <strong>NULL</strong> - No value, unknown, not applicable</li>
+                    <li>📝 <strong>Empty String ('')</strong> - Known value that happens to be empty</li>
+                    <li>🔢 <strong>Zero (0)</strong> - Actual numeric value of zero</li>
+                    <li>🎯 <strong>NOT NULL</strong> - Prevents NULL, but allows empty strings and zero</li>
+                </ul>
+                <pre style="background: rgba(0, 0, 0, 0.4); padding: 10px; border-radius: 4px; margin-top: 10px;"><code style="color: #e2e8f0;">-- These are all different:
+name = NULL        -- Unknown name
+name = ''          -- Known to be empty
+age = NULL         -- Unknown age
+age = 0            -- Actually zero years old
+balance = NULL     -- Unknown balance
+balance = 0.00     -- Actually zero dollars</code></pre>
+            </div>
+
+            <h3>💡 Helpful Tips</h3>
+            <ul>
+                <li>🔍 Use <code>DESCRIBE table_name;</code> to see which columns allow NULL</li>
+                <li>⚡ <strong>Performance</strong> - NOT NULL columns can be indexed more efficiently</li>
+                <li>🛡️ <strong>Data quality</strong> - prevents incomplete records</li>
+                <li>🎯 <strong>Business logic</strong> - enforces required field rules</li>
+                <li>🔄 <strong>Application logic</strong> - reduces null checking in code</li>
+                <li>📊 <strong>Reporting</strong> - ensures consistent data for analytics</li>
+                <li>🚨 <strong>Error prevention</strong> - catches missing data early</li>
+            </ul>
+
+            <h3>🧠 Summary</h3>
+            <ul>
+                <li>🚫 <strong>NOT NULL</strong> prevents empty values in critical columns</li>
+                <li>🛡️ <strong>Data integrity</strong> - ensures essential information is always present</li>
+                <li>⚡ <strong>Performance benefits</strong> - helps with indexing and query optimization</li>
+                <li>🎯 <strong>Business rules</strong> - enforces required field logic at database level</li>
+                <li>📊 <strong>Data quality</strong> - prevents incomplete records from entering system</li>
+                <li>🔧 <strong>Flexible management</strong> - can be added or removed from existing columns</li>
+            </ul>
+
+            <h3>🧪 Practice</h3>
+            <p>📚 Create a table called <code>"orders"</code> with NOT NULL constraints for customer_id, order_date, and total_amount.</p>
+            <div class="editor-container">
+                <textarea class="code-editor" id="exerciseInput" placeholder="Write your CREATE TABLE statement with NOT NULL constraints here..."></textarea>
+                <button class="neon-button" onclick="validateExercise()">Submit</button>
+                <div id="exerciseFeedback" style="margin-top:15px;"></div>
+            </div>
+
+            <h3>🎯 Quiz</h3>
+            <p><strong>What happens when you try to INSERT a NULL value into a column with NOT NULL constraint?</strong></p>
+            <div class="quiz">
+                <button onclick="checkAnswer(this,'A')">A) The value is automatically set to an empty string</button>
+                <button onclick="checkAnswer(this,'B')">B) The INSERT operation fails with an error</button>
+                <button onclick="checkAnswer(this,'C')">C) The value is set to a default value</button>
+                <button onclick="checkAnswer(this,'D')">D) The NULL value is accepted anyway</button>
+                <p class="quiz-feedback"></p>
+                <div id="quizExplanation" class="quiz-explanation" style="display:none;"></div>
+            </div>
+        </section>
+    </div>
+
+    <div id="footer"></div>
+
+    <script>
+        function runNotNullDemo() {
+            const textarea = document.querySelector('.code-editor');
+            const output = document.querySelector('.query-output');
+            const query = textarea.value.trim().toLowerCase();
+            
+            if (query.includes('create table') && query.includes('not null')) {
+                const tableName = query.match(/create table\s+(\w+)/)?.[1] || 'table';
+                const notNullCount = (query.match(/not null/g) || []).length;
+                const hasRequired = query.includes('not null');
+                const hasOptional = !query.split('\n').every(line => line.includes('not null') || !line.includes('varchar') && !line.includes('text'));
+                
+                output.innerHTML = `
+                    <div style='background: rgba(40, 167, 69, 0.2); border: 1px solid #28a745; border-radius: 8px; padding: 15px;'>
+                        <p style='color: #28a745; margin: 0;'>✅ <strong>Table '${tableName}' created with NOT NULL constraints!</strong></p>
+                        <p style='color: #d4edda; margin: 8px 0 0 0;'>🛡️ <strong>Data Protection Features:</strong></p>
+                        <ul style='color: #d4edda; margin: 5px 0 0 20px;'>
+                            <li>🚫 Prevents incomplete data entry</li>
+                            <li>🎯 Enforces required field validation</li>
+                            <li>📊 Ensures data consistency</li>
+                            <li>🔢 ${notNullCount} NOT NULL constraint${notNullCount > 1 ? 's' : ''} defined</li>
+                            ${hasRequired ? '<li>🛡️ Critical fields protected</li>' : ''}
+                            ${hasOptional ? '<li>📝 Optional fields allow flexibility</li>' : ''}
+                        </ul>
+                        <p style='color: #a0a0a0; margin: 8px 0 0 0; font-size: 0.8em;'>💡 Your data integrity is now protected!</p>
+                    </div>
+                `;
+            } else if (query.includes('create table')) {
+                output.innerHTML = `
+                    <div style='background: rgba(255, 193, 7, 0.2); border: 1px solid #ffc107; border-radius: 8px; padding: 15px;'>
+                        <p style='color: #ffc107; margin: 0;'>⚠️ <strong>Table created, but no NOT NULL constraints found!</strong></p>
+                        <p style='color: #fff3cd; margin: 5px 0 0 0;'>🛡️ Consider adding NOT NULL for critical fields.</p>
+                    </div>
+                `;
+            } else {
+                output.innerHTML = `<p style='color: red;'>❌ Invalid query. Try using CREATE TABLE with NOT NULL constraints.</p>`;
+            }
+        }
+        
+        function showNotNullExamples() {
+            const output = document.getElementById('notNullExamplesOutput');
+            const examples = [
+                {
+                    title: '🎯 Required Identifiers',
+                    sql: 'username VARCHAR(50) NOT NULL',
+                    description: 'Ensures every user has a username for login',
+                    businessRule: '🎯 Business Rule: Users must have unique identifiers'
+                },
+                {
+                    title: '📧 Contact Information',
+                    sql: 'email VARCHAR(100) NOT NULL',
+                    description: 'Guarantees communication channel exists',
+                    businessRule: '🎯 Business Rule: Must be able to contact users'
+                },
+                {
+                    title: '💰 Financial Data',
+                    sql: 'price DECIMAL(10,2) NOT NULL',
+                    description: 'Ensures all products have defined prices',
+                    businessRule: '🎯 Business Rule: No products without pricing'
+                },
+                {
+                    title: '📅 Audit Timestamps',
+                    sql: 'created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL',
+                    description: 'Tracks when records were created',
+                    businessRule: '🎯 Business Rule: All records must be timestamped'
+                },
+                {
+                    title: '📊 Status Tracking',
+                    sql: 'status VARCHAR(20) DEFAULT \'active\' NOT NULL',
+                    description: 'Ensures every record has a defined state',
+                    businessRule: '🎯 Business Rule: All entities must have status'
+                }
+            ];
+            
+            let html = '<div style="background: rgba(26, 32, 44, 0.8); border: 1px solid #4a5568; border-radius: 8px; padding: 15px; margin-top: 10px;">';
+            html += '<h4 style="color: #dc3545; margin-top: 0;">🚫 NOT NULL Constraint Examples</h4>';
+            
+            examples.forEach((example, index) => {
+                html += `
+                    <div style="margin-bottom: 15px; padding: 10px; background: rgba(45, 55, 72, 0.6); border-radius: 6px;">
+                        <h5 style="color: #ffd700; margin: 0 0 8px 0;">${example.title}</h5>
+                        <pre style="background: rgba(0, 0, 0, 0.4); padding: 8px; border-radius: 4px; margin: 5px 0; overflow-x: auto; white-space: pre-wrap;"><code style="color: #e2e8f0;">${example.sql}</code></pre>
+                        <p style="color: #a0aec0; margin: 5px 0; font-size: 0.9em;">${example.description}</p>
+                        <p style="color: #68d391; margin: 0; font-size: 0.8em; font-weight: bold;">${example.businessRule}</p>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            output.innerHTML = html;
+        }
+        
+        function validateExercise() {
+            const sql = document.getElementById("exerciseInput").value.trim().toLowerCase();
+            const feedback = document.getElementById("exerciseFeedback");
+            
+            if (sql.includes("create table orders") && sql.includes("not null") && 
+                (sql.includes("customer_id") && sql.includes("not null")) &&
+                (sql.includes("order_date") && sql.includes("not null")) &&
+                (sql.includes("total_amount") && sql.includes("not null"))) {
+                feedback.style.color = "lightgreen";
+                feedback.textContent = "✅ Excellent! You created orders table with NOT NULL constraints for customer_id, order_date, and total_amount.";
+            } else if (sql.includes("create table orders") && sql.includes("not null") && sql.includes("customer_id")) {
+                feedback.style.color = "orange";
+                feedback.textContent = "⚠️ Good! Don't forget to add NOT NULL for order_date and total_amount.";
+            } else if (sql.includes("create table orders") && sql.includes("not null")) {
+                feedback.style.color = "orange";
+                feedback.textContent = "⚠️ Good table creation! Make sure to include NOT NULL for customer_id, order_date, and total_amount.";
+            } else {
+                feedback.style.color = "red";
+                feedback.textContent = "❌ Try: CREATE TABLE orders with NOT NULL constraints for customer_id, order_date, and total_amount.";
+            }
+        }
+        
+        function checkAnswer(btn, opt) {
+            const fb = btn.parentElement.querySelector('.quiz-feedback');
+            const exp = document.getElementById('quizExplanation');
+            const buttons = btn.parentElement.querySelectorAll('button');
+            
+            // Disable all buttons after selection
+            buttons.forEach(b => b.disabled = true);
+            
+            if (opt === 'B') {
+                fb.style.color = 'lightgreen';
+                fb.textContent = '✅ Correct! The INSERT operation fails with a constraint violation error.';
+                btn.style.backgroundColor = '#28a745';
+                exp.innerHTML = `
+                    <p><strong>🎯 Explanation:</strong></p>
+                    <ul>
+                        <li>🛡️ <strong>Data protection</strong> - NOT NULL constraints enforce data integrity.</li>
+                        <li>🚫 When you try to insert NULL into a NOT NULL column, the database <strong>rejects the operation</strong>.</li>
+                        <li>💥 The database throws a <strong>constraint violation error</strong>.</li>
+                        <li>✅ This prevents incomplete data from entering your database.</li>
+                    </ul>
+                `;
+            } else {
+                fb.style.color = 'red';
+                fb.textContent = '❌ Incorrect. The correct answer is B.';
+                btn.style.backgroundColor = '#dc3545';
+                // Highlight correct answer
+                buttons[1].style.backgroundColor = '#28a745';
+                exp.innerHTML = `
+                    <p><strong>❌ Explanation:</strong></p>
+                    <ul>
+                        <li>🚫 NOT NULL constraints don't automatically convert values.</li>
+                        <li>🎯 They don't set default values or accept NULL values.</li>
+                        <li>🛡️ Their purpose is to <strong>prevent incomplete data</strong> by rejecting the operation.</li>
+                    </ul>
+                `;
+            }
+            exp.style.display = 'block';
+            exp.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // Bookmark functionality
+        const lessonId = "NOT_NULL";
+        const bookmarkBtn = document.getElementById("bookmarkBtn");
+        const unbookmarkBtn = document.getElementById("unbookmarkBtn");
+        const statusText = document.getElementById("bookmarkStatus");
+
+        function checkBookmarkStatus(retries = 3) {
+            fetch(`http://localhost:5000/bookmark-status?lessonId=${lessonId}`, {
+                credentials: 'include',
+                headers: { "Content-Type": "application/json" }
+            })
+            .then(res => {
+                if (!res.ok) throw new Error('Network response was not ok');
+                return res.json();
+            })
+            .then(data => {
+                if (data.bookmarked) {
+                    bookmarkBtn.style.display = "none";
+                    unbookmarkBtn.style.display = "inline-block";
+                    statusText.textContent = "📌 Bookmarked";
+                } else {
+                    bookmarkBtn.style.display = "inline-block";
+                    unbookmarkBtn.style.display = "none";
+                    statusText.textContent = "";
+                }
+            })
+            .catch(error => {
+                console.error('Error checking bookmark status:', error);
+                if (retries > 0) {
+                    setTimeout(() => checkBookmarkStatus(retries - 1), 1000);
+                }
+            });
+        }
+
+        bookmarkBtn.addEventListener("click", () => {
+            fetch("http://localhost:5000/bookmark", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({ lessonId: lessonId, bookmarked: true })
+            })
+            .then(res => res.json())
+            .then(() => checkBookmarkStatus());
+        });
+
+        unbookmarkBtn.addEventListener("click", () => {
+            fetch("http://localhost:5000/bookmark", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({ lessonId: lessonId, bookmarked: false })
+            })
+            .then(res => res.json())
+            .then(() => checkBookmarkStatus());
+        });
+
+        checkBookmarkStatus();
+    </script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register - SQL Quest</title>
+    <link rel="stylesheet" href="stylesheets/style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+    <script src="javascripts/loadComponents.js" defer></script>
+    <script src="javascripts/register.js" defer></script>
+</head>
+<body class="pixel-art dark-theme">
+    <div id="header"></div>
+
+    <div class="register-container">
+        <h2>Register for SQL Quest</h2>
+        <form id="registerForm">
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" required placeholder="3-20 characters, letters, numbers, underscores" />
+                <div id="usernameError" class="error-message"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" required placeholder="Enter your email address" />
+                <div id="emailError" class="error-message"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" required placeholder="Min 8 chars, uppercase, lowercase, number" />
+                <div id="passwordError" class="error-message"></div>
+            </div>
+
+            <button type="submit" class="pixel-button">Register</button>
+        </form>
+    </div>
+
+
+</body>
+</html>

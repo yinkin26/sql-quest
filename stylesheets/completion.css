@@ -1,0 +1,125 @@
+.completion-container {
+    text-align: center;
+    margin: 2rem 0;
+    padding: 1rem;
+    position: relative;
+}
+
+.completion-button {
+    background: transparent;
+    color: #00ffcc;
+    border: 2px solid #00ffcc;
+    padding: 1rem 2rem;
+    font-size: 1.2rem;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 0 10px #00ffcc;
+    font-family: 'Press Start 2P', monospace;
+    position: relative;
+    overflow: hidden;
+}
+
+.completion-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px #00ffcc;
+    background: rgba(0, 255, 204, 0.2);
+}
+
+.completion-button::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(0, 255, 204, 0.2), transparent);
+    transform: rotate(45deg);
+    animation: shimmer 3s linear infinite;
+    pointer-events: none;
+    z-index: -1;
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%) rotate(45deg); }
+    100% { transform: translateX(100%) rotate(45deg); }
+}
+
+.completion-button:disabled {
+    background: rgba(204, 204, 204, 0.1);
+    border-color: #cccccc;
+    color: #cccccc;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.completion-message {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.message-content {
+    background: rgba(0, 0, 0, 0.9);
+    padding: 2rem;
+    border-radius: 8px;
+    text-align: center;
+    animation: popIn 0.5s ease-out;
+    max-width: 90%;
+    width: 400px;
+    border: 2px solid #00ffcc;
+    box-shadow: 0 0 20px #00ffcc;
+}
+
+.message-content h3 {
+    color: #00ffcc;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    text-shadow: 0 0 10px #00ffcc;
+    font-family: 'Press Start 2P', monospace;
+}
+
+.message-content p {
+    color: #fff;
+    margin-bottom: 1.5rem;
+    text-shadow: 0 0 5px #fff;
+}
+
+.message-content button {
+    background: transparent;
+    color: #00ffcc;
+    border: 2px solid #00ffcc;
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    font-family: 'Press Start 2P', monospace;
+    box-shadow: 0 0 10px #00ffcc;
+}
+
+.message-content button:hover {
+    background: rgba(0, 255, 204, 0.2);
+    box-shadow: 0 0 20px #00ffcc;
+}
+
+@keyframes popIn {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}

@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en" class="pixel-art dark-theme">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Quest - SQL NULL & IS NULL</title>
+    <link rel="stylesheet" href="stylesheets/style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <script src="javascripts/loadComponents.js" defer></script>
+    <script src="javascripts/script.js" defer></script>
+    <script src="javascripts/lessonTracker.js" defer></script>
+
+</head>
+<body class="pixel-art dark-theme">
+    <div id="header"></div>
+    <div class="lesson-layout">
+        <div id="sidebar"></div>
+
+        <section class="lesson-content">
+            <h2>💡 SQL NULL & IS NULL</h2>
+
+            <!-- Add bookmark buttons -->
+            <div class="bookmark-container">
+                <button id="bookmarkBtn" style="display: none;">🔖 Bookmark</button>
+                <button id="unbookmarkBtn" style="display: none;">❌ Remove Bookmark</button>
+                <span id="bookmarkStatus"></span>
+            </div>
+
+            <!-- Explanation of NULL & IS NULL -->
+            <h3>📌 What is NULL in SQL?</h3>
+            <p>In SQL, <code>NULL</code> is a special marker used to indicate that a data value does not exist in the database. A NULL value is not the same as an empty string or a zero value.</p>
+
+            <h3>🧠 Basic Syntax of IS NULL</h3>
+            <p>To check if a column contains <code>NULL</code> values, you can use the <code>IS NULL</code> condition.</p>
+            <pre><code>SELECT column1, column2 FROM table_name WHERE column1 IS NULL;</code></pre>
+
+            <h3>💡 Example: Checking for NULL values</h3>
+            <p><strong>⚠️ Important:</strong> This query won't work as expected because <code>= NULL</code> is invalid. Always use <code>IS NULL</code>.</p>
+<pre><code>SELECT name, email FROM customers WHERE email = NULL;</code></pre>
+<pre><code>SELECT name, email FROM customers WHERE email IS NULL;</code></pre>
+
+            <h3>🧪 Try It Yourself: Check for NULL values</h3>
+            <p>Write a SQL query to retrieve customers whose email is NULL:</p>
+            <div class="code-block">
+                <textarea class="code-editor" id="userQuery">SELECT name, email FROM customers WHERE email IS NULL;</textarea>
+                <button class="neon-button" onclick="runTryItQuery()">Run</button>
+                <div class="query-output" id="queryResult"></div>
+            </div>
+
+
+            <h3>💬 Why Use NULL?</h3>
+            <p>In a database, a <code>NULL</code> value indicates that the data is missing or unknown. For instance, if a customer doesn't have an email address, that column might contain a <code>NULL</code> value.</p>
+
+            <h3>🌍 Real-World Use Case</h3>
+            <p>Consider an employee database where some employees do not have a phone number. You can use the <code>IS NULL</code> condition to find those employees:</p>
+            <pre><code>SELECT name FROM employees WHERE phone_number IS NULL;</code></pre>
+
+            <h3>💡 Helpful Tips</h3>
+            <ul>
+                <li><code>NULL</code> is not the same as an empty string or zero; it represents missing or undefined data.</li>
+                <li>To check if a column does not contain <code>NULL</code>, use <code>IS NOT NULL</code>.</li>
+                <li>Be mindful that comparisons with <code>NULL</code> using <code>=</code> or <code>!=</code> will not return the expected results. Always use <code>IS NULL</code> or <code>IS NOT NULL</code>.</li>
+            </ul>
+
+            <h3>🧠 Summary</h3>
+            <ul>
+                <li><code>NULL</code> represents missing or undefined data.</li>
+                <li>Use <code>IS NULL</code> to check for <code>NULL</code> values in a column.</li>
+                <li>To check for values that are not <code>NULL</code>, use <code>IS NOT NULL</code>.</li>
+            </ul>
+
+            <!-- Practice Section -->
+            <h3>🧪 Practice: Find Customers with Missing Email</h3>
+            <p>🧠 Your task: Write a SQL query to find customers who do not have an email address (i.e., the email column contains <code>NULL</code>) in the <code>customers</code> table.</p>
+            <ul>
+                <li><code>name</code> (VARCHAR(100))</li>
+                <li><code>email</code> (VARCHAR(100))</li>
+            </ul>
+
+            <p>💬 Try modifying the query to use <code>IS NOT NULL</code> and see which customers do have emails!</p>
+
+            <div class="editor-container">
+                <textarea class="code-editor" id="exerciseInput" placeholder="Write your SELECT query here..."></textarea>
+                <button class="neon-button" onclick="validateNullQuery()">Submit</button>
+                <div id="exerciseFeedback" style="margin-top: 15px;"></div>
+            </div>
+
+            <!-- Mock Table for Displaying After Submit (Customer Data) -->
+            <div class="mock-table" id="mockTable" style="display: none;">
+                <h4>Preview: What the table would look like when queried:</h4>
+
+                <h5>After Query (Example Result):</h5>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>name</th>
+                            <th>email</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>John Doe</td>
+                            <td>NULL</td>
+                        </tr>
+                        <tr>
+                            <td>Jane Smith</td>
+                            <td>NULL</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- Mock Table for Customers WITH Email -->
+            <div class="mock-table" id="mockTableNotNull" style="display: none;">
+                <h4>Preview: What the table would look like when queried:</h4>
+
+                <h5>After Query (Example Result - Email IS NOT NULL):</h5>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>name</th>
+                            <th>email</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Alice Brown</td>
+                            <td>alice@example.com</td>
+                        </tr>
+                        <tr>
+                            <td>Bob White</td>
+                            <td>bob@example.com</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+
+            <h3>🎯 Quiz</h3>
+            <p><strong>Which query returns customers with a <code>NULL</code> email address?</strong></p>
+            <div class="quiz">
+                <button onclick="checkAnswer(this, false)">A) SELECT name FROM customers WHERE email = NULL;</button>
+                <button onclick="checkAnswer(this, true)">B) SELECT name FROM customers WHERE email IS NULL;</button>
+                <button onclick="checkAnswer(this, false)">C) SELECT name FROM customers WHERE email IS NOT NULL;</button>
+                <button onclick="checkAnswer(this, false)">D) SELECT name FROM customers WHERE email != NULL;</button>
+                <p class="quiz-feedback"></p>
+                <div id="quizExplanation" class="quiz-explanation" style="display: none;"></div>
+            </div>
+        </section>
+    </div>
+
+    <div id="footer"></div>
+
+  
+ 
+    <script>
+        // Function to validate the user's NULL query
+        function validateNullQuery() {
+            const userSQL = document.getElementById("exerciseInput").value.trim().toLowerCase().replace(/\s+/g, " ");
+            const feedback = document.getElementById("exerciseFeedback");
+            const nullTable = document.getElementById("mockTable");
+            const notNullTable = document.getElementById("mockTableNotNull");
+
+            // Hide both tables first
+            nullTable.style.display = "none";
+            notNullTable.style.display = "none";
+
+            const expectedNull = "select name, email from customers where email is null;";
+            const expectedNotNull = "select name, email from customers where email is not null;";
+
+            if (userSQL === expectedNull) {
+                feedback.style.color = "lightgreen";
+                feedback.innerHTML = "✅ Perfect! You've correctly selected customers <strong>without</strong> email addresses.";
+                nullTable.style.display = "block";
+                nullTable.scrollIntoView({ behavior: "smooth" });
+            } else if (userSQL === expectedNotNull) {
+                feedback.style.color = "lightblue";
+                feedback.innerHTML = "👍 Great! You've selected customers <strong>with</strong> email addresses.";
+                notNullTable.style.display = "block";
+                notNullTable.scrollIntoView({ behavior: "smooth" });
+            } else if (userSQL.includes("select") && userSQL.includes("from customers") && userSQL.includes("where email")) {
+                feedback.style.color = "orange";
+                feedback.innerHTML = "⚠️ You're close! Make sure you're using <code>IS NULL</code> or <code>IS NOT NULL</code> correctly.";
+            } else {
+                feedback.style.color = "red";
+                feedback.innerHTML = "❌ Not quite. Use <code>SELECT name, email FROM customers WHERE email IS NULL;</code> to find missing emails.";
+            }
+        }
+
+
+
+        // Function to check the quiz answer
+        let quizCompleted = false;
+        
+        function checkAnswer(button, isCorrect) {
+            // If quiz is already completed, don't allow further clicks
+            if (quizCompleted) {
+                return;
+            }
+
+            const feedback = button.parentElement.querySelector(".quiz-feedback");
+            const explanationBox = document.getElementById("quizExplanation");
+            const quizContainer = button.parentElement;
+            
+            feedback.innerHTML = "";
+            explanationBox.style.display = "block";
+
+            if (isCorrect) {
+                // Correct answer - disable all buttons and mark as completed
+                quizCompleted = true;
+                const allButtons = quizContainer.querySelectorAll('button');
+                allButtons.forEach(btn => {
+                    btn.disabled = true;
+                    if (btn === button) {
+                        btn.style.backgroundColor = '#44ff44';
+                        btn.style.boxShadow = '0 0 15px rgba(68, 255, 68, 0.5)';
+                    }
+                });
+                
+                feedback.style.color = "lightgreen";
+                feedback.innerHTML = "✅ Correct! Quiz completed!";
+                explanationBox.innerHTML = `
+                          <p><strong>Explanation:</strong></p>
+                          <ul>
+                            <li><code>IS NULL</code> is the correct way to check for NULL values in SQL.</li>
+                          </ul>`;
+            } else {
+                // Incorrect answer - disable this button only
+                button.disabled = true;
+                button.style.backgroundColor = '#ff4444';
+                button.style.opacity = '0.6';
+                button.style.cursor = 'not-allowed';
+                
+                feedback.style.color = "red";
+                feedback.innerHTML = "❌ Incorrect. Try another answer!";
+                
+                // Add retry message if not already present
+                let retryMsg = quizContainer.querySelector('.retry-message');
+                if (!retryMsg) {
+                    retryMsg = document.createElement('p');
+                    retryMsg.className = 'retry-message';
+                    retryMsg.style.color = '#ffd700';
+                    retryMsg.style.fontWeight = 'bold';
+                    retryMsg.style.marginTop = '10px';
+                    retryMsg.innerHTML = '💡 Keep trying! Choose another answer.';
+                    feedback.parentNode.insertBefore(retryMsg, feedback.nextSibling);
+                }
+                
+                let explanation = "";
+                switch (button.innerText.trim().charAt(0)) {
+                    case "A":
+                        explanation = `
+                                  <p><strong>Explanation:</strong></p>
+                                  <ul>
+                                    <li>Use <code>IS NULL</code> to check for NULL values, not <code>= NULL</code>.</li>
+                                  </ul>`;
+                        break;
+                    case "C":
+                        explanation = `
+                                  <p><strong>Explanation:</strong></p>
+                                  <ul>
+                                    <li><code>IS NOT NULL</code> would check for rows that do not have NULL values.</li>
+                                  </ul>`;
+                        break;
+                    case "D":
+                        explanation = `
+                                  <p><strong>Explanation:</strong></p>
+                                  <ul>
+                                    <li>Using <code>!= NULL</code> will not work for NULL checks. Always use <code>IS NULL</code>.</li>
+                                  </ul>`;
+                        break;
+                }
+                explanationBox.innerHTML = explanation;
+            }
+
+            explanationBox.scrollIntoView({ behavior: "smooth" });
+        }
+
+        function runTryItQuery() {
+            const userSQL = document.getElementById("userQuery").value.trim().toLowerCase().replace(/\s+/g, " ");
+            const resultContainer = document.getElementById("queryResult");
+
+            // Simulated mock database for customer data
+            const mockData = [
+                { name: "John Doe", email: "john@example.com" },
+                { name: "Jane Smith", email: "jane@example.com" },
+                { name: "Alice Brown", email: null },
+                { name: "Bob White", email: null }
+            ];
+
+            // Simulate SQL query execution based on user input
+            let resultRows = [];
+            if (userSQL.includes("email is null")) {
+                resultRows = mockData.filter(row => row.email === null);
+            }
+
+            // Display results or message if no results
+            if (resultRows.length > 0) {
+                let resultHTML = `<table><thead><tr><th>Name</th><th>Email</th></tr></thead><tbody>`;
+                resultRows.forEach(row => {
+                    resultHTML += `<tr><td>${row.name}</td><td>${row.email ? row.email : 'NULL'}</td></tr>`;
+                });
+                resultHTML += `</tbody></table>`;
+                resultContainer.innerHTML = resultHTML;
+            } else {
+                resultContainer.innerHTML = "<p>No records found where email is NULL.</p>";
+            }
+        }
+
+
+        // Bookmark functionality
+        const lessonId = "NullAndIsNull";
+        const bookmarkBtn = document.getElementById("bookmarkBtn");
+        const unbookmarkBtn = document.getElementById("unbookmarkBtn");
+        const statusText = document.getElementById("bookmarkStatus");
+
+        // Function to check bookmark status with retry
+        function checkBookmarkStatus(retries = 3) {
+            fetch(`http://localhost:5000/bookmark-status?lessonId=${lessonId}`, {
+                credentials: 'include',
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+                .then(res => {
+                    if (!res.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return res.json();
+                })
+                .then(data => {
+                    if (data.bookmarked) {
+                        bookmarkBtn.style.display = "none";
+                        unbookmarkBtn.style.display = "inline-block";
+                        statusText.textContent = "📌 Bookmarked";
+                    } else {
+                        bookmarkBtn.style.display = "inline-block";
+                        unbookmarkBtn.style.display = "none";
+                        statusText.textContent = "";
+                    }
+                })
+                .catch(error => {
+                    console.error('Error checking bookmark status:', error);
+                    if (retries > 0) {
+                        setTimeout(() => checkBookmarkStatus(retries - 1), 1000);
+                    }
+                });
+        }
+
+        // Add bookmark
+        bookmarkBtn.addEventListener("click", () => {
+            fetch("http://localhost:5000/bookmark", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                    lessonId: lessonId,
+                    bookmarked: true
+                })
+            })
+                .then(res => res.json())
+                .then(() => {
+                    checkBookmarkStatus();
+                });
+        });
+
+        // Remove bookmark
+        unbookmarkBtn.addEventListener("click", () => {
+            fetch("http://localhost:5000/bookmark", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                    lessonId: lessonId,
+                    bookmarked: false
+                })
+            })
+                .then(res => res.json())
+                .then(() => {
+                    checkBookmarkStatus();
+                });
+        });
+
+        // Check initial status when page loads
+        checkBookmarkStatus();
+    </script>
+</body>
+</html>

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en" class="pixel-art dark-theme">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Quest - SQL HAVING Clause</title>
+    <link rel="stylesheet" href="stylesheets/style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <script src="javascripts/loadComponents.js" defer></script>
+    <script src="javascripts/script.js" defer></script>
+    <script src="javascripts/lessonTracker.js" defer></script>
+</head>
+<body class="pixel-art dark-theme">
+    <div id="header"></div>
+    <div class="lesson-layout">
+        <section class="lesson">
+            <div class="lesson-header">
+                <h1>🔍 SQL HAVING Clause</h1>
+                <div class="bookmark-container">
+                    <button id="bookmarkBtn" class="bookmark-btn" onclick="toggleBookmark('having')">
+                        <span class="bookmark-icon">🔖</span>
+                        <span class="bookmark-text">Bookmark</span>
+                    </button>
+                    <span id="bookmarkStatus"></span>
+                </div>
+            </div>
+            
+            <h3>🤔 What is HAVING?</h3>
+            <p>The <strong>HAVING</strong> clause is a powerful SQL feature that allows you to filter groups created by the GROUP BY clause. While WHERE filters individual rows before grouping, HAVING filters entire groups after they've been formed and aggregate functions have been calculated.</p>
+            
+            <p><strong>HAVING is essential for:</strong></p>
+            <ul>
+                <li><strong>Group Filtering</strong>: Filter groups based on aggregate function results</li>
+                <li><strong>Advanced Analytics</strong>: Find groups that meet specific criteria (e.g., departments with more than 10 employees)</li>
+                <li><strong>Business Intelligence</strong>: Identify high-performing segments, outliers, and trends</li>
+                <li><strong>Data Quality</strong>: Find groups with unusual patterns or missing data</li>
+                <li><strong>Threshold Analysis</strong>: Groups exceeding or falling below certain thresholds</li>
+            </ul>
+            
+            <p><strong>Key Differences: WHERE vs HAVING</strong></p>
+            <div class="code-block">
+                <pre><code>-- WHERE: Filters rows BEFORE grouping
+SELECT department, COUNT(*) as emp_count
+FROM employees
+WHERE salary > 50000  -- Filters individual employees
+GROUP BY department;
+
+-- HAVING: Filters groups AFTER grouping
+SELECT department, COUNT(*) as emp_count
+FROM employees
+GROUP BY department
+HAVING COUNT(*) > 5;  -- Filters departments with >5 employees</code></pre>
+            </div>
+            
+            <h3>📝 Basic Syntax</h3>
+            <div class="code-block">
+                <pre><code>SELECT column1, aggregate_function(column2)
+FROM table_name
+WHERE condition              -- Optional: Filter rows before grouping
+GROUP BY column1
+HAVING aggregate_condition   -- Filter groups after aggregation
+ORDER BY column1;</code></pre>
+            </div>
+            
+            <p><strong>SQL Execution Order:</strong></p>
+            <ol>
+                <li><strong>FROM</strong>: Get data from tables</li>
+                <li><strong>WHERE</strong>: Filter individual rows</li>
+                <li><strong>GROUP BY</strong>: Group remaining rows</li>
+                <li><strong>HAVING</strong>: Filter groups</li>
+                <li><strong>SELECT</strong>: Choose columns to display</li>
+                <li><strong>ORDER BY</strong>: Sort final results</li>
+            </ol>
+            
+            <p><strong>Common HAVING Examples:</strong></p>
+            <div class="code-block">
+                <pre><code>-- Find departments with average salary > $60,000
+SELECT department, AVG(salary) as avg_salary
+FROM employees
+GROUP BY department
+HAVING AVG(salary) > 60000;
+
+-- Find customers with total orders > $1000
+SELECT customer_id, SUM(order_amount) as total_spent
+FROM orders
+GROUP BY customer_id
+HAVING SUM(order_amount) > 1000;</code></pre>
+            </div>
+            
+            <h3>🧪 Try It Yourself</h3>
+            <div class="code-block">
+                <textarea id="sqlEditor" placeholder="Write your SQL query here...">SELECT department, COUNT(*) as employee_count, AVG(salary) as avg_salary
+FROM employees
+GROUP BY department
+HAVING COUNT(*) > 5 AND AVG(salary) > 50000;</textarea>
+                <button onclick="runQuery()">Run Query</button>
+                <div id="queryResult"></div>
+            </div>
+            
+            <h3>💡 Examples</h3>
+            
+            <h4>1. Sales Performance Analysis</h4>
+            <div class="code-block">
+                <pre><code>-- Find sales representatives who exceeded $100K in sales
+SELECT 
+    sales_rep_id,
+    sales_rep_name,
+    COUNT(*) as deals_closed,
+    SUM(deal_amount) as total_sales,
+    AVG(deal_amount) as avg_deal_size
+FROM sales_deals
+WHERE deal_status = 'Closed Won'
+GROUP BY sales_rep_id, sales_rep_name
+HAVING SUM(deal_amount) > 100000
+ORDER BY total_sales DESC;</code></pre>
+            </div>
+            
+            <h4>2. Customer Segmentation Analysis</h4>
+            <div class="code-block">
+                <pre><code>-- Identify high-value customer segments
+SELECT 
+    customer_segment,
+    COUNT(*) as customer_count,
+    AVG(annual_revenue) as avg_revenue,
+    SUM(annual_revenue) as total_segment_revenue,
+    MIN(annual_revenue) as min_revenue,
+    MAX(annual_revenue) as max_revenue
+FROM customers
+WHERE status = 'Active'
+GROUP BY customer_segment
+HAVING COUNT(*) >= 10 AND AVG(annual_revenue) > 50000
+ORDER BY total_segment_revenue DESC;</code></pre>
+            </div>
+            
+            <h4>3. Product Performance by Category</h4>
+            <div class="code-block">
+                <pre><code>-- Find product categories with declining sales
+SELECT 
+    category,
+    YEAR(order_date) as year,
+    COUNT(*) as orders_count,
+    SUM(quantity * price) as total_revenue,
+    AVG(quantity * price) as avg_order_value
+FROM order_items oi
+JOIN products p ON oi.product_id = p.product_id
+JOIN orders o ON oi.order_id = o.order_id
+WHERE YEAR(order_date) IN (2023, 2024)
+GROUP BY category, YEAR(order_date)
+HAVING SUM(quantity * price) > 10000
+ORDER BY category, year;</code></pre>
+            </div>
+            
+            <h4>4. Employee Performance by Department</h4>
+            <div class="code-block">
+                <pre><code>-- Find departments with high employee turnover
+SELECT 
+    department,
+    COUNT(*) as total_employees,
+    SUM(CASE WHEN termination_date IS NOT NULL THEN 1 ELSE 0 END) as terminated_employees,
+    ROUND(
+        (SUM(CASE WHEN termination_date IS NOT NULL THEN 1 ELSE 0 END) * 100.0 / COUNT(*)), 2
+    ) as turnover_rate
+FROM employees
+WHERE hire_date >= '2023-01-01'
+GROUP BY department
+HAVING COUNT(*) >= 5 AND 
+       (SUM(CASE WHEN termination_date IS NOT NULL THEN 1 ELSE 0 END) * 100.0 / COUNT(*)) > 15
+ORDER BY turnover_rate DESC;</code></pre>
+            </div>
+            
+            <h4>5. Complex Multi-Condition Analysis</h4>
+            <div class="code-block">
+                <pre><code>-- Find regions with consistent growth and high performance
+SELECT 
+    region,
+    COUNT(DISTINCT customer_id) as unique_customers,
+    COUNT(*) as total_orders,
+    SUM(order_amount) as total_revenue,
+    AVG(order_amount) as avg_order_value,
+    MAX(order_date) as last_order_date
+FROM orders
+WHERE order_date >= '2024-01-01'
+GROUP BY region
+HAVING COUNT(DISTINCT customer_id) >= 50
+   AND SUM(order_amount) > 500000
+   AND AVG(order_amount) > 200
+   AND COUNT(*) > 1000
+ORDER BY total_revenue DESC;</code></pre>
+            </div>
+            
+            <h4>6. Time-Based Analysis with HAVING</h4>
+            <div class="code-block">
+                <pre><code>-- Monthly analysis: Find months with exceptional performance
+SELECT 
+    YEAR(order_date) as year,
+    MONTH(order_date) as month,
+    MONTHNAME(order_date) as month_name,
+    COUNT(*) as orders_count,
+    SUM(order_amount) as monthly_revenue,
+    AVG(order_amount) as avg_order_value,
+    COUNT(DISTINCT customer_id) as unique_customers
+FROM orders
+GROUP BY YEAR(order_date), MONTH(order_date), MONTHNAME(order_date)
+HAVING monthly_revenue > (
+    SELECT AVG(monthly_total) * 1.2
+    FROM (
+        SELECT SUM(order_amount) as monthly_total
+        FROM orders
+        GROUP BY YEAR(order_date), MONTH(order_date)
+    ) monthly_averages
+)
+ORDER BY year DESC, month DESC;</code></pre>
+            </div>
+            
+            <h3>💡 Helpful Tips</h3>
+            <ul>
+                <li><strong>Aggregate Functions Only</strong>: HAVING can only use aggregate functions or columns in GROUP BY</li>
+                <li><strong>Performance Optimization</strong>: Use WHERE to filter rows before grouping for better performance</li>
+                <li><strong>Multiple Conditions</strong>: Combine conditions with AND, OR: HAVING COUNT(*) > 5 AND AVG(salary) > 50000</li>
+                <li><strong>Subqueries</strong>: Use subqueries in HAVING for dynamic thresholds and comparisons</li>
+                <li><strong>Column Aliases</strong>: You can reference column aliases in HAVING: HAVING total_sales > 10000</li>
+                <li><strong>NULL Handling</strong>: Aggregate functions ignore NULL values, but COUNT(*) counts all rows</li>
+                <li><strong>Complex Expressions</strong>: Use CASE statements and mathematical operations in HAVING conditions</li>
+                <li><strong>Date Functions</strong>: Combine with date functions for time-based group filtering</li>
+                <li><strong>Nested Aggregates</strong>: You cannot nest aggregate functions in HAVING (use subqueries instead)</li>
+                <li><strong>Index Strategy</strong>: Create indexes on GROUP BY columns for better HAVING performance</li>
+            </ul>
+            
+            <h3>🧠 Summary</h3>
+            <ul>
+                <li><strong>Purpose</strong>: HAVING filters groups after GROUP BY aggregation, while WHERE filters individual rows</li>
+                <li><strong>Power</strong>: Enables sophisticated group-level analysis and business intelligence queries</li>
+                <li><strong>Flexibility</strong>: Works with all aggregate functions and supports complex conditional logic</li>
+                <li><strong>Best Practice</strong>: Use WHERE for row filtering and HAVING for group filtering to optimize performance</li>
+                <li><strong>Business Value</strong>: Essential for identifying high-performing segments, outliers, and trends in data</li>
+            </ul>
+            
+            <h3>🧪 Practice: Customers with More Than 1 Order</h3>
+            <div class="practice-section">
+                <p><strong>Challenge:</strong> Write a query to find customers who have placed more than 1 order and their total order amount is greater than $500.</p>
+                <div class="code-block">
+                    <textarea id="practiceEditor" placeholder="Write your solution here..."></textarea>
+                    <button onclick="checkPractice()">Check Solution</button>
+                    <div id="practiceResult"></div>
+                </div>
+                <div class="solution" style="display: none;">
+                    <h4>💡 Solution:</h4>
+                    <pre><code>SELECT customer_id, COUNT(*) as order_count, SUM(order_amount) as total_amount
+FROM orders
+GROUP BY customer_id
+HAVING COUNT(*) > 1 AND SUM(order_amount) > 500
+ORDER BY total_amount DESC;</code></pre>
+                </div>
+            </div>
+            
+            <h3>🎯 Quiz</h3>
+            <p><strong>Which clause filters groups after aggregation?</strong></p>
+            <div class="quiz">
+                <button onclick="checkAnswer(this, false)">A) WHERE</button>
+                <button onclick="checkAnswer(this, true)">B) HAVING</button>
+                <button onclick="checkAnswer(this, false)">C) GROUP BY</button>
+                <button onclick="checkAnswer(this, false)">D) ORDER BY</button>
+                <p class="quiz-feedback"></p>
+                <div id="quizExplanation" class="quiz-explanation" style="display: none;"></div>
+            </div>
+        </section>
+    </div>
+    <div id="footer"></div>
+</body>
+</html>

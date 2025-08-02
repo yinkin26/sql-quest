@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Views - Interactive Learning</title>
+    <script type="module" src="../../javascripts/mockTables.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: #e0e0e0;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .lesson-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            border: 2px solid #00ffff;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+        }
+
+        .lesson-header h1 {
+            font-size: 3em;
+            color: #00ffff;
+            text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+            margin-bottom: 10px;
+        }
+
+        .lesson-header p {
+            font-size: 1.2em;
+            color: #a0a0a0;
+        }
+
+        .content-section {
+            background: rgba(255, 255, 255, 0.05);
+            margin: 30px 0;
+            padding: 30px;
+            border-radius: 10px;
+            border-left: 5px solid #00ffff;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .content-section h2 {
+            color: #00ffff;
+            margin-bottom: 20px;
+            font-size: 2em;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+        }
+
+        .content-section h3 {
+            color: #ffd700;
+            margin: 25px 0 15px 0;
+            font-size: 1.5em;
+        }
+
+        .content-section h4 {
+            color: #ff6b6b;
+            margin: 20px 0 10px 0;
+            font-size: 1.2em;
+        }
+
+        pre {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            border: 1px solid #333;
+            margin: 15px 0;
+        }
+
+        code {
+            color: #e2e8f0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .highlight {
+            background: rgba(255, 215, 0, 0.2);
+            padding: 2px 4px;
+            border-radius: 3px;
+            color: #ffd700;
+        }
+
+        .editor-container {
+            margin: 20px 0;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid #444;
+        }
+
+        .code-editor {
+            width: 100%;
+            height: 120px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid #555;
+            border-radius: 5px;
+            padding: 15px;
+            color: #e0e0e0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            resize: vertical;
+        }
+
+        .neon-button {
+            background: linear-gradient(45deg, #00ffff, #0080ff);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            color: #000;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px 5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+        }
+
+        .neon-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 25px rgba(0, 255, 255, 0.5);
+        }
+
+        .query-output {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid #333;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 15px;
+            min-height: 100px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .quiz {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border: 1px solid #444;
+        }
+
+        .quiz button {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            padding: 15px;
+            background: rgba(0, 255, 255, 0.1);
+            border: 1px solid #00ffff;
+            border-radius: 5px;
+            color: #e0e0e0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quiz button:hover {
+            background: rgba(0, 255, 255, 0.2);
+            transform: translateX(5px);
+        }
+
+        .quiz-feedback {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .quiz-explanation {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border-left: 4px solid #ffd700;
+        }
+
+        .performance-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .performance-table th,
+        .performance-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #444;
+        }
+
+        .performance-table th {
+            background: rgba(0, 255, 255, 0.2);
+            color: #00ffff;
+            font-weight: bold;
+        }
+
+        .performance-table tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .bookmark-section {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border: 1px solid #444;
+        }
+
+        ul, ol {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        li {
+            margin-bottom: 8px;
+            color: #d0d0d0;
+        }
+
+        .info-box {
+            background: rgba(0, 123, 255, 0.1);
+            border: 1px solid #007bff;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .warning-box {
+            background: rgba(255, 193, 7, 0.1);
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .success-box {
+            background: rgba(40, 167, 69, 0.1);
+            border: 1px solid #28a745;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .danger-box {
+            background: rgba(220, 53, 69, 0.1);
+            border: 1px solid #dc3545;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="header"></div>
+
+    <div class="container">
+        <div class="lesson-header">
+            <h1>🔍 SQL Views</h1>
+            <p>Master virtual tables and data abstraction with SQL Views</p>
+            <div class="bookmark-section">
+                <button id="bookmarkBtn" class="neon-button">📌 Bookmark This Lesson</button>
+                <button id="unbookmarkBtn" class="neon-button" style="display:none;">📌 Remove Bookmark</button>
+                <p id="bookmarkStatus" style="margin-top: 10px; color: #ffd700;"></p>
+            </div>
+        </div>
+
+        <section class="content-section">
+            <h2>🎯 What are SQL Views?</h2>
+            <p>A <span class="highlight">VIEW</span> is a virtual table based on the result of a SQL statement. It contains rows and columns just like a real table, but doesn't store data physically. Views provide a way to simplify complex queries, enhance security, and present data in different formats.</p>
+            
+            <div class="info-box">
+                <h4>🔑 Key Characteristics:</h4>
+                <ul>
+                    <li>🎭 <strong>Virtual Table</strong> - No physical storage, data comes from underlying tables</li>
+                    <li>🔄 <strong>Dynamic</strong> - Always shows current data from base tables</li>
+                    <li>🛡️ <strong>Security Layer</strong> - Hide sensitive columns and restrict access</li>
+                    <li>🎯 <strong>Simplification</strong> - Complex queries become simple table references</li>
+                    <li>📊 <strong>Data Abstraction</strong> - Present data in different formats</li>
+                </ul>
+            </div>
+
+            <h3>📝 Basic View Syntax</h3>
+            <pre><code><span style="color: #ff6b6b;">CREATE VIEW</span> <span style="color: #ffd700;">view_name</span> <span style="color: #ff6b6b;">AS</span>
+<span style="color: #ff6b6b;">SELECT</span> <span style="color: #ffd700;">column1, column2, ...</span>
+<span style="color: #ff6b6b;">FROM</span> <span style="color: #00ffff;">table_name</span>
+<span style="color: #ff6b6b;">WHERE</span> <span style="color: #ffd700;">condition</span>;</code></pre>
+
+
+        </section>
+
+        <section class="content-section">
+            <h2>🏗️ Types of Views</h2>
+            
+            <h3>1️⃣ Simple Views</h3>
+            <p>Based on a single table with basic filtering or column selection.</p>
+            <pre><code><span style="color: #888;">-- Example: Active users view</span>
+<span style="color: #ff6b6b;">CREATE VIEW</span> <span style="color: #ffd700;">active_users</span> <span style="color: #ff6b6b;">AS</span>
+<span style="color: #ff6b6b;">SELECT</span> <span style="color: #ffd700;">user_id, username, email, created_at</span>
+<span style="color: #ff6b6b;">FROM</span> <span style="color: #00ffff;">users</span>
+<span style="color: #ff6b6b;">WHERE</span> <span style="color: #ffd700;">status</span> = <span style="color: #98fb98;">'active'</span>;</code></pre>
+
+            <h3>2️⃣ Complex Views</h3>
+            <p>Involve multiple tables, joins, aggregations, or subqueries.</p>
+            <pre><code><span style="color: #888;">-- Example: User order summary</span>
+<span style="color: #ff6b6b;">CREATE VIEW</span> <span style="color: #ffd700;">user_order_summary</span> <span style="color: #ff6b6b;">AS</span>
+<span style="color: #ff6b6b;">SELECT</span> 
+    <span style="color: #ffd700;">u.user_id</span>,
+    <span style="color: #ffd700;">u.username</span>,
+    <span style="color: #ffd700;">COUNT(o.order_id)</span> <span style="color: #ff6b6b;">AS</span> <span style="color: #ffd700;">total_orders</span>,
+    <span style="color: #ffd700;">SUM(o.total_amount)</span> <span style="color: #ff6b6b;">AS</span> <span style="color: #ffd700;">total_spent</span>,
+    <span style="color: #ffd700;">AVG(o.total_amount)</span> <span style="color: #ff6b6b;">AS</span> <span style="color: #ffd700;">avg_order_value</span>
+<span style="color: #ff6b6b;">FROM</span> <span style="color: #00ffff;">users</span> <span style="color: #ffd700;">u</span>
+<span style="color: #ff6b6b;">LEFT JOIN</span> <span style="color: #00ffff;">orders</span> <span style="color: #ffd700;">o</span> <span style="color: #ff6b6b;">ON</span> <span style="color: #ffd700;">u.user_id = o.user_id</span>
+<span style="color: #ff6b6b;">GROUP BY</span> <span style="color: #ffd700;">u.user_id, u.username</span>;</code></pre>
+
+            <h3>3️⃣ Materialized Views</h3>
+            <div class="info-box">
+                <p><strong>Note:</strong> MySQL doesn't support materialized views natively, but other databases like PostgreSQL and Oracle do. Materialized views store the result physically and need to be refreshed periodically.</p>
+            </div>
+
+            <h3>4️⃣ Updatable Views</h3>
+            <p>Views that allow INSERT, UPDATE, and DELETE operations under certain conditions.</p>
+            <div class="warning-box">
+                <h4>⚠️ Updatable View Requirements:</h4>
+                <ul>
+                    <li>🎯 Based on a single table</li>
+                    <li>🚫 No aggregate functions (COUNT, SUM, AVG, etc.)</li>
+                    <li>🚫 No DISTINCT clause</li>
+                    <li>🚫 No GROUP BY or HAVING clauses</li>
+                    <li>🚫 No subqueries in SELECT list</li>
+                    <li>🔑 Must include all NOT NULL columns without default values</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>🛠️ View Management</h2>
+            
+            <h3>📋 Show Views</h3>
+            <pre><code><span style="color: #888;">-- List all views in current database</span>
+<span style="color: #ff6b6b;">SHOW FULL TABLES WHERE</span> <span style="color: #ffd700;">Table_type</span> = <span style="color: #98fb98;">'VIEW'</span>;
+
+<span style="color: #888;">-- Show view definition</span>
+<span style="color: #ff6b6b;">SHOW CREATE VIEW</span> <span style="color: #ffd700;">view_name</span>;</code></pre>
+
+            <h3>🔄 Modify Views</h3>
+            <pre><code><span style="color: #888;">-- Replace existing view</span>
+<span style="color: #ff6b6b;">CREATE OR REPLACE VIEW</span> <span style="color: #ffd700;">active_users</span> <span style="color: #ff6b6b;">AS</span>
+<span style="color: #ff6b6b;">SELECT</span> <span style="color: #ffd700;">user_id, username, email, last_login</span>
+<span style="color: #ff6b6b;">FROM</span> <span style="color: #00ffff;">users</span>
+<span style="color: #ff6b6b;">WHERE</span> <span style="color: #ffd700;">status</span> = <span style="color: #98fb98;">'active'</span> <span style="color: #ff6b6b;">AND</span> <span style="color: #ffd700;">last_login</span> >= <span style="color: #ffd700;">DATE_SUB(NOW(), INTERVAL 30 DAY)</span>;
+
+<span style="color: #888;">-- Alternative: ALTER VIEW (MySQL 5.7.6+)</span>
+<span style="color: #ff6b6b;">ALTER VIEW</span> <span style="color: #ffd700;">active_users</span> <span style="color: #ff6b6b;">AS</span>
+<span style="color: #ff6b6b;">SELECT</span> <span style="color: #ffd700;">user_id, username, email, created_at</span>
+<span style="color: #ff6b6b;">FROM</span> <span style="color: #00ffff;">users</span>
+<span style="color: #ff6b6b;">WHERE</span> <span style="color: #ffd700;">status</span> = <span style="color: #98fb98;">'active'</span>;</code></pre>
+
+            <h3>🗑️ Drop Views</h3>
+            <pre><code><span style="color: #888;">-- Drop single view</span>
+<span style="color: #ff6b6b;">DROP VIEW</span> <span style="color: #ffd700;">view_name</span>;
+
+<span style="color: #888;">-- Drop multiple views</span>
+<span style="color: #ff6b6b;">DROP VIEW</span> <span style="color: #ffd700;">view1, view2, view3</span>;
+
+<span style="color: #888;">-- Drop view if exists (safe)</span>
+<span style="color: #ff6b6b;">DROP VIEW IF EXISTS</span> <span style="color: #ffd700;">view_name</span>;</code></pre>
+
+            <h3>🔧 View Management Demo</h3>
+            <button class="neon-button" onclick="showViewManagement()">🛠️ Show Management Examples</button>
+            <div id="viewManagementOutput"></div>
+        </section>
+
+        <section class="content-section">
+            <h2>🌟 Real-World View Examples</h2>
+            
+            <h3>👥 User Management System</h3>
+            <pre><code><span style="color: #888;">-- Base tables</span>
+<span style="color: #ff6b6b;">CREATE TABLE</span> <span style="color: #00ffff;">users</span> (
+    <span style="color: #ffd700;">user_id</span> <span style="color: #ff6b6b;">INT PRIMARY KEY AUTO_INCREMENT</span>,
+    <span style="color: #ffd700;">username</span> <span style="color: #ff6b6b;">VARCHAR(50) UNIQUE NOT NULL</span>,
+    <span style="color: #ffd700;">email</span> <span style="color: #ff6b6b;">VARCHAR(100) UNIQUE NOT NULL</span>,
+    <span style="color: #ffd700;">password_hash</span> <span style="color: #ff6b6b;">VARCHAR(255) NOT NULL</span>,
+    <span style="color: #ffd700;">first_name</span> <span style="color: #ff6b6b;">VARCHAR(50)</span>,
+    <span style="color: #ffd700;">last_name</span> <span style="color: #ff6b6b;">VARCHAR(50)</span>,
+    <span style="color: #ffd700;">status</span> <span style="color: #ff6b6b;">ENUM('active', 'inactive', 'suspended') DEFAULT 'active'</span>,
+    <span style="color: #ffd700;">created_at</span> <span style="color: #ff6b6b;">TIMESTAMP DEFAULT CURRENT_TIMESTAMP</span>,
+    <span style="color: #ffd700;">last_login</span> <span style="color: #ff6b6b;">TIMESTAMP NULL</span>
+);
+
+<span style="color: #888;">-- Security view (hide sensitive data)</span>
+<span style="color: #ff6b6b;">CREATE VIEW</span> <span style="color: #ffd700;">public_users</span> <span style="color: #ff6b6b;">AS</span>
+<span style="color: #ff6b6b;">SELECT</span> 
+    <span style="color: #ffd700;">user_id</span>,
+    <span style="color: #ffd700;">username</span>,
+    <span style="color: #ffd700;">first_name</span>,
+    <span style="color: #ffd700;">last_name</span>,
+    <span style="color: #ffd700;">status</span>,
+    <span style="color: #ffd700;">created_at</span>
+<span style="color: #ff6b6b;">FROM</span> <span style="color: #00ffff;">users</span>;
+
+<span style="color: #888;">-- Admin dashboard view</span>
+<span style="color: #ff6b6b;">CREATE VIEW</span> <span style="color: #ffd700;">user_stats</span> <span style="color: #ff6b6b;">AS</span>
+<span style="color: #ff6b6b;">SELECT</span>
+    <span style="color: #ffd700;">status</span>,
+    <span style="color: #ffd700;">COUNT(*)</span> <span style="color: #ff6b6b;">AS</span> <span style="color: #ffd700;">user_count</span>,
+    <span style="color: #ffd700;">ROUND(COUNT(*) * 100.0 / (SELECT COUNT(*) FROM users), 2)</span> <span style="color: #ff6b6b;">AS</span> <span style="color: #ffd700;">percentage</span>
+<span style="color: #ff6b6b;">FROM</span> <span style="color: #00ffff;">users</span>
+<span style="color: #ff6b6b;">GROUP BY</span> <span style="color: #ffd700;">status</span>;</code></pre>
+
+            <h3>🛒 E-commerce Analytics</h3>
+            <pre><code><span style="color: #888;">-- Product performance view</span>
+<span style="color: #ff6b6b;">CREATE VIEW</span> <span style="color: #ffd700;">product_performance</span> <span style="color: #ff6b6b;">AS</span>
+<span style="color: #ff6b6b;">SELECT</span>
+    <span style="color: #ffd700;">p.product_id</span>,
+    <span style="color: #ffd700;">p.name</span>,
+    <span style="color: #ffd700;">p.price</span>,
+    <span style="color: #ffd700;">COUNT(oi.order_item_id)</span> <span style="color: #ff6b6b;">AS</span> <span style="color: #ffd700;">times_ordered</span>,
+    <span style="color: #ffd700;">SUM(oi.quantity)</span> <span style="color: #ff6b6b;">AS</span> <span style="color: #ffd700;">total_quantity_sold</span>,
+    <span style="color: #ffd700;">SUM(oi.quantity * oi.price)</span> <span style="color: #ff6b6b;">AS</span> <span style="color: #ffd700;">total_revenue</span>,
+    <span style="color: #ffd700;">AVG(oi.quantity)</span> <span style="color: #ff6b6b;">AS</span> <span style="color: #ffd700;">avg_quantity_per_order</span>
+<span style="color: #ff6b6b;">FROM</span> <span style="color: #00ffff;">products</span> <span style="color: #ffd700;">p</span>
+<span style="color: #ff6b6b;">LEFT JOIN</span> <span style="color: #00ffff;">order_items</span> <span style="color: #ffd700;">oi</span> <span style="color: #ff6b6b;">ON</span> <span style="color: #ffd700;">p.product_id = oi.product_id</span>
+<span style="color: #ff6b6b;">GROUP BY</span> <span style="color: #ffd700;">p.product_id, p.name, p.price</span>;
+
+<span style="color: #888;">-- Monthly sales summary</span>
+<span style="color: #ff6b6b;">CREATE VIEW</span> <span style="color: #ffd700;">monthly_sales</span> <span style="color: #ff6b6b;">AS</span>
+<span style="color: #ff6b6b;">SELECT</span>
+    <span style="color: #ffd700;">YEAR(order_date)</span> <span style="color: #ff6b6b;">AS</span> <span style="color: #ffd700;">year</span>,
+    <span style="color: #ffd700;">MONTH(order_date)</span> <span style="color: #ff6b6b;">AS</span> <span style="color: #ffd700;">month</span>,
+    <span style="color: #ffd700;">MONTHNAME(order_date)</span> <span style="color: #ff6b6b;">AS</span> <span style="color: #ffd700;">month_name</span>,
+    <span style="color: #ffd700;">COUNT(*)</span> <span style="color: #ff6b6b;">AS</span> <span style="color: #ffd700;">total_orders</span>,
+    <span style="color: #ffd700;">SUM(total_amount)</span> <span style="color: #ff6b6b;">AS</span> <span style="color: #ffd700;">total_revenue</span>,
+    <span style="color: #ffd700;">AVG(total_amount)</span> <span style="color: #ff6b6b;">AS</span> <span style="color: #ffd700;">avg_order_value</span>,
+    <span style="color: #ffd700;">COUNT(DISTINCT user_id)</span> <span style="color: #ff6b6b;">AS</span> <span style="color: #ffd700;">unique_customers</span>
+<span style="color: #ff6b6b;">FROM</span> <span style="color: #00ffff;">orders</span>
+<span style="color: #ff6b6b;">WHERE</span> <span style="color: #ffd700;">status</span> = <span style="color: #98fb98;">'completed'</span>
+<span style="color: #ff6b6b;">GROUP BY</span> <span style="color: #ffd700;">YEAR(order_date), MONTH(order_date)</span>
+<span style="color: #ff6b6b;">ORDER BY</span> <span style="color: #ffd700;">year DESC, month DESC</span>;</code></pre>
+
+            <h3>🏦 Banking System</h3>
+            <pre><code><span style="color: #888;">-- Account balance view</span>
+<span style="color: #ff6b6b;">CREATE VIEW</span> <span style="color: #ffd700;">account_balances</span> <span style="color: #ff6b6b;">AS</span>
+<span style="color: #ff6b6b;">SELECT</span>
+    <span style="color: #ffd700;">a.account_id</span>,
+    <span style="color: #ffd700;">a.account_number</span>,
+    <span style="color: #ffd700;">a.account_type</span>,
+    <span style="color: #ffd700;">c.customer_name</span>,
+    <span style="color: #ffd700;">a.initial_balance</span> + <span style="color: #ffd700;">COALESCE(SUM(t.amount), 0)</span> <span style="color: #ff6b6b;">AS</span> <span style="color: #ffd700;">current_balance</span>,
+    <span style="color: #ffd700;">COUNT(t.transaction_id)</span> <span style="color: #ff6b6b;">AS</span> <span style="color: #ffd700;">transaction_count</span>,
+    <span style="color: #ffd700;">MAX(t.transaction_date)</span> <span style="color: #ff6b6b;">AS</span> <span style="color: #ffd700;">last_transaction</span>
+<span style="color: #ff6b6b;">FROM</span> <span style="color: #00ffff;">accounts</span> <span style="color: #ffd700;">a</span>
+<span style="color: #ff6b6b;">JOIN</span> <span style="color: #00ffff;">customers</span> <span style="color: #ffd700;">c</span> <span style="color: #ff6b6b;">ON</span> <span style="color: #ffd700;">a.customer_id = c.customer_id</span>
+<span style="color: #ff6b6b;">LEFT JOIN</span> <span style="color: #00ffff;">transactions</span> <span style="color: #ffd700;">t</span> <span style="color: #ff6b6b;">ON</span> <span style="color: #ffd700;">a.account_id = t.account_id</span>
+<span style="color: #ff6b6b;">GROUP BY</span> <span style="color: #ffd700;">a.account_id, a.account_number, a.account_type, c.customer_name, a.initial_balance</span>;</code></pre>
+        </section>
+
+        <section class="content-section">
+            <h2>⚡ Performance Considerations</h2>
+            
+            <h3>📊 View Performance Analysis</h3>
+            <div class="mock-table">
+                <p>🎯 Click below to see performance considerations for different view types:</p>
+                <button class="neon-button" onclick="displayMockTable('viewPerformance')">⚡ View Performance Table</button>
+                <div class="query-output" id="mockTableOutput"></div>
+            </div>
+
+            <div class="warning-box">
+                <h4>⚠️ Performance Tips:</h4>
+                <ul>
+                    <li>🎯 <strong>Index base tables</strong> - Views inherit performance from underlying tables</li>
+                    <li>🔍 <strong>Use EXPLAIN</strong> - Analyze view query execution plans</li>
+                    <li>📊 <strong>Limit data</strong> - Add WHERE clauses to reduce result sets</li>
+                    <li>🚫 <strong>Avoid SELECT *</strong> - Only select needed columns</li>
+                    <li>🔄 <strong>Consider caching</strong> - For frequently accessed complex views</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>🛡️ Security Benefits</h2>
+            
+            <h3>🔒 Data Access Control</h3>
+            <div class="success-box">
+                <h4>✅ Security Advantages:</h4>
+                <ul>
+                    <li>🎭 <strong>Hide sensitive columns</strong> - Exclude passwords, SSNs, etc.</li>
+                    <li>🔍 <strong>Row-level filtering</strong> - Show only relevant data to users</li>
+                    <li>🛡️ <strong>Abstraction layer</strong> - Users don't need direct table access</li>
+                    <li>📊 <strong>Simplified permissions</strong> - Grant access to views, not tables</li>
+                    <li>🔄 <strong>Audit trail</strong> - Track access through views</li>
+                </ul>
+            </div>
+
+            <h3>🎯 Security Example</h3>
+            <pre><code><span style="color: #888;">-- Sensitive user table</span>
+<span style="color: #ff6b6b;">CREATE TABLE</span> <span style="color: #00ffff;">employees</span> (
+    <span style="color: #ffd700;">employee_id</span> <span style="color: #ff6b6b;">INT PRIMARY KEY</span>,
+    <span style="color: #ffd700;">name</span> <span style="color: #ff6b6b;">VARCHAR(100)</span>,
+    <span style="color: #ffd700;">email</span> <span style="color: #ff6b6b;">VARCHAR(100)</span>,
+    <span style="color: #ffd700;">salary</span> <span style="color: #ff6b6b;">DECIMAL(10,2)</span>,        <span style="color: #888;">-- 🔒 Sensitive</span>
+    <span style="color: #ffd700;">ssn</span> <span style="color: #ff6b6b;">VARCHAR(11)</span>,            <span style="color: #888;">-- 🔒 Sensitive</span>
+    <span style="color: #ffd700;">department</span> <span style="color: #ff6b6b;">VARCHAR(50)</span>,
+    <span style="color: #ffd700;">hire_date</span> <span style="color: #ff6b6b;">DATE</span>
+);
+
+<span style="color: #888;">-- Public directory view (hide sensitive data)</span>
+<span style="color: #ff6b6b;">CREATE VIEW</span> <span style="color: #ffd700;">employee_directory</span> <span style="color: #ff6b6b;">AS</span>
+<span style="color: #ff6b6b;">SELECT</span>
+    <span style="color: #ffd700;">employee_id</span>,
+    <span style="color: #ffd700;">name</span>,
+    <span style="color: #ffd700;">email</span>,
+    <span style="color: #ffd700;">department</span>
+<span style="color: #ff6b6b;">FROM</span> <span style="color: #00ffff;">employees</span>;
+
+<span style="color: #888;">-- Manager view (department-specific access)</span>
+<span style="color: #ff6b6b;">CREATE VIEW</span> <span style="color: #ffd700;">hr_employee_view</span> <span style="color: #ff6b6b;">AS</span>
+<span style="color: #ff6b6b;">SELECT</span>
+    <span style="color: #ffd700;">employee_id</span>,
+    <span style="color: #ffd700;">name</span>,
+    <span style="color: #ffd700;">email</span>,
+    <span style="color: #ffd700;">department</span>,
+    <span style="color: #ffd700;">hire_date</span>,
+    <span style="color: #ffd700;">salary</span>                    <span style="color: #888;">-- 🔓 Visible to HR only</span>
+<span style="color: #ff6b6b;">FROM</span> <span style="color: #00ffff;">employees</span>
+<span style="color: #ff6b6b;">WHERE</span> <span style="color: #ffd700;">department</span> = <span style="color: #98fb98;">'Human Resources'</span>;</code></pre>
+        </section>
+
+        <section class="content-section">
+            <h2>⚠️ View Best Practices</h2>
+            
+            <div style="background: rgba(40, 167, 69, 0.2); border: 2px solid #28a745; border-radius: 8px; padding: 15px; margin: 15px 0;">
+                <h4 style="color: #28a745; margin-top: 0;">✅ Do's</h4>
+                <ul style="color: #d4edda;">
+                    <li>📝 <strong>Use descriptive names</strong> - Clear, meaningful view names</li>
+                    <li>📚 <strong>Document purpose</strong> - Add comments explaining view usage</li>
+                    <li>🎯 <strong>Keep it simple</strong> - Avoid overly complex logic</li>
+                    <li>🔍 <strong>Index base tables</strong> - Ensure underlying tables are optimized</li>
+                    <li>🛡️ <strong>Use for security</strong> - Hide sensitive data effectively</li>
+                    <li>🔄 <strong>Version control</strong> - Track view changes in your schema</li>
+                </ul>
+            </div>
+
+            <div style="background: rgba(220, 53, 69, 0.2); border: 2px solid #dc3545; border-radius: 8px; padding: 15px; margin: 15px 0;">
+                <h4 style="color: #dc3545; margin-top: 0;">❌ Don'ts</h4>
+                <ul style="color: #f8d7da;">
+                    <li>🚫 <strong>Don't nest too deeply</strong> - Avoid views based on views based on views</li>
+                    <li>📊 <strong>Don't over-aggregate</strong> - Complex calculations can be slow</li>
+                    <li>🔄 <strong>Don't ignore updates</strong> - Keep views current with schema changes</li>
+                    <li>🎯 <strong>Don't use for everything</strong> - Sometimes direct table access is better</li>
+                    <li>💾 <strong>Don't forget dependencies</strong> - Views depend on underlying tables</li>
+                    <li>🔍 <strong>Don't skip testing</strong> - Test view performance with real data</li>
+                </ul>
+            </div>
+
+            <h3>💡 Helpful Tips</h3>
+            <ul>
+                <li>🔍 Use <code>SHOW CREATE VIEW view_name;</code> to see view definition</li>
+                <li>📊 <strong>Naming convention</strong> - Use prefixes like 'v_' or suffixes like '_view'</li>
+                <li>🛡️ <strong>Security first</strong> - Always consider what data should be hidden</li>
+                <li>⚡ <strong>Performance testing</strong> - Test views with production-sized data</li>
+                <li>🔄 <strong>Regular maintenance</strong> - Review and update views periodically</li>
+                <li>📚 <strong>Documentation</strong> - Document view purpose and dependencies</li>
+            </ul>
+
+            <h3>🧠 Summary</h3>
+            <ul>
+                <li>🎭 <strong>Views</strong> are virtual tables that simplify complex queries</li>
+                <li>🛡️ <strong>Security layer</strong> - Hide sensitive data and control access</li>
+                <li>🔄 <strong>Dynamic</strong> - Always show current data from base tables</li>
+                <li>⚡ <strong>Performance</strong> - Depends on underlying table optimization</li>
+                <li>🎯 <strong>Abstraction</strong> - Simplify complex business logic</li>
+                <li>🔧 <strong>Management</strong> - Easy to create, modify, and drop</li>
+            </ul>
+
+            <h3>🧪 Practice</h3>
+            <p>📚 Create a view called <code>"customer_summary"</code> that shows customer information with their total orders and total spent.</p>
+            <div class="editor-container">
+                <textarea class="code-editor" id="exerciseInput" placeholder="Write your CREATE VIEW statement here..."></textarea>
+                <button class="neon-button" onclick="validateExercise()">Submit</button>
+                <div id="exerciseFeedback" style="margin-top:15px;"></div>
+            </div>
+
+            <h3>🎯 Quiz</h3>
+            <p><strong>What is the main advantage of using views for security?</strong></p>
+            <div class="quiz">
+                <button onclick="checkAnswer(this,'A')">A) Views make queries run faster</button>
+                <button onclick="checkAnswer(this,'B')">B) Views can hide sensitive columns from users</button>
+                <button onclick="checkAnswer(this,'C')">C) Views automatically backup your data</button>
+                <button onclick="checkAnswer(this,'D')">D) Views reduce storage space</button>
+                <p class="quiz-feedback"></p>
+                <div id="quizExplanation" class="quiz-explanation" style="display:none;"></div>
+            </div>
+        </section>
+    </div>
+
+    <div id="footer"></div>
+
+    <script>
+        function runViewDemo() {
+            const textarea = document.querySelector('.code-editor');
+            const output = document.querySelector('.query-output');
+            const query = textarea.value.trim().toLowerCase();
+            
+            if (query.includes('create view') || query.includes('create or replace view')) {
+                const viewName = query.match(/view\s+(\w+)/)?.[1] || 'new_view';
+                const hasJoin = query.includes('join');
+                const hasAggregate = query.includes('count') || query.includes('sum') || query.includes('avg');
+                const hasWhere = query.includes('where');
+                
+                output.innerHTML = `
+                    <div style='background: rgba(40, 167, 69, 0.2); border: 1px solid #28a745; border-radius: 8px; padding: 15px;'>
+                        <p style='color: #28a745; margin: 0;'>✅ <strong>View "${viewName}" created successfully!</strong></p>
+                        <p style='color: #d4edda; margin: 8px 0 0 0;'>🎯 <strong>View Features:</strong></p>
+                        <ul style='color: #d4edda; margin: 5px 0 0 20px;'>
+                            <li>🎭 Virtual table created - no physical storage used</li>
+                            <li>🔄 Dynamic data - always shows current information</li>
+                            ${hasJoin ? '<li>🔗 Includes table joins for comprehensive data</li>' : ''}
+                            ${hasAggregate ? '<li>📊 Contains aggregated calculations</li>' : ''}
+                            ${hasWhere ? '<li>🔍 Filtered data based on conditions</li>' : ''}
+                            <li>🛡️ Can be used to control data access</li>
+                        </ul>
+                        <p style='color: #a0a0a0; margin: 8px 0 0 0; font-size: 0.8em;'>💡 You can now query this view like a regular table!</p>
+                    </div>
+                `;
+            } else if (query.includes('select') && query.includes('from')) {
+                const hasView = query.includes('_view') || query.includes('v_');
+                output.innerHTML = `
+                    <div style='background: rgba(0, 123, 255, 0.2); border: 1px solid #007bff; border-radius: 8px; padding: 15px;'>
+                        <p style='color: #007bff; margin: 0;'>📊 <strong>Query executed successfully!</strong></p>
+                        <p style='color: #b3d7ff; margin: 8px 0 0 0;'>🔍 <strong>Results:</strong></p>
+                        <ul style='color: #b3d7ff; margin: 5px 0 0 20px;'>
+                            ${hasView ? '<li>🎭 Querying from view - data abstraction in action</li>' : '<li>📋 Querying from table - direct data access</li>'}
+                            <li>⚡ Results reflect current state of underlying data</li>
+                            <li>🛡️ Only authorized columns and rows returned</li>
+                        </ul>
+                    </div>
+                `;
+            } else {
+                output.innerHTML = `<p style='color: red;'>❌ Invalid query. Try using CREATE VIEW or SELECT statements.</p>`;
+            }
+        }
+        
+        function showViewManagement() {
+            const output = document.getElementById('viewManagementOutput');
+            const examples = [
+                {
+                    title: '📋 List All Views',
+                    sql: 'SHOW FULL TABLES WHERE Table_type = "VIEW";',
+                    description: 'Shows all views in the current database',
+                    result: 'Displays view names and types'
+                },
+                {
+                    title: '🔍 View Definition',
+                    sql: 'SHOW CREATE VIEW user_summary;',
+                    description: 'Shows the SQL statement that creates the view',
+                    result: 'Displays complete CREATE VIEW statement'
+                },
+                {
+                    title: '🔄 Replace View',
+                    sql: 'CREATE OR REPLACE VIEW active_users AS SELECT * FROM users WHERE status = "active";',
+                    description: 'Updates existing view or creates new one',
+                    result: 'View is updated with new definition'
+                },
+                {
+                    title: '🗑️ Drop View',
+                    sql: 'DROP VIEW IF EXISTS old_view;',
+                    description: 'Safely removes a view from the database',
+                    result: 'View is deleted, underlying tables unaffected'
+                },
+                {
+                    title: '📊 View Information',
+                    sql: 'SELECT * FROM information_schema.views WHERE table_schema = DATABASE();',
+                    description: 'Gets detailed information about all views',
+                    result: 'Shows view metadata and definitions'
+                }
+            ];
+            
+            let html = '<div style="background: rgba(26, 32, 44, 0.8); border: 1px solid #4a5568; border-radius: 8px; padding: 15px; margin-top: 10px;">';
+            html += '<h4 style="color: #dc3545; margin-top: 0;">🛠️ View Management Examples</h4>';
+            
+            examples.forEach((example, index) => {
+                html += `
+                    <div style="margin-bottom: 15px; padding: 10px; background: rgba(45, 55, 72, 0.6); border-radius: 6px;">
+                        <h5 style="color: #ffd700; margin: 0 0 8px 0;">${example.title}</h5>
+                        <pre style="background: rgba(0, 0, 0, 0.4); padding: 8px; border-radius: 4px; margin: 5px 0; overflow-x: auto; white-space: pre-wrap;"><code style="color: #e2e8f0;">${example.sql}</code></pre>
+                        <p style="color: #a0aec0; margin: 5px 0; font-size: 0.9em;">${example.description}</p>
+                        <p style="color: #68d391; margin: 0; font-size: 0.8em; font-weight: bold;">📈 Result: ${example.result}</p>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            output.innerHTML = html;
+        }
+        
+        function validateExercise() {
+            const sql = document.getElementById("exerciseInput").value.trim().toLowerCase();
+            const feedback = document.getElementById("exerciseFeedback");
+            
+            if (sql.includes("create view") && sql.includes("customer_summary") && 
+                sql.includes("join") && (sql.includes("count") || sql.includes("sum"))) {
+                feedback.style.color = "lightgreen";
+                feedback.textContent = "✅ Excellent! You created a comprehensive customer summary view with joins and aggregations.";
+            } else if (sql.includes("create view") && sql.includes("customer_summary") && sql.includes("join")) {
+                feedback.style.color = "orange";
+                feedback.textContent = "⚠️ Good! Add aggregations like COUNT(orders) and SUM(total_amount) for a complete summary.";
+            } else if (sql.includes("create view") && sql.includes("customer_summary")) {
+                feedback.style.color = "orange";
+                feedback.textContent = "⚠️ Good start! Include JOINs with orders table and aggregations for total orders and spending.";
+            } else {
+                feedback.style.color = "red";
+                feedback.textContent = "❌ Try: CREATE VIEW customer_summary AS SELECT c.*, COUNT(o.order_id), SUM(o.total) FROM customers c LEFT JOIN orders o ON c.id = o.customer_id GROUP BY c.id;";
+            }
+        }
+        
+        function checkAnswer(btn, opt) {
+            const fb = btn.parentElement.querySelector('.quiz-feedback');
+            const exp = document.getElementById('quizExplanation');
+            const buttons = btn.parentElement.querySelectorAll('button');
+            
+            // Disable all buttons after selection
+            buttons.forEach(b => b.disabled = true);
+            
+            if (opt === 'B') {
+                fb.style.color = 'lightgreen';
+                fb.textContent = '✅ Correct! Views can hide sensitive columns and provide controlled access to data.';
+                btn.style.backgroundColor = '#28a745';
+                exp.innerHTML = `
+                    <p><strong>🎯 Explanation:</strong></p>
+                    <ul>
+                        <li>🛡️ <strong>Data Security</strong> - Views can exclude sensitive columns like passwords, SSNs, salaries.</li>
+                        <li>🔍 <strong>Row-level filtering</strong> - Show only relevant data to specific users.</li>
+                        <li>🎭 <strong>Abstraction layer</strong> - Users access views instead of direct tables.</li>
+                        <li>📊 <strong>Simplified permissions</strong> - Grant access to views rather than underlying tables.</li>
+                    </ul>
+                `;
+            } else {
+                fb.style.color = 'red';
+                fb.textContent = '❌ Incorrect. The correct answer is B.';
+                btn.style.backgroundColor = '#dc3545';
+                // Highlight correct answer
+                buttons[1].style.backgroundColor = '#28a745';
+                exp.innerHTML = `
+                    <p><strong>❌ Explanation:</strong></p>
+                    <ul>
+                        <li>🚫 Views don't improve performance - they depend on underlying table optimization.</li>
+                        <li>💾 Views don't backup data - they're virtual tables with no physical storage.</li>
+                        <li>📦 Views don't reduce storage - they don't store data themselves.</li>
+                        <li>🛡️ The main security benefit is hiding sensitive columns and controlling data access.</li>
+                    </ul>
+                `;
+            }
+            exp.style.display = 'block';
+            exp.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // Bookmark functionality
+        const lessonId = "VIEWS";
+        const bookmarkBtn = document.getElementById("bookmarkBtn");
+        const unbookmarkBtn = document.getElementById("unbookmarkBtn");
+        const statusText = document.getElementById("bookmarkStatus");
+
+        function checkBookmarkStatus(retries = 3) {
+            fetch(`http://localhost:5000/bookmark-status?lessonId=${lessonId}`, {
+                credentials: 'include',
+                headers: { "Content-Type": "application/json" }
+            })
+            .then(res => {
+                if (!res.ok) throw new Error('Network response was not ok');
+                return res.json();
+            })
+            .then(data => {
+                if (data.bookmarked) {
+                    bookmarkBtn.style.display = "none";
+                    unbookmarkBtn.style.display = "inline-block";
+                    statusText.textContent = "📌 Bookmarked";
+                } else {
+                    bookmarkBtn.style.display = "inline-block";
+                    unbookmarkBtn.style.display = "none";
+                    statusText.textContent = "";
+                }
+            })
+            .catch(error => {
+                console.error('Error checking bookmark status:', error);
+                if (retries > 0) {
+                    setTimeout(() => checkBookmarkStatus(retries - 1), 1000);
+                }
+            });
+        }
+
+        bookmarkBtn.addEventListener("click", () => {
+            fetch("http://localhost:5000/bookmark", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({ lessonId: lessonId, bookmarked: true })
+            })
+            .then(res => res.json())
+            .then(() => checkBookmarkStatus());
+        });
+
+        unbookmarkBtn.addEventListener("click", () => {
+            fetch("http://localhost:5000/bookmark", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({ lessonId: lessonId, bookmarked: false })
+            })
+            .then(res => res.json())
+            .then(() => checkBookmarkStatus());
+        });
+
+        checkBookmarkStatus();
+    </script>
+</body>
+</html>

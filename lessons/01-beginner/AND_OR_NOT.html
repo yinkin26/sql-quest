@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en" class="pixel-art dark-theme">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SQL Quest - SQL AND / OR / NOT</title>
+    <link rel="stylesheet" href="../../stylesheets/style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <script src="../../javascripts/loadComponents.js" defer></script>
+    <script src="../../javascripts/script.js" defer></script>
+    <script src="../../javascripts/lessonTracker.js" defer></script>
+
+</head>
+<body class="pixel-art dark-theme">
+    <div id="header"></div>
+    <div class="lesson-layout">
+        <div id="sidebar"></div>
+
+        <section class="lesson-content">
+            <h2>⚖️ SQL AND / OR / NOT</h2>
+
+            <!-- Add bookmark buttons -->
+            <div class="bookmark-container">
+                <button id="bookmarkBtn" style="display: none;">🔖 Bookmark</button>
+                <button id="unbookmarkBtn" style="display: none;">❌ Remove Bookmark</button>
+                <span id="bookmarkStatus"></span>
+            </div>
+
+            <h3>📌 What Are Logical Operators?</h3>
+            <p>SQL uses logical operators to combine or negate conditions in a <code class="tooltip" title="Used to filter data based on conditions">WHERE</code> clause. These include <code>AND</code>, <code>OR</code>, and <code>NOT</code>.</p>
+
+            <h3>🧠 Syntax</h3>
+            <pre><code>SELECT column1, column2 FROM table_name
+WHERE condition1 AND condition2;
+
+SELECT * FROM table_name
+WHERE condition1 OR condition2;
+
+SELECT * FROM table_name
+WHERE NOT condition;</code></pre>
+
+            <h3>💡 Example: AND</h3>
+            <div class="code-block">
+                <textarea class="code-editor">SELECT * FROM customers WHERE city = 'Tokyo' AND country = 'Japan';</textarea>
+                <button class="neon-button run-btn">Run</button>
+                <div class="query-output"></div>
+            </div>
+
+            <h3>💡 Example: OR</h3>
+            <div class="code-block">
+                <textarea class="code-editor">SELECT * FROM customers WHERE city = 'Tokyo' OR city = 'Osaka';</textarea>
+                <button class="neon-button run-btn">Run</button>
+                <div class="query-output"></div>
+            </div>
+
+            <h3>💡 Example: NOT</h3>
+            <div class="code-block">
+                <textarea class="code-editor">SELECT * FROM customers WHERE NOT city = 'Tokyo';</textarea>
+                <button class="neon-button run-btn">Run</button>
+                <div class="query-output"></div>
+            </div>
+
+            <h3>🧪 Try It Yourself</h3>
+            <div class="code-block">
+                <textarea class="code-editor">SELECT name FROM customers WHERE city = 'London' OR city = 'Paris';</textarea>
+                <button class="neon-button run-btn">Run</button>
+                <div class="query-output"></div>
+            </div>
+
+            <h3>💬 When to Use These?</h3>
+            <ul>
+                <li><code>AND</code>: All conditions must be true</li>
+                <li><code>OR</code>: At least one condition must be true</li>
+                <li><code>NOT</code>: Reverses the result of the condition</li>
+            </ul>
+
+            <h3>💡 Helpful Tips</h3>
+            <ul>
+                <li>Use parentheses to group conditions for clarity: <code>(condition1 OR condition2) AND condition3</code></li>
+                <li>Logical operators can be mixed but watch out for precedence</li>
+                <li>Combine with <code>IN</code>, <code>BETWEEN</code>, or <code>LIKE</code> for powerful filters</li>
+            </ul>
+
+            <h3>🌍 Real-World Use Case</h3>
+            <p>Imagine you're running a promotion for customers in London or Paris. You want to send emails only to people in those cities. Use this query:</p>
+            <pre><code>SELECT name, email FROM customers
+WHERE city = 'London' OR city = 'Paris';</code></pre>
+            <p>This helps you quickly filter relevant customers for localized offers.</p>
+
+
+
+            <h3>🧪 Practice: Use AND, OR, and NOT</h3>
+            <p>Write a SQL query to select customers from London or Paris who are older than 25.</p>
+            <ul>
+                <li><code>age</code> (INT)</li>
+            </ul>
+            <div class="editor-container">
+                <textarea class="code-editor" id="practiceQuery" placeholder="Write your query here..."></textarea>
+                <button class="neon-button" onclick="validatePracticeQuery()">Submit</button>
+                <div id="practiceFeedback" style="margin-top: 15px;"></div>
+            </div>
+
+            <!-- Mock Table for Displaying After Submit (Filtered Data) -->
+            <div class="mock-table" id="mockTable" style="display:none;">
+                <h4>Preview: What the table would look like when queried:</h4>
+                <h5>After Query (Example Result):</h5>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>name</th>
+                            <th>city</th>
+                            <th>age</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Customer1</td>
+                            <td>London</td>
+                            <td>30</td>
+                        </tr>
+                        <tr>
+                            <td>Customer2</td>
+                            <td>Paris</td>
+                            <td>28</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+
+            <h3>🎯 Quiz</h3>
+            <p><strong>Which query shows customers who are from London or Paris?</strong></p>
+            <div class="quiz">
+                <button onclick="checkAnswer(this, true, 'A')">A) SELECT * FROM customers WHERE city = 'London' OR city = 'Paris';</button>
+                <button onclick="checkAnswer(this, false, 'B')">B) SELECT * FROM customers WHERE city = 'London' AND city = 'Paris';</button>
+                <button onclick="checkAnswer(this, false, 'C')">C) SELECT * FROM customers WHERE NOT city = 'London' OR city = 'Paris';</button>
+                <button onclick="checkAnswer(this, true, 'D')">D) SELECT * FROM customers WHERE city IN ('London', 'Paris');</button>
+                <p class="quiz-feedback"></p>
+                <div id="quizExplanation" class="quiz-explanation" style="display: none;"></div>
+            </div>
+        </section>
+    </div>
+
+    <div id="footer"></div>
+
+    
+    <script>
+        let quizCompleted = false;
+        
+        function checkAnswer(button, isCorrect, option) {
+            // If quiz is already completed, don't allow further clicks
+            if (quizCompleted) {
+                return;
+            }
+
+            const feedback = button.parentElement.querySelector(".quiz-feedback");
+            const explanationBox = document.getElementById("quizExplanation");
+            const quizContainer = button.parentElement;
+
+            feedback.innerHTML = "";
+            explanationBox.style.display = "block";
+
+            if (isCorrect) {
+                // Correct answer - disable all buttons and mark as completed
+                quizCompleted = true;
+                const allButtons = quizContainer.querySelectorAll('button');
+                allButtons.forEach(btn => {
+                    btn.disabled = true;
+                    if (btn === button) {
+                        btn.style.backgroundColor = '#44ff44';
+                        btn.style.boxShadow = '0 0 15px rgba(68, 255, 68, 0.5)';
+                    }
+                });
+                
+                feedback.style.color = "lightgreen";
+                feedback.innerHTML = "✅ Correct! Quiz completed!";
+            } else {
+                // Incorrect answer - disable this button only
+                button.disabled = true;
+                button.style.backgroundColor = '#ff4444';
+                button.style.opacity = '0.6';
+                button.style.cursor = 'not-allowed';
+                
+                feedback.style.color = "red";
+                feedback.innerHTML = "❌ Incorrect. Try another answer!";
+                
+                // Add retry message if not already present
+                let retryMsg = quizContainer.querySelector('.retry-message');
+                if (!retryMsg) {
+                    retryMsg = document.createElement('p');
+                    retryMsg.className = 'retry-message';
+                    retryMsg.style.color = '#ffd700';
+                    retryMsg.style.fontWeight = 'bold';
+                    retryMsg.style.marginTop = '10px';
+                    retryMsg.innerHTML = '💡 Keep trying! Choose another answer.';
+                    feedback.parentNode.insertBefore(retryMsg, feedback.nextSibling);
+                }
+            }
+
+            // Show explanation based on the option
+            switch (option) {
+                case 'A':
+                    explanationBox.innerHTML = `
+                            <p><strong>Explanation:</strong></p>
+                            <ul>
+                              <li><code>OR</code> allows you to match either of the conditions, so it returns rows where the city is either 'London' or 'Paris'.</li>
+                            </ul>`;
+                    break;
+                case 'B':
+                    explanationBox.innerHTML = `
+                            <p><strong>Explanation:</strong></p>
+                            <ul>
+                              <li><code>AND</code> means both conditions must be true. A row cannot have city = 'London' AND city = 'Paris' at the same time.</li>
+                            </ul>`;
+                    break;
+                case 'C':
+                    explanationBox.innerHTML = `
+                            <p><strong>Explanation:</strong></p>
+                            <ul>
+                              <li><code>NOT</code> changes the meaning and could produce confusing results. This will include cities that are not London OR are Paris.</li>
+                            </ul>`;
+                    break;
+                case 'D':
+                    explanationBox.innerHTML = `
+                            <p><strong>Explanation:</strong></p>
+                            <ul>
+                              <li><code>IN</code> allows you to specify a list of values for the condition. The correct syntax is <code>city IN ('London', 'Paris')</code>.</li>
+                            </ul>`;
+                    break;
+            }
+
+            explanationBox.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+
+        function validatePracticeQuery() {
+            const userSQL = document.getElementById("practiceQuery").value.trim().toLowerCase().replace(/\s+/g, " ");
+            const feedback = document.getElementById("practiceFeedback");
+
+            const expected =
+                "select name, city, age from customers where (city = 'london' or city = 'paris') and age > 25;";
+
+            const pattern = /select name,\s*city,\s*age from customers where\s*\(city = '(london|paris)'\s*or\s*city = '(paris|london)'\)\s*and\s*age\s*>\s*25;?/i;
+
+            if (pattern.test(userSQL)) {
+                feedback.style.color = "lightgreen";
+                feedback.innerHTML = "✅ Perfect! Your query is correct.";
+                document.getElementById("mockTable").style.display = "block";
+                document.getElementById("mockTable").scrollIntoView({ behavior: "smooth" });
+            } else {
+                feedback.style.color = "red";
+                feedback.innerHTML = "❌ Incorrect. Make sure you're using the correct syntax with AND, OR, and the proper conditions.";
+            }
+        }
+
+        // Bookmark functionality
+        const lessonId = "AND_OR_NOT";
+        const bookmarkBtn = document.getElementById("bookmarkBtn");
+        const unbookmarkBtn = document.getElementById("unbookmarkBtn");
+        const statusText = document.getElementById("bookmarkStatus");
+
+        // Function to check bookmark status with retry
+        function checkBookmarkStatus(retries = 3) {
+            fetch(`http://localhost:5000/bookmark-status?lessonId=${lessonId}`, {
+                credentials: 'include',
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+                .then(res => {
+                    if (!res.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return res.json();
+                })
+                .then(data => {
+                    if (data.bookmarked) {
+                        bookmarkBtn.style.display = "none";
+                        unbookmarkBtn.style.display = "inline-block";
+                        statusText.textContent = "📌 Bookmarked";
+                    } else {
+                        bookmarkBtn.style.display = "inline-block";
+                        unbookmarkBtn.style.display = "none";
+                        statusText.textContent = "";
+                    }
+                })
+                .catch(error => {
+                    console.error('Error checking bookmark status:', error);
+                    if (retries > 0) {
+                        setTimeout(() => checkBookmarkStatus(retries - 1), 1000);
+                    }
+                });
+        }
+
+        // Add bookmark
+        bookmarkBtn.addEventListener("click", () => {
+            fetch("http://localhost:5000/bookmark", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                    lessonId: lessonId,
+                    bookmarked: true
+                })
+            })
+                .then(res => res.json())
+                .then(() => {
+                    checkBookmarkStatus();
+                });
+        });
+
+        // Remove bookmark
+        unbookmarkBtn.addEventListener("click", () => {
+            fetch("http://localhost:5000/bookmark", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                    lessonId: lessonId,
+                    bookmarked: false
+                })
+            })
+                .then(res => res.json())
+                .then(() => {
+                    checkBookmarkStatus();
+                });
+        });
+
+        // Check initial status when page loads
+        checkBookmarkStatus();
+    </script>
+</body>
+</html>

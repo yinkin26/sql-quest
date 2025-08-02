@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en" class="pixel-art dark-theme">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Quest - SQL CASE Expression</title>
+    <link rel="stylesheet" href="stylesheets/style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <script src="javascripts/loadComponents.js" defer></script>
+    <script src="javascripts/script.js" defer></script>
+    <script src="javascripts/lessonTracker.js" defer></script>
+</head>
+<body class="pixel-art dark-theme">
+    <div id="header"></div>
+    <div class="lesson-layout">
+        <section class="lesson">
+            <div class="lesson-header">
+                <h1>🔀 SQL CASE Expression</h1>
+                <div class="bookmark-container">
+                    <button id="bookmarkBtn" class="bookmark-btn" onclick="toggleBookmark('case_expression')">
+                        <span class="bookmark-icon">🔖</span>
+                        <span class="bookmark-text">Bookmark</span>
+                    </button>
+                    <span id="bookmarkStatus"></span>
+                </div>
+            </div>
+
+            <h3>🤔 What is CASE Expression?</h3>
+            <p>The <strong>CASE</strong> expression is one of the most powerful and versatile tools in SQL, allowing you to implement conditional logic directly within your queries. It functions like an if-then-else statement in programming languages, enabling you to transform data, create calculated fields, and implement complex business logic without requiring multiple queries or external processing.</p>
+            
+            <p><strong>CASE expressions are essential for:</strong></p>
+            <ul>
+                <li><strong>Conditional Data Transformation</strong>: Convert values based on specific conditions</li>
+                <li><strong>Dynamic Categorization</strong>: Create categories and segments from raw data</li>
+                <li><strong>Business Logic Implementation</strong>: Apply complex business rules directly in SQL</li>
+                <li><strong>Data Cleaning and Standardization</strong>: Normalize inconsistent data formats</li>
+                <li><strong>Calculated Fields</strong>: Create computed columns with conditional logic</li>
+                <li><strong>Report Generation</strong>: Format data for presentation and analysis</li>
+                <li><strong>Performance Optimization</strong>: Reduce the need for multiple queries</li>
+                <li><strong>Data Analysis</strong>: Implement statistical and analytical calculations</li>
+            </ul>
+            
+            <p><strong>How CASE Expressions Work:</strong></p>
+            <div class="code-block">
+                <pre><code>-- Simple CASE: Compares an expression to a set of simple expressions
+CASE expression
+    WHEN value1 THEN result1
+    WHEN value2 THEN result2
+    WHEN value3 THEN result3
+    ELSE default_result
+END
+
+-- Searched CASE: Evaluates a set of Boolean expressions
+CASE 
+    WHEN condition1 THEN result1
+    WHEN condition2 THEN result2
+    WHEN condition3 THEN result3
+    ELSE default_result
+END</code></pre>
+            </div>
+            
+            <p><strong>Real-World Applications:</strong></p>
+            <div class="code-block">
+                <pre><code>-- E-commerce: Categorize products by price
+SELECT product_name,
+       CASE 
+           WHEN price < 50 THEN 'Budget'
+           WHEN price BETWEEN 50 AND 200 THEN 'Mid-Range'
+           ELSE 'Premium'
+       END as price_category
+FROM products;
+
+-- HR: Calculate bonus based on performance
+SELECT employee_name,
+       salary,
+       CASE 
+           WHEN performance_rating >= 4.5 THEN salary * 0.15
+           WHEN performance_rating >= 3.5 THEN salary * 0.10
+           WHEN performance_rating >= 2.5 THEN salary * 0.05
+           ELSE 0
+       END as bonus
+FROM employees;</code></pre>
+            </div>
+
+            <h3>📝 Basic Syntax</h3>
+            <div class="code-block">
+                <pre><code>-- Simple CASE Expression
+SELECT column1,
+       CASE column2
+           WHEN 'value1' THEN 'result1'
+           WHEN 'value2' THEN 'result2'
+           WHEN 'value3' THEN 'result3'
+           ELSE 'default_result'
+       END as new_column
+FROM table_name;
+
+-- Searched CASE Expression (more flexible)
+SELECT column1,
+       CASE 
+           WHEN condition1 THEN 'result1'
+           WHEN condition2 THEN 'result2'
+           WHEN condition3 THEN 'result3'
+           ELSE 'default_result'
+       END as new_column
+FROM table_name;
+
+-- CASE in WHERE clause
+SELECT *
+FROM table_name
+WHERE CASE 
+          WHEN column1 > 100 THEN column2
+          ELSE column3
+      END = 'some_value';
+
+-- CASE in ORDER BY clause
+SELECT *
+FROM table_name
+ORDER BY CASE 
+             WHEN priority = 'High' THEN 1
+             WHEN priority = 'Medium' THEN 2
+             WHEN priority = 'Low' THEN 3
+             ELSE 4
+         END;</code></pre>
+            </div>
+            
+            <p><strong>Key Components:</strong></p>
+            <ul>
+                <li><strong>CASE Keyword</strong>: Starts the conditional expression</li>
+                <li><strong>WHEN Clauses</strong>: Define conditions to evaluate</li>
+                <li><strong>THEN Clauses</strong>: Specify results when conditions are true</li>
+                <li><strong>ELSE Clause</strong>: Optional default result when no conditions match</li>
+                <li><strong>END Keyword</strong>: Closes the CASE expression</li>
+            </ul>
+            
+            <p><strong>Important Considerations:</strong></p>
+            <div class="code-block">
+                <pre><code>-- Data type consistency
+-- All THEN and ELSE results must be compatible data types
+CASE 
+    WHEN condition1 THEN 'Text Result'    -- String
+    WHEN condition2 THEN 123              -- Number (will be converted)
+    ELSE 'Default'                        -- String
+END
+
+-- NULL handling
+-- CASE expressions can return NULL
+CASE 
+    WHEN column IS NULL THEN 'No Value'
+    WHEN column = '' THEN 'Empty String'
+    ELSE column
+END
+
+-- Performance considerations
+-- Conditions are evaluated in order (top to bottom)
+-- Place most likely conditions first for better performance
+-- Use indexes on columns referenced in WHEN conditions
+
+-- Nested CASE expressions
+CASE 
+    WHEN condition1 THEN 
+        CASE 
+            WHEN sub_condition1 THEN 'Result A'
+            ELSE 'Result B'
+        END
+    ELSE 'Result C'
+END</code></pre>
+            </div>
+
+            <h3>🧪 Try It Yourself</h3>
+            <div class="code-block">
+                <div class="editor-container">
+                    <div class="editor-header">
+                        <span>SQL Editor</span>
+                        <button onclick="runQuery()" class="run-btn">▶ Run Query</button>
+                    </div>
+                    <textarea id="sqlEditor" placeholder="-- Try writing a CASE expression here\nSELECT name, price,\n       CASE \n           WHEN price < 50 THEN 'Cheap'\n           WHEN price < 100 THEN 'Moderate'\n           ELSE 'Expensive'\n       END as price_category\nFROM products;">SELECT name, price,
+       CASE 
+           WHEN price < 50 THEN 'Cheap'
+           WHEN price < 100 THEN 'Moderate'
+           ELSE 'Expensive'
+       END as price_category
+FROM products;</textarea>
+                </div>
+                <div class="result-container">
+                    <div class="result-header">Query Result</div>
+                    <div id="queryResult" class="result-content">
+                        <p>Click "Run Query" to see results</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3>💡 Examples</h3>
+            
+            <h4>1. E-commerce Product Categorization and Analysis</h4>
+            <div class="code-block">
+                <pre><code>-- Comprehensive product categorization
+SELECT 
+    product_id,
+    product_name,
+    category,
+    price,
+    stock_quantity,
+    CASE 
+        WHEN price < 25 THEN 'Budget'
+        WHEN price BETWEEN 25 AND 100 THEN 'Mid-Range'
+        WHEN price BETWEEN 101 AND 500 THEN 'Premium'
+        ELSE 'Luxury'
+    END as price_tier,
+    CASE 
+        WHEN stock_quantity = 0 THEN 'Out of Stock'
+        WHEN stock_quantity BETWEEN 1 AND 10 THEN 'Low Stock'
+        WHEN stock_quantity BETWEEN 11 AND 50 THEN 'Normal Stock'
+        ELSE 'High Stock'
+    END as stock_status,
+    CASE 
+        WHEN category IN ('Electronics', 'Computers') THEN 'Technology'
+        WHEN category IN ('Clothing', 'Shoes', 'Accessories') THEN 'Fashion'
+        WHEN category IN ('Books', 'Movies', 'Music') THEN 'Entertainment'
+        WHEN category IN ('Home', 'Garden', 'Kitchen') THEN 'Home & Living'
+        ELSE 'Other'
+    END as department
+FROM products
+ORDER BY department, price_tier, stock_status;
+
+-- Dynamic pricing strategy
+SELECT 
+    product_id,
+    product_name,
+    price as original_price,
+    stock_quantity,
+    CASE 
+        WHEN stock_quantity > 100 THEN price * 0.90  -- 10% discount for overstocked
+        WHEN stock_quantity BETWEEN 50 AND 100 THEN price * 0.95  -- 5% discount
+        WHEN stock_quantity BETWEEN 10 AND 49 THEN price  -- Regular price
+        WHEN stock_quantity BETWEEN 1 AND 9 THEN price * 1.05  -- 5% premium for low stock
+        ELSE price * 1.10  -- 10% premium for very low stock
+    END as dynamic_price,
+    CASE 
+        WHEN stock_quantity > 100 THEN 'Clearance Sale'
+        WHEN stock_quantity BETWEEN 50 AND 100 THEN 'Special Offer'
+        WHEN stock_quantity BETWEEN 10 AND 49 THEN 'Regular Price'
+        WHEN stock_quantity BETWEEN 1 AND 9 THEN 'Limited Stock'
+        ELSE 'Almost Sold Out'
+    END as pricing_strategy
+FROM products
+WHERE category NOT IN ('Discontinued')
+ORDER BY stock_quantity ASC;</code></pre>
+            </div>
+            
+            <h4>2. Customer Segmentation and Loyalty Programs</h4>
+            <div class="code-block">
+                <pre><code>-- Customer tier classification
+SELECT 
+    customer_id,
+    CONCAT(first_name, ' ', last_name) as customer_name,
+    total_spent,
+    total_orders,
+    registration_date,
+    CASE 
+        WHEN total_spent >= 10000 THEN 'Platinum'
+        WHEN total_spent >= 5000 THEN 'Gold'
+        WHEN total_spent >= 2000 THEN 'Silver'
+        WHEN total_spent >= 500 THEN 'Bronze'
+        ELSE 'Basic'
+    END as loyalty_tier,
+    CASE 
+        WHEN total_spent >= 10000 THEN 0.20  -- 20% discount
+        WHEN total_spent >= 5000 THEN 0.15   -- 15% discount
+        WHEN total_spent >= 2000 THEN 0.10   -- 10% discount
+        WHEN total_spent >= 500 THEN 0.05    -- 5% discount
+        ELSE 0.00                            -- No discount
+    END as discount_rate,
+    CASE 
+        WHEN total_orders = 0 THEN 'Never Purchased'
+        WHEN total_orders = 1 THEN 'First-Time Buyer'
+        WHEN total_orders BETWEEN 2 AND 5 THEN 'Occasional Buyer'
+        WHEN total_orders BETWEEN 6 AND 15 THEN 'Regular Customer'
+        ELSE 'VIP Customer'
+    END as customer_type,
+    CASE 
+        WHEN DATEDIFF(CURRENT_DATE, registration_date) < 30 THEN 'New Customer'
+        WHEN DATEDIFF(CURRENT_DATE, registration_date) < 365 THEN 'Recent Customer'
+        WHEN DATEDIFF(CURRENT_DATE, registration_date) < 1095 THEN 'Established Customer'
+        ELSE 'Long-term Customer'
+    END as customer_tenure
+FROM customers
+ORDER BY total_spent DESC;
+
+-- Customer engagement analysis
+SELECT 
+    c.customer_id,
+    c.first_name,
+    c.last_name,
+    c.email,
+    COUNT(o.order_id) as total_orders,
+    SUM(o.total_amount) as total_spent,
+    MAX(o.order_date) as last_order_date,
+    CASE 
+        WHEN MAX(o.order_date) >= DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY) THEN 'Active'
+        WHEN MAX(o.order_date) >= DATE_SUB(CURRENT_DATE, INTERVAL 90 DAY) THEN 'Recent'
+        WHEN MAX(o.order_date) >= DATE_SUB(CURRENT_DATE, INTERVAL 180 DAY) THEN 'Inactive'
+        WHEN MAX(o.order_date) >= DATE_SUB(CURRENT_DATE, INTERVAL 365 DAY) THEN 'Dormant'
+        ELSE 'Lost'
+    END as engagement_status,
+    CASE 
+        WHEN COUNT(o.order_id) >= 10 AND MAX(o.order_date) >= DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY) THEN 'Champion'
+        WHEN SUM(o.total_amount) >= 2000 AND MAX(o.order_date) >= DATE_SUB(CURRENT_DATE, INTERVAL 60 DAY) THEN 'Loyal Customer'
+        WHEN COUNT(o.order_id) >= 5 AND MAX(o.order_date) >= DATE_SUB(CURRENT_DATE, INTERVAL 90 DAY) THEN 'Potential Loyalist'
+        WHEN MAX(o.order_date) >= DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY) THEN 'New Customer'
+        WHEN MAX(o.order_date) >= DATE_SUB(CURRENT_DATE, INTERVAL 180 DAY) THEN 'At Risk'
+        ELSE 'Cannot Lose Them'
+    END as customer_segment
+FROM customers c
+LEFT JOIN orders o ON c.customer_id = o.customer_id
+GROUP BY c.customer_id, c.first_name, c.last_name, c.email
+ORDER BY total_spent DESC;</code></pre>
+            </div>
+            
+            <h4>3. Employee Performance and HR Analytics</h4>
+            <div class="code-block">
+                <pre><code>-- Employee performance evaluation
+SELECT 
+    employee_id,
+    CONCAT(first_name, ' ', last_name) as full_name,
+    department,
+    job_title,
+    salary,
+    performance_rating,
+    hire_date,
+    CASE 
+        WHEN performance_rating >= 4.5 THEN 'Outstanding'
+        WHEN performance_rating >= 4.0 THEN 'Exceeds Expectations'
+        WHEN performance_rating >= 3.5 THEN 'Meets Expectations'
+        WHEN performance_rating >= 2.5 THEN 'Below Expectations'
+        ELSE 'Unsatisfactory'
+    END as performance_category,
+    CASE 
+        WHEN performance_rating >= 4.5 THEN salary * 0.15  -- 15% bonus
+        WHEN performance_rating >= 4.0 THEN salary * 0.12  -- 12% bonus
+        WHEN performance_rating >= 3.5 THEN salary * 0.08  -- 8% bonus
+        WHEN performance_rating >= 3.0 THEN salary * 0.05  -- 5% bonus
+        ELSE 0
+    END as annual_bonus,
+    CASE 
+        WHEN DATEDIFF(CURRENT_DATE, hire_date) / 365 < 1 THEN 'New Hire'
+        WHEN DATEDIFF(CURRENT_DATE, hire_date) / 365 < 3 THEN 'Junior'
+        WHEN DATEDIFF(CURRENT_DATE, hire_date) / 365 < 7 THEN 'Experienced'
+        WHEN DATEDIFF(CURRENT_DATE, hire_date) / 365 < 15 THEN 'Senior'
+        ELSE 'Veteran'
+    END as experience_level,
+    CASE 
+        WHEN performance_rating >= 4.0 AND DATEDIFF(CURRENT_DATE, hire_date) / 365 >= 2 THEN 'Promotion Ready'
+        WHEN performance_rating >= 3.5 AND DATEDIFF(CURRENT_DATE, hire_date) / 365 >= 3 THEN 'Development Needed'
+        WHEN performance_rating < 3.0 THEN 'Performance Improvement Plan'
+        ELSE 'Maintain Current Role'
+    END as career_recommendation
+FROM employees
+ORDER BY department, performance_rating DESC;
+
+-- Salary analysis and recommendations
+SELECT 
+    department,
+    job_title,
+    COUNT(*) as employee_count,
+    AVG(salary) as avg_salary,
+    MIN(salary) as min_salary,
+    MAX(salary) as max_salary,
+    AVG(performance_rating) as avg_performance,
+    CASE 
+        WHEN AVG(salary) < 50000 THEN 'Below Market'
+        WHEN AVG(salary) BETWEEN 50000 AND 80000 THEN 'Market Rate'
+        WHEN AVG(salary) BETWEEN 80001 AND 120000 THEN 'Above Market'
+        ELSE 'Premium Rate'
+    END as salary_competitiveness,
+    CASE 
+        WHEN AVG(performance_rating) >= 4.0 AND AVG(salary) < 70000 THEN 'Consider Salary Increase'
+        WHEN AVG(performance_rating) < 3.0 AND AVG(salary) > 80000 THEN 'Review Compensation'
+        WHEN AVG(performance_rating) >= 3.5 THEN 'Maintain Current Structure'
+        ELSE 'Performance Development Needed'
+    END as hr_recommendation
+FROM employees
+GROUP BY department, job_title
+HAVING COUNT(*) >= 3
+ORDER BY department, avg_salary DESC;</code></pre>
+            </div>
+            
+            <h4>4. Financial Analysis and Reporting</h4>
+            <div class="code-block">
+                <pre><code>-- Revenue analysis by time periods
+SELECT 
+    order_id,
+    customer_id,
+    order_date,
+    total_amount,
+    CASE 
+        WHEN MONTH(order_date) IN (12, 1, 2) THEN 'Winter'
+        WHEN MONTH(order_date) IN (3, 4, 5) THEN 'Spring'
+        WHEN MONTH(order_date) IN (6, 7, 8) THEN 'Summer'
+        ELSE 'Fall'
+    END as season,
+    CASE 
+        WHEN DAYOFWEEK(order_date) IN (1, 7) THEN 'Weekend'
+        ELSE 'Weekday'
+    END as day_type,
+    CASE 
+        WHEN HOUR(order_date) BETWEEN 6 AND 11 THEN 'Morning'
+        WHEN HOUR(order_date) BETWEEN 12 AND 17 THEN 'Afternoon'
+        WHEN HOUR(order_date) BETWEEN 18 AND 22 THEN 'Evening'
+        ELSE 'Night'
+    END as time_of_day,
+    CASE 
+        WHEN total_amount < 50 THEN 'Small Order'
+        WHEN total_amount BETWEEN 50 AND 200 THEN 'Medium Order'
+        WHEN total_amount BETWEEN 201 AND 500 THEN 'Large Order'
+        ELSE 'Enterprise Order'
+    END as order_size,
+    CASE 
+        WHEN total_amount < 50 THEN total_amount * 0.02   -- 2% processing fee
+        WHEN total_amount BETWEEN 50 AND 200 THEN total_amount * 0.015  -- 1.5% fee
+        WHEN total_amount BETWEEN 201 AND 500 THEN total_amount * 0.01   -- 1% fee
+        ELSE total_amount * 0.005  -- 0.5% fee for large orders
+    END as processing_fee
+FROM orders
+WHERE order_date >= DATE_SUB(CURRENT_DATE, INTERVAL 1 YEAR)
+ORDER BY order_date DESC;
+
+-- Profitability analysis
+SELECT 
+    p.product_id,
+    p.product_name,
+    p.category,
+    p.price,
+    p.cost,
+    (p.price - p.cost) as profit_per_unit,
+    CASE 
+        WHEN p.cost = 0 THEN 0
+        ELSE ROUND(((p.price - p.cost) / p.cost) * 100, 2)
+    END as profit_margin_percentage,
+    CASE 
+        WHEN p.cost = 0 THEN 'No Cost Data'
+        WHEN ((p.price - p.cost) / p.cost) * 100 >= 50 THEN 'High Margin'
+        WHEN ((p.price - p.cost) / p.cost) * 100 >= 25 THEN 'Good Margin'
+        WHEN ((p.price - p.cost) / p.cost) * 100 >= 10 THEN 'Low Margin'
+        WHEN ((p.price - p.cost) / p.cost) * 100 > 0 THEN 'Minimal Margin'
+        ELSE 'Loss Making'
+    END as profitability_status,
+    SUM(oi.quantity) as total_sold,
+    SUM(oi.quantity * (p.price - p.cost)) as total_profit,
+    CASE 
+        WHEN SUM(oi.quantity * (p.price - p.cost)) >= 10000 THEN 'Star Product'
+        WHEN SUM(oi.quantity * (p.price - p.cost)) >= 5000 THEN 'Profitable Product'
+        WHEN SUM(oi.quantity * (p.price - p.cost)) >= 1000 THEN 'Moderate Performer'
+        WHEN SUM(oi.quantity * (p.price - p.cost)) > 0 THEN 'Low Performer'
+        ELSE 'Loss Maker'
+    END as product_performance
+FROM products p
+LEFT JOIN order_items oi ON p.product_id = oi.product_id
+LEFT JOIN orders o ON oi.order_id = o.order_id
+WHERE o.order_date >= DATE_SUB(CURRENT_DATE, INTERVAL 1 YEAR)
+   OR o.order_date IS NULL
+GROUP BY p.product_id, p.product_name, p.category, p.price, p.cost
+ORDER BY total_profit DESC NULLS LAST;</code></pre>
+            </div>
+            
+            <h4>5. Inventory Management and Supply Chain</h4>
+            <div class="code-block">
+                <pre><code>-- Inventory status and reorder recommendations
+SELECT 
+    product_id,
+    product_name,
+    category,
+    stock_quantity,
+    reorder_level,
+    max_stock_level,
+    price,
+    CASE 
+        WHEN stock_quantity = 0 THEN 'Out of Stock - URGENT'
+        WHEN stock_quantity <= reorder_level THEN 'Reorder Required'
+        WHEN stock_quantity <= (reorder_level * 1.5) THEN 'Low Stock Warning'
+        WHEN stock_quantity >= max_stock_level THEN 'Overstock'
+        ELSE 'Normal Stock'
+    END as stock_status,
+    CASE 
+        WHEN stock_quantity = 0 THEN reorder_level * 2  -- Emergency order
+        WHEN stock_quantity <= reorder_level THEN (max_stock_level - stock_quantity)
+        ELSE 0
+    END as recommended_order_quantity,
+    CASE 
+        WHEN stock_quantity = 0 THEN 'Immediate'
+        WHEN stock_quantity <= reorder_level THEN 'Within 1 Week'
+        WHEN stock_quantity <= (reorder_level * 1.5) THEN 'Within 2 Weeks'
+        ELSE 'No Action Required'
+    END as urgency_level,
+    CASE 
+        WHEN category IN ('Electronics', 'Technology') THEN 'Fast Moving'
+        WHEN category IN ('Clothing', 'Fashion') THEN 'Seasonal'
+        WHEN category IN ('Books', 'Media') THEN 'Steady'
+        WHEN category IN ('Home', 'Garden') THEN 'Slow Moving'
+        ELSE 'Standard'
+    END as inventory_category,
+    stock_quantity * price as inventory_value,
+    CASE 
+        WHEN stock_quantity * price >= 50000 THEN 'High Value Inventory'
+        WHEN stock_quantity * price >= 10000 THEN 'Medium Value Inventory'
+        WHEN stock_quantity * price >= 1000 THEN 'Low Value Inventory'
+        ELSE 'Minimal Value Inventory'
+    END as value_classification
+FROM products
+WHERE category NOT IN ('Discontinued')
+ORDER BY 
+    CASE 
+        WHEN stock_quantity = 0 THEN 1
+        WHEN stock_quantity <= reorder_level THEN 2
+        WHEN stock_quantity <= (reorder_level * 1.5) THEN 3
+        WHEN stock_quantity >= max_stock_level THEN 4
+        ELSE 5
+    END,
+    inventory_value DESC;</code></pre>
+            </div>
+            
+            <h4>6. Advanced Analytics and Business Intelligence</h4>
+            <div class="code-block">
+                <pre><code>-- Customer lifetime value prediction
+SELECT 
+    c.customer_id,
+    CONCAT(c.first_name, ' ', c.last_name) as customer_name,
+    c.registration_date,
+    COUNT(o.order_id) as total_orders,
+    SUM(o.total_amount) as total_spent,
+    AVG(o.total_amount) as avg_order_value,
+    DATEDIFF(CURRENT_DATE, c.registration_date) as days_as_customer,
+    CASE 
+        WHEN DATEDIFF(CURRENT_DATE, c.registration_date) > 0 THEN
+            ROUND(SUM(o.total_amount) / (DATEDIFF(CURRENT_DATE, c.registration_date) / 365), 2)
+        ELSE 0
+    END as annual_value,
+    CASE 
+        WHEN COUNT(o.order_id) >= 10 AND SUM(o.total_amount) >= 5000 THEN 'High Value'
+        WHEN COUNT(o.order_id) >= 5 AND SUM(o.total_amount) >= 2000 THEN 'Medium Value'
+        WHEN COUNT(o.order_id) >= 2 AND SUM(o.total_amount) >= 500 THEN 'Low Value'
+        WHEN COUNT(o.order_id) >= 1 THEN 'Minimal Value'
+        ELSE 'No Value'
+    END as customer_value_segment,
+    CASE 
+        WHEN COUNT(o.order_id) = 0 THEN 0
+        WHEN DATEDIFF(CURRENT_DATE, c.registration_date) = 0 THEN SUM(o.total_amount)
+        ELSE ROUND(
+            (SUM(o.total_amount) / (DATEDIFF(CURRENT_DATE, c.registration_date) / 365)) * 3, 2
+        )
+    END as predicted_3_year_value,
+    CASE 
+        WHEN COUNT(o.order_id) >= 5 AND 
+             MAX(o.order_date) >= DATE_SUB(CURRENT_DATE, INTERVAL 60 DAY) AND
+             SUM(o.total_amount) >= 1000 THEN 'Retain at All Costs'
+        WHEN COUNT(o.order_id) >= 3 AND 
+             MAX(o.order_date) >= DATE_SUB(CURRENT_DATE, INTERVAL 90 DAY) THEN 'High Retention Priority'
+        WHEN COUNT(o.order_id) >= 2 AND 
+             MAX(o.order_date) >= DATE_SUB(CURRENT_DATE, INTERVAL 180 DAY) THEN 'Medium Retention Priority'
+        WHEN COUNT(o.order_id) >= 1 AND 
+             MAX(o.order_date) >= DATE_SUB(CURRENT_DATE, INTERVAL 365 DAY) THEN 'Low Retention Priority'
+        ELSE 'Win-Back Campaign'
+    END as retention_strategy
+FROM customers c
+LEFT JOIN orders o ON c.customer_id = o.customer_id
+GROUP BY c.customer_id, c.first_name, c.last_name, c.registration_date
+ORDER BY predicted_3_year_value DESC;</code></pre>
+            </div>
+
+            <h3>💡 Helpful Tips</h3>
+            <ul>
+                <li><strong>Data Type Consistency</strong>: Ensure all THEN and ELSE results have compatible data types</li>
+                <li><strong>Order Matters</strong>: Conditions are evaluated from top to bottom; place most specific conditions first</li>
+                <li><strong>Performance Optimization</strong>: Put most likely conditions first to reduce evaluation time</li>
+                <li><strong>NULL Handling</strong>: Always consider how NULL values should be handled in your logic</li>
+                <li><strong>ELSE Clause</strong>: Always include an ELSE clause to handle unexpected cases</li>
+                <li><strong>Readability</strong>: Use proper indentation and formatting for complex CASE expressions</li>
+                <li><strong>Testing</strong>: Test all possible conditions to ensure correct behavior</li>
+                <li><strong>Index Usage</strong>: Create indexes on columns frequently used in WHEN conditions</li>
+                <li><strong>Nested CASE</strong>: Use nested CASE expressions for complex multi-level logic</li>
+                <li><strong>Alternative Functions</strong>: Consider using COALESCE, NULLIF, or IIF for simple cases</li>
+                <li><strong>Documentation</strong>: Comment complex CASE logic for future maintenance</li>
+                <li><strong>Validation</strong>: Validate that all possible input values are handled appropriately</li>
+            </ul>
+
+            <h3>🧠 Summary</h3>
+            <ul>
+                <li><strong>Conditional Logic</strong>: CASE expressions implement if-then-else logic in SQL</li>
+                <li><strong>Two Types</strong>: Simple CASE (value comparison) and Searched CASE (condition evaluation)</li>
+                <li><strong>Versatility</strong>: Can be used in SELECT, WHERE, ORDER BY, and other clauses</li>
+                <li><strong>Data Transformation</strong>: Essential for converting and categorizing data</li>
+                <li><strong>Business Logic</strong>: Enables complex business rules implementation in queries</li>
+                <li><strong>Performance</strong>: More efficient than multiple queries or external processing</li>
+            </ul>
+
+            <h3>🧪 Practice: Categorize Products by Price</h3>
+            <div class="mock-table" id="mockTable" style="display: none;">
+                <h4>Preview: What the table would look like when queried:</h4>
+                <h5>After Query (Example Result):</h5>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>name</th>
+                            <th>price</th>
+                            <th>price_category</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Budget Mouse</td>
+                            <td>$25.99</td>
+                            <td>Cheap</td>
+                        </tr>
+                        <tr>
+                            <td>Gaming Keyboard</td>
+                            <td>$75.00</td>
+                            <td>Moderate</td>
+                        </tr>
+                        <tr>
+                            <td>4K Monitor</td>
+                            <td>$299.99</td>
+                            <td>Expensive</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>🎯 Quiz</h3>
+            <p><strong>Which SQL expression allows you to implement conditional logic similar to if-then-else statements?</strong></p>
+            <div class="quiz">
+                <button onclick="checkAnswer(this, true)">A) CASE</button>
+                <button onclick="checkAnswer(this, false)">B) IF</button>
+                <button onclick="checkAnswer(this, false)">C) WHEN</button>
+                <button onclick="checkAnswer(this, false)">D) SWITCH</button>
+                <p class="quiz-feedback"></p>
+                <div id="quizExplanation" class="quiz-explanation" style="display: none;"></div>
+            </div>
+        </section>
+    </div>
+    <div id="footer"></div>
+</body>
+</html>

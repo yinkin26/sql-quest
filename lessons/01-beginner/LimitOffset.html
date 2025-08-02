@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en" class="pixel-art dark-theme">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SQL Quest - SQL LIMIT / OFFSET</title>
+    <link rel="stylesheet" href="../../stylesheets/style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <script src="../../javascripts/loadComponents.js" defer></script>
+    <script src="../../javascripts/script.js" defer></script>
+    <script src="../../javascripts/lessonTracker.js" defer></script>
+
+</head>
+<body class="pixel-art dark-theme">
+    <div id="header"></div>
+    <div class="lesson-layout">
+        <div id="sidebar"></div>
+
+        <section class="lesson-content">
+            <h2>🔢 SQL LIMIT / OFFSET</h2>
+
+            <!-- Add bookmark buttons -->
+            <div class="bookmark-container">
+                <button id="bookmarkBtn" style="display: none;">🔖 Bookmark</button>
+                <button id="unbookmarkBtn" style="display: none;">❌ Remove Bookmark</button>
+                <span id="bookmarkStatus"></span>
+            </div>
+
+            <!-- Explanation of LIMIT / OFFSET Statement -->
+            <h3>📌 What is LIMIT / OFFSET?</h3>
+            <p>The <code class="tooltip" title="Used to limit the number of rows returned in a result set">LIMIT</code> and <code class="tooltip" title="Used to skip a certain number of rows in a result set">OFFSET</code> clauses are used to control the number of rows returned in a SQL query, allowing for efficient pagination of large datasets.</p>
+
+            <h3>🧠 Basic Syntax</h3>
+            <pre><code>SELECT column1, column2 FROM table_name
+LIMIT number_of_rows OFFSET start_position;</code></pre>
+
+            <h3>💡 Example</h3>
+            <pre><code>SELECT name, city FROM customers
+LIMIT 5 OFFSET 10;</code></pre>
+
+            <!-- Try a Query Section - User Data -->
+            <h3>🧪 Try a Query (User Data)</h3>
+            <p><strong>Note:</strong> If you don't specify <code>OFFSET</code>, the query will return results starting from the first row.</p>
+            <p>✍️ Edit the SQL query below and press "Run" to see the result. This feature will display mock data from the table after applying <code>LIMIT</code> and <code>OFFSET</code>.</p>
+            <div class="code-block">
+                <textarea class="code-editor">SELECT name, city FROM customers LIMIT 3 OFFSET 5;</textarea>
+                <button class="neon-button run-btn">Run</button>
+                <div class="query-output"></div>
+            </div>
+
+            <h3>🌍 Real-World Use Case</h3>
+            <p>SQL <code>LIMIT</code> and <code>OFFSET</code> are commonly used in applications to implement pagination. For example, an e-commerce website might use these clauses to display products 10 at a time. Here's how you can display 10 products starting from the 11th:</p>
+            <pre><code>SELECT product_name, price FROM products
+LIMIT 10 OFFSET 10;</code></pre>
+
+            <h3>💡 Helpful Tips</h3>
+            <ul>
+                <li><code>LIMIT</code> specifies the maximum number of rows to return.</li>
+                <li><code>OFFSET</code> skips a number of rows before returning results (use with LIMIT).</li>
+                <li>
+                    ✅ MySQL Tip: <code>LIMIT offset, count</code> is also valid. Example:<br>
+                    <code>SELECT * FROM products LIMIT 2, 3;</code> → Skips 2 rows, returns 3
+                </li>
+                <li>⚠️ Note: <code>OFFSET</code> without <code>LIMIT</code> may not be supported in all databases (e.g., MySQL).</li>
+            </ul>
+
+
+            <!-- Summary -->
+            <h3>🧠 Summary</h3>
+            <ul>
+                <li><code>LIMIT</code> restricts the number of rows returned by a query.</li>
+                <li><code>OFFSET</code> allows you to skip a specified number of rows before returning the remaining rows.</li>
+                <li>Use both clauses to paginate query results efficiently.</li>
+            </ul>
+
+            <!-- Practice Section - Product Data -->
+            <h3>🧪 Practice: Limit and Offset in the Products Table</h3>
+            <p>Write an <code>SELECT</code> statement to retrieve the first 3 products, skipping the first 2 in the <code>products</code> table:</p>
+            <ul>
+                <li><code>product_id</code> (INT)</li>
+                <li><code>product_name</code> (VARCHAR(100))</li>
+                <li><code>price</code> (DECIMAL(8,2))</li>
+            </ul>
+
+            <div class="editor-container">
+                <textarea class="code-editor" id="exerciseInput" placeholder="Write your SELECT query here..."></textarea>
+                <button class="neon-button" onclick="validateLimitOffsetQuery()">Submit</button>
+                <div id="exerciseFeedback" style="margin-top: 15px;"></div>
+            </div>
+
+            <!-- Mock Table for Displaying After Submit -->
+            <div class="mock-table" id="mockTable" style="display: none;">
+                <h4>Preview: What the table would look like when queried:</h4>
+
+                <!-- Before Limit / Offset Table (Product Data)-->
+                <h5>Before Limit / Offset:</h5>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>product_id</th>
+                            <th>product_name</th>
+                            <th>price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>Laptop</td>
+                            <td>999.99</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Smartphone</td>
+                            <td>799.49</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>Headphones</td>
+                            <td>120.99</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>Tablet</td>
+                            <td>499.99</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>Watch</td>
+                            <td>149.99</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- After Limit / Offset Table (Product Data)-->
+                <h5>After Limit / Offset:</h5>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>product_id</th>
+                            <th>product_name</th>
+                            <th>price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>3</td>
+                            <td>Headphones</td>
+                            <td>120.99</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>Tablet</td>
+                            <td>499.99</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>Watch</td>
+                            <td>149.99</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Quiz Section -->
+            <h3>🎯 Quiz</h3>
+            <p><strong>What does the <code>LIMIT</code> clause do in SQL?</strong></p>
+            <div class="quiz">
+                <button onclick="checkAnswer(this, false)" title="ALL is not valid in this context">A) Limits the number of <code>columns</code> returned</button>
+                <button onclick="checkAnswer(this, true)" title="UNIQUE is not valid in this context">B) Limits the number of <code>rows</code> returned</button>
+                <button onclick="checkAnswer(this, false)">C) Limits the number of <code>tables</code> returned</button>
+                <button onclick="checkAnswer(this, false)">D) Limits the number of <code>queries</code> executed</button>
+                <p class="quiz-feedback"></p>
+                <div id="quizExplanation" class="quiz-explanation" style="display: none;"></div>
+            </div>
+
+
+        </section>
+    </div>
+
+    <div id="footer"></div>
+
+ 
+    <script>
+        let quizCompleted = false;
+        function checkAnswer(button, isCorrect) {
+            if (quizCompleted) return;
+            
+            const feedback = button.parentElement.querySelector(".quiz-feedback");
+            const explanationBox = document.getElementById("quizExplanation");
+            const quizContainer = button.parentElement;
+
+            if (isCorrect) {
+                // Correct answer - disable all buttons and mark as completed
+                quizCompleted = true;
+                const allButtons = quizContainer.querySelectorAll('button');
+                allButtons.forEach(btn => {
+                    btn.disabled = true;
+                    if (btn === button) {
+                        btn.style.backgroundColor = '#44ff44';
+                        btn.style.boxShadow = '0 0 15px rgba(68, 255, 68, 0.5)';
+                    }
+                });
+                
+                feedback.style.color = "lightgreen";
+                feedback.innerHTML = "✅ Correct! Quiz completed!";
+                explanationBox.innerHTML = `
+                <p><strong>Explanation:</strong></p>
+                <ul>
+                    <li>The <code>LIMIT</code> clause limits the number of <strong>rows</strong> returned by a query.</li>
+                    <li>It's used for pagination and controlling result set size.</li>
+                </ul>`;
+            } else {
+                // Incorrect answer - disable this button only
+                button.disabled = true;
+                button.style.backgroundColor = '#ff4444';
+                button.style.opacity = '0.6';
+                button.style.cursor = 'not-allowed';
+                
+                feedback.style.color = "red";
+                feedback.innerHTML = "❌ Incorrect. Try another answer!";
+                
+                // Add retry message if not already present
+                let retryMsg = quizContainer.querySelector('.retry-message');
+                if (!retryMsg) {
+                    retryMsg = document.createElement('p');
+                    retryMsg.className = 'retry-message';
+                    retryMsg.style.color = '#ffd700';
+                    retryMsg.style.fontWeight = 'bold';
+                    retryMsg.style.marginTop = '10px';
+                    retryMsg.innerHTML = '💡 Keep trying! Choose another answer.';
+                    feedback.parentNode.insertBefore(retryMsg, feedback.nextSibling);
+                }
+                
+                const buttonText = button.textContent;
+                if (buttonText.includes('columns')) {
+                    explanationBox.innerHTML = `
+                    <p><strong>Explanation:</strong></p>
+                    <ul>
+                        <li><code>LIMIT</code> does not control the number of columns returned.</li>
+                        <li>Use <code>SELECT</code> to specify which columns to return.</li>
+                    </ul>`;
+                } else if (buttonText.includes('tables')) {
+                    explanationBox.innerHTML = `
+                    <p><strong>Explanation:</strong></p>
+                    <ul>
+                        <li><code>LIMIT</code> does not control the number of tables.</li>
+                        <li>It only limits the number of rows in the result set.</li>
+                    </ul>`;
+                } else if (buttonText.includes('queries')) {
+                    explanationBox.innerHTML = `
+                    <p><strong>Explanation:</strong></p>
+                    <ul>
+                        <li><code>LIMIT</code> does not control query execution.</li>
+                        <li>It only limits the number of rows returned from a single query.</li>
+                    </ul>`;
+                }
+            }
+
+            explanationBox.style.display = "block";
+            explanationBox.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+
+
+
+        function validateLimitOffsetQuery() {
+            const userSQL = document.getElementById("exerciseInput").value.trim().toLowerCase().replace(/\s+/g, " ");
+            const feedback = document.getElementById("exerciseFeedback");
+
+            const expected =
+                "select product_id, product_name, price from products limit 3 offset 2;";
+
+            if (userSQL === expected) {
+                feedback.style.color = "lightgreen";
+                feedback.innerHTML = "✅ Perfect! Your LIMIT / OFFSET syntax is correct.";
+                // Show the mock table after a correct submission
+                document.getElementById("mockTable").style.display = "block";
+                // Scroll the mock table into view
+                document.getElementById("mockTable").scrollIntoView({ behavior: "smooth" });
+            } else if (userSQL.includes("select") && userSQL.includes("products") && userSQL.includes("limit") && userSQL.includes("offset")) {
+                feedback.style.color = "orange";
+                feedback.innerHTML = "⚠️ You're close! Double-check your LIMIT and OFFSET values.";
+            } else {
+                feedback.style.color = "red";
+                feedback.innerHTML = "❌ That's not quite right. Make sure you're selecting the correct data with LIMIT and OFFSET.";
+            }
+        }
+
+        // Bookmark functionality
+        const lessonId = "LimitOffset";
+        const bookmarkBtn = document.getElementById("bookmarkBtn");
+        const unbookmarkBtn = document.getElementById("unbookmarkBtn");
+        const statusText = document.getElementById("bookmarkStatus");
+
+        // Function to check bookmark status with retry
+        function checkBookmarkStatus(retries = 3) {
+            fetch(`http://localhost:5000/bookmark-status?lessonId=${lessonId}`, {
+                credentials: 'include',
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+                .then(res => {
+                    if (!res.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return res.json();
+                })
+                .then(data => {
+                    if (data.bookmarked) {
+                        bookmarkBtn.style.display = "none";
+                        unbookmarkBtn.style.display = "inline-block";
+                        statusText.textContent = "📌 Bookmarked";
+                    } else {
+                        bookmarkBtn.style.display = "inline-block";
+                        unbookmarkBtn.style.display = "none";
+                        statusText.textContent = "";
+                    }
+                })
+                .catch(error => {
+                    console.error('Error checking bookmark status:', error);
+                    if (retries > 0) {
+                        setTimeout(() => checkBookmarkStatus(retries - 1), 1000);
+                    }
+                });
+        }
+
+        // Add bookmark
+        bookmarkBtn.addEventListener("click", () => {
+            fetch("http://localhost:5000/bookmark", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                    lessonId: lessonId,
+                    bookmarked: true
+                })
+            })
+                .then(res => res.json())
+                .then(() => {
+                    checkBookmarkStatus();
+                });
+        });
+
+        // Remove bookmark
+        unbookmarkBtn.addEventListener("click", () => {
+            fetch("http://localhost:5000/bookmark", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                    lessonId: lessonId,
+                    bookmarked: false
+                })
+            })
+                .then(res => res.json())
+                .then(() => {
+                    checkBookmarkStatus();
+                });
+        });
+
+        // Check initial status when page loads
+        checkBookmarkStatus();
+    </script>
+</body>
+</html>

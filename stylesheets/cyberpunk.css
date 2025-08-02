@@ -1,0 +1,234 @@
+.cyberpunk-theme {
+  background: linear-gradient(135deg, #0d0d0d, #1a1a1a);
+  color: #00fff7;
+  animation: background-pulse 10s infinite alternate;
+}
+
+@keyframes background-pulse {
+  0% { background: linear-gradient(135deg, #0d0d0d, #1a1a1a); }
+  50% { background: linear-gradient(135deg, #1a1a1a, #0d0d0d); }
+  100% { background: linear-gradient(135deg, #0d0d0d, #1a1a1a); }
+}
+
+.neon-border {
+  border: 2px solid #00fff7;
+  box-shadow: 0 0 10px #00fff7, 0 0 20px #00fff7;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.neon-border:hover {
+  border-color: #ff00ea;
+  box-shadow: 0 0 15px #ff00ea, 0 0 30px #ff00ea;
+}
+
+.neon-text {
+  text-shadow: 0 0 5px #00fff7, 0 0 10px #00fff7;
+}
+
+.profile-card {
+  background: rgba(13, 13, 13, 0.9);
+  padding: 3rem;
+  margin: 3rem 0;
+  min-width: 400px;
+}
+
+.stat-item {
+  padding: 1rem;
+  margin: 1rem 0;
+  transition: transform 0.3s ease;
+}
+
+.stat-item:hover {
+  transform: scale(1.05);
+}
+
+.progress-bar-fill {
+  background: linear-gradient(90deg, #00fff7, #ff00ea);
+  animation: progress-pulse 1.5s infinite alternate;
+}
+
+@keyframes progress-pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.7; }
+  100% { opacity: 1; }
+}
+
+.scroll-container {
+  max-height: 300px;
+  overflow-y: auto;
+  scrollbar-color: #00fff7 #1a1a1a;
+}
+
+.progress-list li {
+  padding: 0.5rem;
+  margin: 0.5rem 0;
+  background: rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
+}
+
+.progress-list li:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateX(10px);
+}
+
+.progress-list li:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+@keyframes glow {
+  0% { box-shadow: 0 0 5px #00fff7; }
+  50% { box-shadow: 0 0 20px #00fff7; }
+  100% { box-shadow: 0 0 5px #00fff7; }
+}
+
+.profile-badge {
+  animation: glow 2s infinite;
+}
+
+/* Global Theme Toggle Styling */
+.nav-controls {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.theme-toggle-global {
+  background: linear-gradient(135deg, #00fff7 0%, #ff00ea 100%);
+  color: #0d0d0d;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 0 10px rgba(0, 255, 247, 0.3);
+  min-width: 100px;
+  justify-content: center;
+  font-family: 'Press Start 2P', monospace;
+}
+
+.theme-toggle-global:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 0 20px rgba(0, 255, 247, 0.5), 0 0 30px rgba(255, 0, 234, 0.3);
+  background: linear-gradient(135deg, #ff00ea 0%, #00fff7 100%);
+  color: #ffffff;
+}
+
+.theme-toggle-global:active {
+  transform: translateY(-1px) scale(1.02);
+}
+
+.theme-toggle-global .theme-icon {
+  font-size: 12px;
+  transition: transform 0.3s ease;
+}
+
+.theme-toggle-global:hover .theme-icon {
+  transform: scale(1.2) rotate(10deg);
+}
+
+/* Light theme overrides for global toggle */
+body.light-theme .theme-toggle-global {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
+}
+
+body.light-theme .theme-toggle-global:hover {
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+  box-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
+}
+
+/* Streaming indicator styles */
+.validation-streaming {
+  padding: 2rem;
+  text-align: center;
+  background: rgba(13, 13, 13, 0.9);
+  border: 2px solid #00fff7;
+  border-radius: 8px;
+  box-shadow: 0 0 10px #00fff7;
+}
+
+.streaming-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.streaming-dots {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.streaming-dots span {
+  width: 8px;
+  height: 8px;
+  background: #00fff7;
+  border-radius: 50%;
+  animation: streaming-pulse 1.4s infinite ease-in-out;
+  box-shadow: 0 0 5px #00fff7;
+}
+
+.streaming-dots span:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.streaming-dots span:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+.streaming-dots span:nth-child(3) {
+  animation-delay: 0s;
+}
+
+@keyframes streaming-pulse {
+  0%, 80%, 100% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  40% {
+    transform: scale(1.2);
+    opacity: 1;
+    box-shadow: 0 0 15px #00fff7;
+  }
+}
+
+.streaming-text {
+  color: #00fff7;
+  font-size: 14px;
+  font-weight: 600;
+  text-shadow: 0 0 5px #00fff7;
+  animation: text-glow 2s infinite alternate;
+}
+
+@keyframes text-glow {
+  0% {
+    text-shadow: 0 0 5px #00fff7;
+  }
+  100% {
+    text-shadow: 0 0 10px #00fff7, 0 0 20px #00fff7;
+  }
+}
+
+/* Responsive design for nav controls */
+@media (max-width: 768px) {
+  .nav-controls {
+    gap: 10px;
+  }
+  
+  .theme-toggle-global {
+    font-size: 10px;
+    padding: 6px 12px;
+    min-width: 80px;
+  }
+  
+  .theme-toggle-global .theme-icon {
+    font-size: 10px;
+  }
+}

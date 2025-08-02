@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Leaderboard - SQL Quest</title>
+    <link rel="stylesheet" href="stylesheets/style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+    <script defer src="javascripts/loadComponents.js"></script>
+    <script defer src="javascripts/leaderboard.js"></script>
+</head>
+<body class="pixel-art dark-theme">
+    <div id="header"></div>
+
+    <div class="leaderboard-container">
+        <h2>🏆 Top Players</h2>
+        <table class="leaderboard-table">
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Badge</th>
+                    <th>Username</th>
+                    <th>XP</th>
+                </tr>
+            </thead>
+            <tbody id="leaderboardBody">
+                <!-- Dynamic leaderboard entries here -->
+            </tbody>
+        </table>
+    </div>
+    <div id="footer"></div>
+</body>
+</html>

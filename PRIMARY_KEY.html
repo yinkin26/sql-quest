@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en" class="pixel-art dark-theme">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Quest - PRIMARY KEY</title>
+    <link rel="stylesheet" href="stylesheets/style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <script src="javascripts/loadComponents.js" defer></script>
+    <script src="javascripts/script.js" defer></script>
+    <script src="javascripts/lessonTracker.js" defer></script>
+    <script type="module" src="javascripts/mockTables.js"></script>
+</head>
+<body class="pixel-art dark-theme">
+    <div id="header"></div>
+    <div class="lesson-layout">
+        <div id="sidebar"></div>
+
+        <section class="lesson-content">
+            <h2>🔑 PRIMARY KEY</h2>
+
+            <!-- Bookmark buttons -->
+            <div class="bookmark-container">
+                <button id="bookmarkBtn" style="display: none;">🔖 Bookmark</button>
+                <button id="unbookmarkBtn" style="display: none;">❌ Remove Bookmark</button>
+                <span id="bookmarkStatus"></span>
+            </div>
+
+            <div class="callout-box">
+                <p>🔑 The master key to your data! PRIMARY KEY is the unique identifier that makes each row special.</p>
+            </div>
+
+            <h3>📌 What is a PRIMARY KEY?</h3>
+            <p>A <code class="tooltip" title="Unique identifier for table rows">PRIMARY KEY</code> is a constraint that uniquely identifies each row in a table. It's like a 🆔 social security number for your data - no two rows can have the same primary key value. Think of it as the 🏠 address of each record in your database neighborhood!</p>
+
+            <h3>🎯 PRIMARY KEY Rules</h3>
+            <div style="background: rgba(0, 255, 255, 0.1); border: 2px solid #00ffff; border-radius: 8px; padding: 15px; margin: 15px 0;">
+                <h4 style="color: #00ffff; margin-top: 0;">🔒 Key Rules</h4>
+                <ul style="color: #e0ffff;">
+                    <li>🔑 <strong>UNIQUE</strong> - No duplicate values allowed</li>
+                    <li>🚫 <strong>NOT NULL</strong> - Cannot be empty or NULL</li>
+                    <li>1️⃣ <strong>ONE PER TABLE</strong> - Only one primary key per table</li>
+                    <li>🔒 <strong>IMMUTABLE</strong> - Should not change once set</li>
+                    <li>⚡ <strong>AUTO INDEX</strong> - Automatically creates an index for fast lookups</li>
+                </ul>
+            </div>
+
+            <h3>🧠 Basic Syntax</h3>
+
+            <h4>Method 1: Column-Level Definition</h4>
+            <pre><code>CREATE TABLE <span style="color: #00ffff;">users</span> (
+    <span style="color: #ffd700;">id</span> INT <span style="color: #00ffff;">PRIMARY KEY</span>,
+    name VARCHAR(100),
+    email VARCHAR(100)
+);</code></pre>
+
+            <h4>Method 2: Table-Level Definition</h4>
+            <pre><code>CREATE TABLE <span style="color: #00ffff;">users</span> (
+    <span style="color: #ffd700;">id</span> INT,
+    name VARCHAR(100),
+    email VARCHAR(100),
+    <span style="color: #00ffff;">PRIMARY KEY</span> (<span style="color: #ffd700;">id</span>)
+);</code></pre>
+
+            <h4>Method 3: AUTO_INCREMENT Primary Key</h4>
+            <pre><code>CREATE TABLE <span style="color: #00ffff;">users</span> (
+    <span style="color: #ffd700;">id</span> INT <span style="color: #00ffff;">PRIMARY KEY AUTO_INCREMENT</span>,
+    name VARCHAR(100),
+    email VARCHAR(100)
+);</code></pre>
+
+
+
+            <h3>📊 Mock Table Preview</h3>
+            <p>🔍 See how PRIMARY KEY works with real data:</p>
+            <button class="neon-button" onclick="displayMockTable('products')">📊 View Products Table</button>
+            <div class="query-output" id="mockTableOutput"></div>
+            <p style="color: #a0a0a0; font-size: 0.9em; margin-top: 10px;">💡 Notice how each product_id is unique and identifies each row!</p>
+
+            <h3>🔗 Composite PRIMARY KEY</h3>
+            <p>Sometimes you need multiple columns to uniquely identify a row:</p>
+            <pre><code>CREATE TABLE <span style="color: #00ffff;">order_items</span> (
+    <span style="color: #ffd700;">order_id</span> INT,
+    <span style="color: #ffd700;">product_id</span> INT,
+    quantity INT,
+    price DECIMAL(10,2),
+    <span style="color: #00ffff;">PRIMARY KEY</span> (<span style="color: #ffd700;">order_id</span>, <span style="color: #ffd700;">product_id</span>)
+);</code></pre>
+
+            <h3>📋 PRIMARY KEY Examples Showcase</h3>
+            <button class="neon-button" onclick="showPrimaryKeyExamples()">Show PRIMARY KEY Examples</button>
+            <div id="primaryKeyExamplesOutput" class="query-output" style="margin-top: 10px;"></div>
+
+            <h3>🔧 Adding PRIMARY KEY to Existing Table</h3>
+            <pre><code>-- Add primary key to existing table
+ALTER TABLE <span style="color: #00ffff;">existing_table</span>
+ADD CONSTRAINT <span style="color: #98fb98;">pk_existing_table</span> PRIMARY KEY (<span style="color: #ffd700;">id</span>);
+
+-- Drop primary key (if needed)
+ALTER TABLE <span style="color: #00ffff;">existing_table</span>
+DROP PRIMARY KEY;</code></pre>
+
+            <h3>🌍 Real-World PRIMARY KEY Examples</h3>
+            
+            <h4>👥 User Management</h4>
+            <pre><code>CREATE TABLE <span style="color: #00ffff;">users</span> (
+    <span style="color: #ffd700;">user_id</span> INT PRIMARY KEY AUTO_INCREMENT,  -- 🔑 Unique user identifier
+    username VARCHAR(50) UNIQUE NOT NULL,        -- ⭐ Unique username
+    email VARCHAR(100) UNIQUE NOT NULL,          -- 📧 Unique email
+    password_hash VARCHAR(255) NOT NULL,         -- 🔒 Encrypted password
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);</code></pre>
+
+            <h4>🛒 E-commerce Orders</h4>
+            <pre><code>CREATE TABLE <span style="color: #00ffff;">orders</span> (
+    <span style="color: #ffd700;">order_id</span> INT PRIMARY KEY AUTO_INCREMENT,  -- 🔑 Unique order number
+    customer_id INT NOT NULL,                    -- 👤 Link to customer
+    order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    total_amount DECIMAL(10,2) NOT NULL,
+    status VARCHAR(20) DEFAULT 'pending',
+    FOREIGN KEY (customer_id) REFERENCES users(user_id)
+);</code></pre>
+
+            <h4>📚 Library System</h4>
+            <pre><code>CREATE TABLE <span style="color: #00ffff;">books</span> (
+    <span style="color: #ffd700;">isbn</span> VARCHAR(13) PRIMARY KEY,            -- 📖 ISBN as natural primary key
+    title VARCHAR(200) NOT NULL,
+    author VARCHAR(100) NOT NULL,
+    publication_year INT,
+    available_copies INT DEFAULT 0
+);</code></pre>
+
+            <h3>🆔 Natural vs Surrogate Keys</h3>
+            
+            <h4>🌿 Natural Primary Key</h4>
+            <p>Uses existing meaningful data:</p>
+            <pre><code>-- Using Social Security Number
+CREATE TABLE <span style="color: #00ffff;">employees</span> (
+    <span style="color: #ffd700;">ssn</span> VARCHAR(11) PRIMARY KEY,  -- 🆔 Natural identifier
+    first_name VARCHAR(50),
+    last_name VARCHAR(50)
+);</code></pre>
+
+            <h4>🤖 Surrogate Primary Key</h4>
+            <p>Uses artificial auto-generated values:</p>
+            <pre><code>-- Using auto-increment ID
+CREATE TABLE <span style="color: #00ffff;">employees</span> (
+    <span style="color: #ffd700;">employee_id</span> INT PRIMARY KEY AUTO_INCREMENT,  -- 🤖 Artificial identifier
+    ssn VARCHAR(11) UNIQUE,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50)
+);</code></pre>
+
+            <h3>⚠️ PRIMARY KEY Best Practices</h3>
+            <div style="background: rgba(40, 167, 69, 0.2); border: 2px solid #28a745; border-radius: 8px; padding: 15px; margin: 15px 0;">
+                <h4 style="color: #28a745; margin-top: 0;">✅ Do's</h4>
+                <ul style="color: #d4edda;">
+                    <li>🤖 <strong>Use surrogate keys</strong> (AUTO_INCREMENT) for most tables</li>
+                    <li>📏 <strong>Keep it simple</strong> - prefer single column primary keys</li>
+                    <li>🔢 <strong>Use integers</strong> when possible for better performance</li>
+                    <li>📝 <strong>Name consistently</strong> - use table_name + '_id' pattern</li>
+                    <li>🎯 <strong>Always define</strong> a primary key for every table</li>
+                </ul>
+            </div>
+
+            <div style="background: rgba(220, 53, 69, 0.2); border: 2px solid #dc3545; border-radius: 8px; padding: 15px; margin: 15px 0;">
+                <h4 style="color: #dc3545; margin-top: 0;">❌ Don'ts</h4>
+                <ul style="color: #f8d7da;">
+                    <li>🚫 <strong>Don't use business data</strong> as primary keys (emails, names)</li>
+                    <li>🔄 <strong>Don't change</strong> primary key values once set</li>
+                    <li>📏 <strong>Don't make them too long</strong> - impacts performance</li>
+                    <li>🔤 <strong>Avoid string primary keys</strong> when possible</li>
+                    <li>🚫 <strong>Never leave tables</strong> without primary keys</li>
+                </ul>
+            </div>
+
+            <h3>💡 Helpful Tips</h3>
+            <ul>
+                <li>🔍 Use <code>DESCRIBE table_name;</code> to see which column is the primary key</li>
+                <li>⚡ <strong>Performance boost</strong> - primary keys automatically create clustered indexes</li>
+                <li>🔗 <strong>Foreign key target</strong> - other tables reference primary keys</li>
+                <li>🔢 <strong>AUTO_INCREMENT</strong> starts at 1 and increments automatically</li>
+                <li>🎯 <strong>Replication friendly</strong> - surrogate keys work better in distributed systems</li>
+                <li>📊 <strong>Query optimization</strong> - database engines optimize queries using primary keys</li>
+            </ul>
+
+            <h3>🧠 Summary</h3>
+            <ul>
+                <li>🔑 <strong>PRIMARY KEY</strong> uniquely identifies each row in a table</li>
+                <li>🚫 Must be <strong>UNIQUE</strong> and <strong>NOT NULL</strong></li>
+                <li>1️⃣ <strong>One per table</strong> - each table can have only one primary key</li>
+                <li>🤖 <strong>AUTO_INCREMENT</strong> automatically generates unique values</li>
+                <li>⚡ <strong>Performance benefits</strong> - creates automatic indexes</li>
+                <li>🔗 <strong>Relationship foundation</strong> - used by foreign keys to link tables</li>
+            </ul>
+
+            <h3>🧪 Practice</h3>
+            <p>📚 Create a table called <code>"customers"</code> with an auto-incrementing primary key called <code>"customer_id"</code>.</p>
+            <div class="editor-container">
+                <textarea class="code-editor" id="exerciseInput" placeholder="Write your CREATE TABLE statement with PRIMARY KEY here..."></textarea>
+                <button class="neon-button" onclick="validateExercise()">Submit</button>
+                <div id="exerciseFeedback" style="margin-top:15px;"></div>
+            </div>
+
+            <h3>🎯 Quiz</h3>
+            <p><strong>How many PRIMARY KEYs can a table have?</strong></p>
+            <div class="quiz">
+                <button onclick="checkAnswer(this,'A')">A) As many as needed</button>
+                <button onclick="checkAnswer(this,'B')">B) Exactly one</button>
+                <button onclick="checkAnswer(this,'C')">C) Up to three</button>
+                <button onclick="checkAnswer(this,'D')">D) None - they're optional</button>
+                <p class="quiz-feedback"></p>
+                <div id="quizExplanation" class="quiz-explanation" style="display:none;"></div>
+            </div>
+        </section>
+    </div>
+
+    <div id="footer"></div>
+
+    <script>
+        function runPrimaryKeyDemo() {
+            const textarea = document.querySelector('.code-editor');
+            const output = document.querySelector('.query-output');
+            const query = textarea.value.trim().toLowerCase();
+            
+            if (query.includes('create table') && query.includes('primary key')) {
+                const hasAutoIncrement = query.includes('auto_increment');
+                const tableName = query.match(/create table\s+(\w+)/)?.[1] || 'table';
+                const pkColumn = query.match(/primary key|\w+\s+\w+\s+primary key/)?.[0] || 'id';
+                
+                output.innerHTML = `
+                    <div style='background: rgba(40, 167, 69, 0.2); border: 1px solid #28a745; border-radius: 8px; padding: 15px;'>
+                        <p style='color: #28a745; margin: 0;'>✅ <strong>Table '${tableName}' created successfully!</strong></p>
+                        <p style='color: #d4edda; margin: 8px 0 0 0;'>🔑 <strong>Primary Key Features:</strong></p>
+                        <ul style='color: #d4edda; margin: 5px 0 0 20px;'>
+                            <li>🆔 Unique identifier for each row</li>
+                            <li>🚫 NOT NULL constraint automatically applied</li>
+                            <li>⚡ Automatic index created for fast lookups</li>
+                            ${hasAutoIncrement ? '<li>🤖 AUTO_INCREMENT will generate unique values</li>' : ''}
+                        </ul>
+                        <p style='color: #a0a0a0; margin: 8px 0 0 0; font-size: 0.8em;'>💡 Your table now has a solid foundation for data integrity!</p>
+                    </div>
+                `;
+            } else if (query.includes('create table')) {
+                output.innerHTML = `
+                    <div style='background: rgba(255, 193, 7, 0.2); border: 1px solid #ffc107; border-radius: 8px; padding: 15px;'>
+                        <p style='color: #ffc107; margin: 0;'>⚠️ <strong>Table created, but missing PRIMARY KEY!</strong></p>
+                        <p style='color: #fff3cd; margin: 5px 0 0 0;'>🔑 Consider adding a PRIMARY KEY for better data integrity.</p>
+                    </div>
+                `;
+            } else {
+                output.innerHTML = `<p style='color: red;'>❌ Invalid query. Try using CREATE TABLE with PRIMARY KEY.</p>`;
+            }
+        }
+        
+        function showPrimaryKeyExamples() {
+            const output = document.getElementById('primaryKeyExamplesOutput');
+            const examples = [
+                {
+                    title: '🤖 Auto-Increment Primary Key',
+                    sql: 'CREATE TABLE users (\n    id INT PRIMARY KEY AUTO_INCREMENT,\n    username VARCHAR(50),\n    email VARCHAR(100)\n);',
+                    description: 'Most common pattern - automatic unique IDs'
+                },
+                {
+                    title: '🔗 Composite Primary Key',
+                    sql: 'CREATE TABLE enrollment (\n    student_id INT,\n    course_id INT,\n    enrollment_date DATE,\n    PRIMARY KEY (student_id, course_id)\n);',
+                    description: 'Multiple columns form the primary key'
+                },
+                {
+                    title: '🌿 Natural Primary Key',
+                    sql: 'CREATE TABLE countries (\n    country_code CHAR(2) PRIMARY KEY,\n    country_name VARCHAR(100),\n    population INT\n);',
+                    description: 'Using meaningful business data as key'
+                },
+                {
+                    title: '🔧 Adding Primary Key Later',
+                    sql: 'ALTER TABLE existing_table\nADD CONSTRAINT pk_existing\nPRIMARY KEY (id);',
+                    description: 'Adding primary key to existing table'
+                }
+            ];
+            
+            let html = '<div style="background: rgba(26, 32, 44, 0.8); border: 1px solid #4a5568; border-radius: 8px; padding: 15px; margin-top: 10px;">';
+            html += '<h4 style="color: #00ffff; margin-top: 0;">🔑 PRIMARY KEY Examples</h4>';
+            
+            examples.forEach((example, index) => {
+                html += `
+                    <div style="margin-bottom: 15px; padding: 10px; background: rgba(45, 55, 72, 0.6); border-radius: 6px;">
+                        <h5 style="color: #ffd700; margin: 0 0 8px 0;">${example.title}</h5>
+                        <pre style="background: rgba(0, 0, 0, 0.4); padding: 8px; border-radius: 4px; margin: 5px 0; overflow-x: auto; white-space: pre-wrap;"><code style="color: #e2e8f0;">${example.sql}</code></pre>
+                        <p style="color: #a0aec0; margin: 5px 0 0 0; font-size: 0.9em;">${example.description}</p>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            output.innerHTML = html;
+        }
+        
+        function validateExercise() {
+            const sql = document.getElementById("exerciseInput").value.trim().toLowerCase();
+            const feedback = document.getElementById("exerciseFeedback");
+            
+            if (sql.includes("create table customers") && sql.includes("customer_id") && sql.includes("primary key") && sql.includes("auto_increment")) {
+                feedback.style.color = "lightgreen";
+                feedback.textContent = "✅ Perfect! You created the customers table with an auto-incrementing primary key.";
+            } else if (sql.includes("create table customers") && sql.includes("customer_id") && sql.includes("primary key")) {
+                feedback.style.color = "orange";
+                feedback.textContent = "⚠️ Good! Consider adding AUTO_INCREMENT for automatic ID generation.";
+            } else if (sql.includes("create table customers") && sql.includes("primary key")) {
+                feedback.style.color = "orange";
+                feedback.textContent = "⚠️ Good table creation! Make sure to name the primary key 'customer_id'.";
+            } else {
+                feedback.style.color = "red";
+                feedback.textContent = "❌ Try: CREATE TABLE customers (customer_id INT PRIMARY KEY AUTO_INCREMENT, ...);";
+            }
+        }
+        
+        function checkAnswer(btn, opt) {
+            const fb = btn.parentElement.querySelector('.quiz-feedback');
+            const exp = document.getElementById('quizExplanation');
+            const buttons = btn.parentElement.querySelectorAll('button');
+            
+            // Disable all buttons after selection
+            buttons.forEach(b => b.disabled = true);
+            
+            if (opt === 'B') {
+                fb.style.color = 'lightgreen';
+                fb.textContent = '✅ Correct! A table can have exactly one PRIMARY KEY.';
+                btn.style.backgroundColor = '#28a745';
+                exp.innerHTML = `
+                    <p><strong>🎯 Explanation:</strong></p>
+                    <ul>
+                        <li>1️⃣ Each table can have <strong>exactly one</strong> PRIMARY KEY constraint.</li>
+                        <li>🔑 The primary key can consist of one or multiple columns (composite key).</li>
+                        <li>🆔 This ensures each row has a unique identifier.</li>
+                        <li>🔗 Other tables use this primary key to establish relationships via foreign keys.</li>
+                    </ul>
+                `;
+            } else {
+                fb.style.color = 'red';
+                fb.textContent = '❌ Incorrect. The correct answer is B.';
+                btn.style.backgroundColor = '#dc3545';
+                // Highlight correct answer
+                buttons[1].style.backgroundColor = '#28a745';
+                exp.innerHTML = `
+                    <p><strong>❌ Explanation:</strong></p>
+                    <ul>
+                        <li>🚫 Tables cannot have multiple primary keys.</li>
+                        <li>✅ Primary keys are essential for data integrity, not optional.</li>
+                        <li>1️⃣ The "one primary key per table" rule is fundamental in relational databases.</li>
+                    </ul>
+                `;
+            }
+            exp.style.display = 'block';
+            exp.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // Bookmark functionality
+        const lessonId = "PRIMARY_KEY";
+        const bookmarkBtn = document.getElementById("bookmarkBtn");
+        const unbookmarkBtn = document.getElementById("unbookmarkBtn");
+        const statusText = document.getElementById("bookmarkStatus");
+
+        function checkBookmarkStatus(retries = 3) {
+            fetch(`http://localhost:5000/bookmark-status?lessonId=${lessonId}`, {
+                credentials: 'include',
+                headers: { "Content-Type": "application/json" }
+            })
+            .then(res => {
+                if (!res.ok) throw new Error('Network response was not ok');
+                return res.json();
+            })
+            .then(data => {
+                if (data.bookmarked) {
+                    bookmarkBtn.style.display = "none";
+                    unbookmarkBtn.style.display = "inline-block";
+                    statusText.textContent = "📌 Bookmarked";
+                } else {
+                    bookmarkBtn.style.display = "inline-block";
+                    unbookmarkBtn.style.display = "none";
+                    statusText.textContent = "";
+                }
+            })
+            .catch(error => {
+                console.error('Error checking bookmark status:', error);
+                if (retries > 0) {
+                    setTimeout(() => checkBookmarkStatus(retries - 1), 1000);
+                }
+            });
+        }
+
+        bookmarkBtn.addEventListener("click", () => {
+            fetch("http://localhost:5000/bookmark", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({ lessonId: lessonId, bookmarked: true })
+            })
+            .then(res => res.json())
+            .then(() => checkBookmarkStatus());
+        });
+
+        unbookmarkBtn.addEventListener("click", () => {
+            fetch("http://localhost:5000/bookmark", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({ lessonId: lessonId, bookmarked: false })
+            })
+            .then(res => res.json())
+            .then(() => checkBookmarkStatus());
+        });
+
+        checkBookmarkStatus();
+    </script>
+</body>
+</html>

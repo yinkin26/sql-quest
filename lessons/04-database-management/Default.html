@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en" class="pixel-art dark-theme">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Quest - DEFAULT Constraint</title>
+    <link rel="stylesheet" href="../../stylesheets/style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <script src="../../javascripts/loadComponents.js" defer></script>
+    <script src="../../javascripts/script.js" defer></script>
+    <script src="../../javascripts/lessonTracker.js" defer></script>
+    <script type="module" src="../../javascripts/mockTables.js"></script>
+</head>
+<body class="pixel-art dark-theme">
+    <div id="header"></div>
+    <div class="lesson-layout">
+        <div id="sidebar"></div>
+
+        <section class="lesson-content">
+            <h2>🎯 DEFAULT Constraint</h2>
+
+            <!-- Bookmark buttons -->
+            <div class="bookmark-container">
+                <button id="bookmarkBtn" style="display: none;">🔖 Bookmark</button>
+                <button id="unbookmarkBtn" style="display: none;">❌ Remove Bookmark</button>
+                <span id="bookmarkStatus"></span>
+            </div>
+
+            <div class="callout-box">
+                <p>🎯 The automatic filler! DEFAULT constraint provides fallback values when no data is specified during insertion.</p>
+            </div>
+
+            <h3>📌 What is a DEFAULT Constraint?</h3>
+            <p>A <code class="tooltip" title="Provides automatic values">DEFAULT</code> constraint specifies a default value for a column when no value is provided during an INSERT operation. It's like having a 🤖 helpful assistant that fills in missing information automatically!</p>
+
+            <h3>🎯 DEFAULT Constraint Features</h3>
+            <div style="background: rgba(34, 139, 34, 0.1); border: 2px solid #228b22; border-radius: 8px; padding: 15px; margin: 15px 0;">
+                <h4 style="color: #228b22; margin-top: 0;">🔍 Key Features</h4>
+                <ul style="color: #90ee90;">
+                    <li>🎯 <strong>AUTOMATIC VALUES</strong> - Fills in missing data during INSERT</li>
+                    <li>🔄 <strong>FLEXIBLE TYPES</strong> - Supports literals, expressions, and functions</li>
+                    <li>⚡ <strong>PERFORMANCE FRIENDLY</strong> - No overhead during SELECT operations</li>
+                    <li>🛡️ <strong>DATA CONSISTENCY</strong> - Ensures columns always have meaningful values</li>
+                    <li>📊 <strong>BUSINESS LOGIC</strong> - Encodes common default behaviors</li>
+                </ul>
+            </div>
+
+            <h3>🧠 Basic Syntax</h3>
+
+            <h4>Method 1: Column Definition with DEFAULT</h4>
+            <pre><code>CREATE TABLE <span style="color: #00ffff;">users</span> (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(50) NOT NULL,
+    <span style="color: #ffd700;">status</span> VARCHAR(20) <span style="color: #228b22;">DEFAULT</span> <span style="color: #98fb98;">'active'</span>,
+    <span style="color: #ffd700;">created_at</span> TIMESTAMP <span style="color: #228b22;">DEFAULT</span> <span style="color: #98fb98;">CURRENT_TIMESTAMP</span>,
+    <span style="color: #ffd700;">login_count</span> INT <span style="color: #228b22;">DEFAULT</span> <span style="color: #98fb98;">0</span>
+);</code></pre>
+
+            <h4>Method 2: Adding DEFAULT to Existing Column</h4>
+            <pre><code>-- Add DEFAULT to existing column
+ALTER TABLE <span style="color: #00ffff;">users</span>
+ALTER COLUMN <span style="color: #ffd700;">status</span> SET <span style="color: #228b22;">DEFAULT</span> <span style="color: #98fb98;">'pending'</span>;
+
+-- Remove DEFAULT from column
+ALTER TABLE <span style="color: #00ffff;">users</span>
+ALTER COLUMN <span style="color: #ffd700;">status</span> DROP <span style="color: #228b22;">DEFAULT</span>;</code></pre>
+
+
+
+            <h3>📊 Mock Table Preview</h3>
+            <p>🔍 See how DEFAULT constraints provide automatic values:</p>
+            <button class="neon-button" onclick="displayMockTable('products')">📦 View Products Table</button>
+            <div class="query-output" id="mockTableOutput"></div>
+            <div style="background: rgba(34, 139, 34, 0.1); border: 1px solid #228b22; border-radius: 6px; padding: 10px; margin-top: 10px;">
+                <h5 style="color: #228b22; margin: 0 0 5px 0;">🎯 DEFAULT Behavior:</h5>
+                <ul style="color: #90ee90; margin: 5px 0 0 20px; font-size: 0.9em;">
+                    <li><strong>Row 1:</strong> All values specified explicitly</li>
+                    <li><strong>Row 2:</strong> Only name specified - all other columns use DEFAULT values</li>
+                    <li><strong>Row 3:</strong> Name, price, and status specified - created_at and stock use DEFAULT</li>
+                </ul>
+            </div>
+
+            <h3>🔍 Types of DEFAULT Values</h3>
+            
+            <h4>📝 Literal Values</h4>
+            <pre><code>-- String literals
+<span style="color: #ffd700;">status</span> VARCHAR(20) <span style="color: #228b22;">DEFAULT</span> <span style="color: #98fb98;">'active'</span>
+<span style="color: #ffd700;">country</span> VARCHAR(50) <span style="color: #228b22;">DEFAULT</span> <span style="color: #98fb98;">'USA'</span>
+
+-- Numeric literals
+<span style="color: #ffd700;">price</span> DECIMAL(10,2) <span style="color: #228b22;">DEFAULT</span> <span style="color: #98fb98;">0.00</span>
+<span style="color: #ffd700;">quantity</span> INT <span style="color: #228b22;">DEFAULT</span> <span style="color: #98fb98;">1</span>
+<span style="color: #ffd700;">discount</span> DECIMAL(5,2) <span style="color: #228b22;">DEFAULT</span> <span style="color: #98fb98;">0.0</span>
+
+-- Boolean literals
+<span style="color: #ffd700;">is_active</span> BOOLEAN <span style="color: #228b22;">DEFAULT</span> <span style="color: #98fb98;">TRUE</span>
+<span style="color: #ffd700;">is_verified</span> BOOLEAN <span style="color: #228b22;">DEFAULT</span> <span style="color: #98fb98;">FALSE</span></code></pre>
+
+            <h4>📅 Date and Time Functions</h4>
+            <pre><code>-- Current timestamp
+<span style="color: #ffd700;">created_at</span> TIMESTAMP <span style="color: #228b22;">DEFAULT</span> <span style="color: #98fb98;">CURRENT_TIMESTAMP</span>
+<span style="color: #ffd700;">updated_at</span> TIMESTAMP <span style="color: #228b22;">DEFAULT</span> <span style="color: #98fb98;">CURRENT_TIMESTAMP</span> ON UPDATE <span style="color: #98fb98;">CURRENT_TIMESTAMP</span>
+
+-- Current date
+<span style="color: #ffd700;">registration_date</span> DATE <span style="color: #228b22;">DEFAULT</span> <span style="color: #98fb98;">CURDATE()</span>
+
+-- Current time
+<span style="color: #ffd700;">login_time</span> TIME <span style="color: #228b22;">DEFAULT</span> <span style="color: #98fb98;">CURTIME()</span></code></pre>
+
+            <h4>🔢 Mathematical Expressions</h4>
+            <pre><code>-- Simple calculations
+<span style="color: #ffd700;">total_price</span> DECIMAL(10,2) <span style="color: #228b22;">DEFAULT</span> <span style="color: #98fb98;">(price * quantity)</span>
+<span style="color: #ffd700;">expiry_date</span> DATE <span style="color: #228b22;">DEFAULT</span> <span style="color: #98fb98;">(CURDATE() + INTERVAL 30 DAY)</span>
+
+-- System functions
+<span style="color: #ffd700;">session_id</span> VARCHAR(50) <span style="color: #228b22;">DEFAULT</span> <span style="color: #98fb98;">UUID()</span>
+<span style="color: #ffd700;">random_code</span> INT <span style="color: #228b22;">DEFAULT</span> <span style="color: #98fb98;">(FLOOR(RAND() * 10000))</span></code></pre>
+
+            <h3>📋 DEFAULT Constraint Examples</h3>
+            <button class="neon-button" onclick="showDefaultExamples()">Show DEFAULT Examples</button>
+            <div id="defaultExamplesOutput" class="query-output" style="margin-top: 10px;"></div>
+
+            <h3>🌍 Real-World DEFAULT Examples</h3>
+            
+            <h4>👥 User Management System</h4>
+            <pre><code>CREATE TABLE <span style="color: #00ffff;">users</span> (
+    user_id INT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    <span style="color: #ffd700;">status</span> VARCHAR(20) <span style="color: #228b22;">DEFAULT</span> <span style="color: #98fb98;">'pending'</span>,           -- 🔄 New users start pending
+    <span style="color: #ffd700;">role</span> VARCHAR(20) <span style="color: #228b22;">DEFAULT</span> <span style="color: #98fb98;">'user'</span>,                -- 👤 Default role is user
+    <span style="color: #ffd700;">is_active</span> BOOLEAN <span style="color: #228b22;">DEFAULT</span> <span style="color: #98fb98;">TRUE</span>,              -- ✅ Active by default
+    <span style="color: #ffd700;">login_count</span> INT <span style="color: #228b22;">DEFAULT</span> <span style="color: #98fb98;">0</span>,                 -- 🔢 Start with zero logins
+    <span style="color: #ffd700;">created_at</span> TIMESTAMP <span style="color: #228b22;">DEFAULT</span> <span style="color: #98fb98;">CURRENT_TIMESTAMP</span>, -- 📅 Auto timestamp
+    <span style="color: #ffd700;">last_login</span> TIMESTAMP <span style="color: #228b22;">DEFAULT</span> <span style="color: #98fb98;">NULL</span>,           -- 🕐 No login yet
+    <span style="color: #ffd700;">profile_picture</span> VARCHAR(255) <span style="color: #228b22;">DEFAULT</span> <span style="color: #98fb98;">'default-avatar.png'</span> -- 🖼️ Default image
+);</code></pre>
+
+            <h4>🛒 E-commerce Orders</h4>
+            <pre><code>CREATE TABLE <span style="color: #00ffff;">orders</span> (
+    order_id INT PRIMARY KEY AUTO_INCREMENT,
+    customer_id INT NOT NULL,
+    <span style="color: #ffd700;">order_status</span> VARCHAR(20) <span style="color: #228b22;">DEFAULT</span> <span style="color: #98fb98;">'pending'</span>,        -- 📦 New orders are pending
+    <span style="color: #ffd700;">payment_status</span> VARCHAR(20) <span style="color: #228b22;">DEFAULT</span> <span style="color: #98fb98;">'unpaid'</span>,       -- 💳 Payment pending
+    <span style="color: #ffd700;">shipping_cost</span> DECIMAL(8,2) <span style="color: #228b22;">DEFAULT</span> <span style="color: #98fb98;">5.99</span>,        -- 🚚 Standard shipping
+    <span style="color: #ffd700;">tax_rate</span> DECIMAL(5,4) <span style="color: #228b22;">DEFAULT</span> <span style="color: #98fb98;">0.0825</span>,          -- 📊 Default tax rate
+    <span style="color: #ffd700;">currency</span> CHAR(3) <span style="color: #228b22;">DEFAULT</span> <span style="color: #98fb98;">'USD'</span>,               -- 💰 Default currency
+    <span style="color: #ffd700;">order_date</span> TIMESTAMP <span style="color: #228b22;">DEFAULT</span> <span style="color: #98fb98;">CURRENT_TIMESTAMP</span>, -- 📅 Order timestamp
+    <span style="color: #ffd700;">estimated_delivery</span> DATE <span style="color: #228b22;">DEFAULT</span> <span style="color: #98fb98;">(CURDATE() + INTERVAL 7 DAY)</span> -- 📦 7 days delivery
+);</code></pre>
+
+            <h4>📝 Blog Posts System</h4>
+            <pre><code>CREATE TABLE <span style="color: #00ffff;">posts</span> (
+    post_id INT PRIMARY KEY AUTO_INCREMENT,
+    title VARCHAR(200) NOT NULL,
+    content TEXT NOT NULL,
+    author_id INT NOT NULL,
+    <span style="color: #ffd700;">status</span> VARCHAR(20) <span style="color: #228b22;">DEFAULT</span> <span style="color: #98fb98;">'draft'</span>,             -- 📝 Start as draft
+    <span style="color: #ffd700;">visibility</span> VARCHAR(20) <span style="color: #228b22;">DEFAULT</span> <span style="color: #98fb98;">'public'</span>,         -- 👁️ Public by default
+    <span style="color: #ffd700;">view_count</span> INT <span style="color: #228b22;">DEFAULT</span> <span style="color: #98fb98;">0</span>,                   -- 👀 Zero views initially
+    <span style="color: #ffd700;">like_count</span> INT <span style="color: #228b22;">DEFAULT</span> <span style="color: #98fb98;">0</span>,                   -- ❤️ Zero likes initially
+    <span style="color: #ffd700;">comment_count</span> INT <span style="color: #228b22;">DEFAULT</span> <span style="color: #98fb98;">0</span>,               -- 💬 Zero comments initially
+    <span style="color: #ffd700;">featured</span> BOOLEAN <span style="color: #228b22;">DEFAULT</span> <span style="color: #98fb98;">FALSE</span>,              -- ⭐ Not featured by default
+    <span style="color: #ffd700;">created_at</span> TIMESTAMP <span style="color: #228b22;">DEFAULT</span> <span style="color: #98fb98;">CURRENT_TIMESTAMP</span>,  -- 📅 Creation timestamp
+    <span style="color: #ffd700;">updated_at</span> TIMESTAMP <span style="color: #228b22;">DEFAULT</span> <span style="color: #98fb98;">CURRENT_TIMESTAMP</span> ON UPDATE <span style="color: #98fb98;">CURRENT_TIMESTAMP</span> -- 🔄 Auto-update
+);</code></pre>
+
+            <h4>🏦 Banking Accounts</h4>
+            <pre><code>CREATE TABLE <span style="color: #00ffff;">accounts</span> (
+    account_id INT PRIMARY KEY AUTO_INCREMENT,
+    account_number VARCHAR(20) UNIQUE NOT NULL,
+    customer_id INT NOT NULL,
+    <span style="color: #ffd700;">account_type</span> VARCHAR(20) <span style="color: #228b22;">DEFAULT</span> <span style="color: #98fb98;">'checking'</span>,      -- 🏦 Default account type
+    <span style="color: #ffd700;">balance</span> DECIMAL(15,2) <span style="color: #228b22;">DEFAULT</span> <span style="color: #98fb98;">0.00</span>,            -- 💰 Start with zero balance
+    <span style="color: #ffd700;">interest_rate</span> DECIMAL(5,4) <span style="color: #228b22;">DEFAULT</span> <span style="color: #98fb98;">0.0100</span>,      -- 📈 1% default interest
+    <span style="color: #ffd700;">status</span> VARCHAR(20) <span style="color: #228b22;">DEFAULT</span> <span style="color: #98fb98;">'active'</span>,           -- ✅ Active by default
+    <span style="color: #ffd700;">overdraft_limit</span> DECIMAL(10,2) <span style="color: #228b22;">DEFAULT</span> <span style="color: #98fb98;">0.00</span>,     -- 🚫 No overdraft by default
+    <span style="color: #ffd700;">monthly_fee</span> DECIMAL(6,2) <span style="color: #228b22;">DEFAULT</span> <span style="color: #98fb98;">0.00</span>,         -- 💳 No monthly fee
+    <span style="color: #ffd700;">opened_date</span> DATE <span style="color: #228b22;">DEFAULT</span> <span style="color: #98fb98;">CURDATE()</span>,           -- 📅 Today's date
+    <span style="color: #ffd700;">last_activity</span> TIMESTAMP <span style="color: #228b22;">DEFAULT</span> <span style="color: #98fb98;">CURRENT_TIMESTAMP</span> -- 🕐 Account opening time
+);</code></pre>
+
+            <h4>📚 Library Management</h4>
+            <pre><code>CREATE TABLE <span style="color: #00ffff;">books</span> (
+    book_id INT PRIMARY KEY AUTO_INCREMENT,
+    title VARCHAR(200) NOT NULL,
+    author VARCHAR(100) NOT NULL,
+    isbn VARCHAR(20) UNIQUE,
+    <span style="color: #ffd700;">status</span> VARCHAR(20) <span style="color: #228b22;">DEFAULT</span> <span style="color: #98fb98;">'available'</span>,        -- 📚 Available by default
+    <span style="color: #ffd700;">condition_rating</span> INT <span style="color: #228b22;">DEFAULT</span> <span style="color: #98fb98;">5</span>,              -- ⭐ Perfect condition (1-5)
+    <span style="color: #ffd700;">rental_price</span> DECIMAL(6,2) <span style="color: #228b22;">DEFAULT</span> <span style="color: #98fb98;">2.99</span>,        -- 💰 Standard rental price
+    <span style="color: #ffd700;">late_fee</span> DECIMAL(6,2) <span style="color: #228b22;">DEFAULT</span> <span style="color: #98fb98;">0.50</span>,             -- ⏰ Daily late fee
+    <span style="color: #ffd700;">max_rental_days</span> INT <span style="color: #228b22;">DEFAULT</span> <span style="color: #98fb98;">14</span>,              -- 📅 2 weeks rental period
+    <span style="color: #ffd700;">times_borrowed</span> INT <span style="color: #228b22;">DEFAULT</span> <span style="color: #98fb98;">0</span>,               -- 📊 Borrowing counter
+    <span style="color: #ffd700;">added_date</span> DATE <span style="color: #228b22;">DEFAULT</span> <span style="color: #98fb98;">CURDATE()</span>,             -- 📅 Date added to library
+    <span style="color: #ffd700;">last_borrowed</span> DATE <span style="color: #228b22;">DEFAULT</span> <span style="color: #98fb98;">NULL</span>              -- 📖 Never borrowed yet
+);</code></pre>
+
+            <h3>🔄 INSERT Behavior with DEFAULT</h3>
+            <pre><code>-- Method 1: Explicit DEFAULT keyword
+INSERT INTO <span style="color: #00ffff;">users</span> (username, email, status, role)
+VALUES ('john_doe', 'john@email.com', <span style="color: #228b22;">DEFAULT</span>, <span style="color: #228b22;">DEFAULT</span>);
+
+-- Method 2: Omit columns (uses DEFAULT automatically)
+INSERT INTO <span style="color: #00ffff;">users</span> (username, email)
+VALUES ('jane_doe', 'jane@email.com');
+
+-- Method 3: Specify some values, omit others
+INSERT INTO <span style="color: #00ffff;">users</span> (username, email, role)
+VALUES ('admin_user', 'admin@email.com', 'admin');
+
+-- Method 4: Override DEFAULT with explicit value
+INSERT INTO <span style="color: #00ffff;">users</span> (username, email, status, is_active)
+VALUES ('test_user', 'test@email.com', 'inactive', FALSE);</code></pre>
+
+            <h3>⚠️ DEFAULT Constraint Best Practices</h3>
+            <div style="background: rgba(40, 167, 69, 0.2); border: 2px solid #28a745; border-radius: 8px; padding: 15px; margin: 15px 0;">
+                <h4 style="color: #28a745; margin-top: 0;">✅ Do's</h4>
+                <ul style="color: #d4edda;">
+                    <li>🎯 <strong>Meaningful defaults</strong> - choose values that make business sense</li>
+                    <li>📊 <strong>Common values</strong> - use the most frequent expected values</li>
+                    <li>🔄 <strong>Status fields</strong> - perfect for workflow states</li>
+                    <li>📅 <strong>Timestamps</strong> - use CURRENT_TIMESTAMP for audit trails</li>
+                    <li>🔢 <strong>Counters</strong> - start numeric counters at 0</li>
+                    <li>✅ <strong>Boolean flags</strong> - set logical default states</li>
+                </ul>
+            </div>
+
+            <div style="background: rgba(220, 53, 69, 0.2); border: 2px solid #dc3545; border-radius: 8px; padding: 15px; margin: 15px 0;">
+                <h4 style="color: #dc3545; margin-top: 0;">❌ Don'ts</h4>
+                <ul style="color: #f8d7da;">
+                    <li>🚫 <strong>Don't use complex expressions</strong> - keep defaults simple</li>
+                    <li>⚡ <strong>Don't use expensive functions</strong> - avoid performance impact</li>
+                    <li>🔄 <strong>Don't use non-deterministic functions</strong> - unless specifically needed</li>
+                    <li>🎯 <strong>Don't set defaults for PRIMARY KEY</strong> - use AUTO_INCREMENT instead</li>
+                    <li>📊 <strong>Don't use defaults for required business data</strong> - force explicit values</li>
+                </ul>
+            </div>
+
+            <h3>💡 Helpful Tips</h3>
+            <ul>
+                <li>🔍 Use <code>SHOW CREATE TABLE table_name;</code> to see DEFAULT values</li>
+                <li>⚡ <strong>Performance</strong> - DEFAULT values don't impact SELECT performance</li>
+                <li>🛡️ <strong>Data consistency</strong> - ensures columns always have values</li>
+                <li>🎯 <strong>Business logic</strong> - encode common behaviors in schema</li>
+                <li>🔄 <strong>Maintenance</strong> - easier to change defaults than update existing data</li>
+                <li>📊 <strong>Documentation</strong> - defaults serve as implicit documentation</li>
+                <li>🕐 <strong>Timestamps</strong> - CURRENT_TIMESTAMP is perfect for audit trails</li>
+            </ul>
+
+            <h3>🧠 Summary</h3>
+            <ul>
+                <li>🎯 <strong>DEFAULT</strong> provides automatic values when none specified</li>
+                <li>🔄 <strong>Flexible types</strong> - supports literals, expressions, and functions</li>
+                <li>⚡ <strong>Performance friendly</strong> - no overhead during SELECT operations</li>
+                <li>🛡️ <strong>Data consistency</strong> - ensures meaningful values in all columns</li>
+                <li>📊 <strong>Business logic</strong> - encodes common default behaviors</li>
+                <li>🎯 <strong>User experience</strong> - reduces required input during data entry</li>
+            </ul>
+
+            <h3>🧪 Practice</h3>
+            <p>📚 Create a table called <code>"employees"</code> with DEFAULT values for status, department, and hire_date.</p>
+            <div class="editor-container">
+                <textarea class="code-editor" id="exerciseInput" placeholder="Write your CREATE TABLE statement with DEFAULT constraints here..."></textarea>
+                <button class="neon-button" onclick="validateExercise()">Submit</button>
+                <div id="exerciseFeedback" style="margin-top:15px;"></div>
+            </div>
+
+            <h3>🎯 Quiz</h3>
+            <p><strong>What happens when you INSERT a row without specifying a value for a column that has a DEFAULT constraint?</strong></p>
+            <div class="quiz">
+                <button onclick="checkAnswer(this, false)">A) The INSERT fails with an error</button>
+                <button onclick="checkAnswer(this, false)">B) The column is set to NULL</button>
+                <button onclick="checkAnswer(this, true)">C) The DEFAULT value is automatically used</button>
+                <button onclick="checkAnswer(this, false)">D) The column is left empty</button>
+                <p class="quiz-feedback"></p>
+                <div id="quizExplanation" class="quiz-explanation" style="display:none;"></div>
+            </div>
+        </section>
+    </div>
+
+    <div id="footer"></div>
+
+    <script>
+        let quizCompleted = false;
+        function checkAnswer(button, isCorrect) {
+            if (quizCompleted) return;
+            
+            const feedback = button.parentElement.querySelector(".quiz-feedback");
+            const explanationBox = document.getElementById("quizExplanation");
+            const quizContainer = button.parentElement;
+
+            if (isCorrect) {
+                // Correct answer - disable all buttons and mark as completed
+                quizCompleted = true;
+                const allButtons = quizContainer.querySelectorAll('button');
+                allButtons.forEach(btn => {
+                    btn.disabled = true;
+                    if (btn === button) {
+                        btn.style.backgroundColor = '#44ff44';
+                        btn.style.boxShadow = '0 0 15px rgba(68, 255, 68, 0.5)';
+                    }
+                });
+                
+                feedback.style.color = "lightgreen";
+                feedback.innerHTML = "✅ Correct! Quiz completed!";
+                explanationBox.innerHTML = `
+                        <p><strong>Explanation:</strong></p>
+                        <ul>
+                            <li><code>DEFAULT</code> constraints automatically provide values when no value is specified during INSERT operations.</li>
+                            <li>This ensures data consistency and reduces the need for explicit value specification.</li>
+                        </ul>`;
+            } else {
+                // Incorrect answer - disable this button only
+                button.disabled = true;
+                button.style.backgroundColor = '#ff4444';
+                button.style.opacity = '0.6';
+                button.style.cursor = 'not-allowed';
+                
+                feedback.style.color = "red";
+                feedback.innerHTML = "❌ Incorrect. Try another answer!";
+                
+                // Add retry message if not already present
+                let retryMsg = quizContainer.querySelector('.retry-message');
+                if (!retryMsg) {
+                    retryMsg = document.createElement('p');
+                    retryMsg.className = 'retry-message';
+                    retryMsg.style.color = '#ffd700';
+                    retryMsg.style.fontWeight = 'bold';
+                    retryMsg.style.marginTop = '10px';
+                    retryMsg.innerHTML = '💡 Keep trying! Choose another answer.';
+                    feedback.parentNode.insertBefore(retryMsg, feedback.nextSibling);
+                }
+                
+                const buttonText = button.textContent;
+                if (buttonText.includes('INSERT fails')) {
+                    explanationBox.innerHTML = `
+                            <p><strong>Explanation:</strong></p>
+                            <ul>
+                                <li>DEFAULT constraints don't cause INSERT operations to fail - they provide fallback values.</li>
+                            </ul>`;
+                } else if (buttonText.includes('set to NULL')) {
+                    explanationBox.innerHTML = `
+                            <p><strong>Explanation:</strong></p>
+                            <ul>
+                                <li>DEFAULT constraints provide specific values, not NULL (unless NULL is the default value).</li>
+                            </ul>`;
+                } else if (buttonText.includes('left empty')) {
+                    explanationBox.innerHTML = `
+                            <p><strong>Explanation:</strong></p>
+                            <ul>
+                                <li>DEFAULT constraints ensure columns are never left empty - they always provide a value.</li>
+                            </ul>`;
+                }
+            }
+
+            explanationBox.style.display = "block";
+            explanationBox.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+
+        function runDefaultDemo() {
+            const textarea = document.querySelector('.code-editor');
+            const output = document.querySelector('.query-output');
+            const query = textarea.value.trim().toLowerCase();
+            
+            if (query.includes('create table') && query.includes('default')) {
+                const tableName = query.match(/create table\s+(\w+)/)?.[1] || 'table';
+                const defaultCount = (query.match(/default/g) || []).length;
+                const hasTimestamp = query.includes('current_timestamp') || query.includes('now()');
+                const hasLiteral = query.includes("default '");
+                
+                output.innerHTML = `
+                    <div style="color: #90ee90; font-family: 'Courier New', monospace;">
+                        <h4>✅ DEFAULT Demo Results:</h4>
+                        <p>📊 Table: <strong>${tableName}</strong></p>
+                        <p>🎯 DEFAULT constraints found: <strong>${defaultCount}</strong></p>
+                        <p>📅 Uses timestamp functions: <strong>${hasTimestamp ? 'Yes' : 'No'}</strong></p>
+                        <p>📝 Uses literal values: <strong>${hasLiteral ? 'Yes' : 'No'}</strong></p>
+                        <p style="color: #ffd700;">💡 DEFAULT constraints will automatically provide values for unspecified columns during INSERT operations.</p>
+                    </div>
+                `;
+            } else {
+                output.innerHTML = `
+                    <div style="color: #ff6b6b;">
+                        <p>❌ Please write a CREATE TABLE statement with DEFAULT constraints.</p>
+                        <p>💡 Example: CREATE TABLE users (id INT, status VARCHAR(20) DEFAULT 'active');</p>
+                    </div>
+                `;
+            }
+        }
+        
+        function validateExercise() {
+            const input = document.getElementById('exerciseInput').value.trim().toLowerCase();
+            const feedback = document.getElementById('exerciseFeedback');
+            
+            if (input.includes('create table') && input.includes('employees') && input.includes('default')) {
+                const hasStatus = input.includes('status') && input.includes('default');
+                const hasDepartment = input.includes('department') && input.includes('default');
+                const hasHireDate = input.includes('hire_date') && input.includes('default');
+                
+                let score = 0;
+                let details = [];
+                
+                if (hasStatus) {
+                    score++;
+                    details.push('✅ Status with DEFAULT');
+                } else {
+                    details.push('❌ Missing status with DEFAULT');
+                }
+                
+                if (hasDepartment) {
+                    score++;
+                    details.push('✅ Department with DEFAULT');
+                } else {
+                    details.push('❌ Missing department with DEFAULT');
+                }
+                
+                if (hasHireDate) {
+                    score++;
+                    details.push('✅ Hire_date with DEFAULT');
+                } else {
+                    details.push('❌ Missing hire_date with DEFAULT');
+                }
+                
+                feedback.innerHTML = `
+                    <div style="color: ${score === 3 ? '#90ee90' : '#ffd700'}; border: 2px solid ${score === 3 ? '#228b22' : '#ffa500'}; border-radius: 8px; padding: 15px; background: rgba(${score === 3 ? '34, 139, 34' : '255, 165, 0'}, 0.1);">
+                        <h4>${score === 3 ? '🎉 Excellent!' : '📝 Good effort!'} Score: ${score}/3</h4>
+                        ${details.map(detail => `<p>${detail}</p>`).join('')}
+                        ${score === 3 ? '<p>🏆 Perfect! You\'ve successfully created an employees table with all required DEFAULT constraints!</p>' : '<p>💡 Keep trying! Make sure to include DEFAULT values for status, department, and hire_date columns.</p>'}
+                    </div>
+                `;
+            } else {
+                feedback.innerHTML = `
+                    <div style="color: #ff6b6b; border: 2px solid #dc3545; border-radius: 8px; padding: 15px; background: rgba(220, 53, 69, 0.1);">
+                        <h4>❌ Invalid Solution</h4>
+                        <p>Please create a table named 'employees' with DEFAULT constraints.</p>
+                        <p>💡 Example: CREATE TABLE employees (id INT PRIMARY KEY, status VARCHAR(20) DEFAULT 'active', ...);</p>
+                    </div>
+                `;
+            }
+        }
+        
+        function showDefaultExamples() {
+            const output = document.getElementById('defaultExamplesOutput');
+            output.innerHTML = `
+                <div style="color: #90ee90; font-family: 'Courier New', monospace;">
+                    <h4>🎯 DEFAULT Constraint Examples:</h4>
+                    <div style="background: rgba(34, 139, 34, 0.1); border: 1px solid #228b22; border-radius: 6px; padding: 15px; margin: 10px 0;">
+                        <h5 style="color: #ffd700;">📝 String Defaults:</h5>
+                        <p>status VARCHAR(20) DEFAULT 'active'</p>
+                        <p>country VARCHAR(50) DEFAULT 'USA'</p>
+                    </div>
+                    <div style="background: rgba(34, 139, 34, 0.1); border: 1px solid #228b22; border-radius: 6px; padding: 15px; margin: 10px 0;">
+                        <h5 style="color: #ffd700;">🔢 Numeric Defaults:</h5>
+                        <p>price DECIMAL(10,2) DEFAULT 0.00</p>
+                        <p>quantity INT DEFAULT 1</p>
+                    </div>
+                    <div style="background: rgba(34, 139, 34, 0.1); border: 1px solid #228b22; border-radius: 6px; padding: 15px; margin: 10px 0;">
+                        <h5 style="color: #ffd700;">📅 Date/Time Defaults:</h5>
+                        <p>created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP</p>
+                        <p>registration_date DATE DEFAULT CURDATE()</p>
+                    </div>
+                    <div style="background: rgba(34, 139, 34, 0.1); border: 1px solid #228b22; border-radius: 6px; padding: 15px; margin: 10px 0;">
+                        <h5 style="color: #ffd700;">✅ Boolean Defaults:</h5>
+                        <p>is_active BOOLEAN DEFAULT TRUE</p>
+                        <p>is_verified BOOLEAN DEFAULT FALSE</p>
+                    </div>
+                </div>
+             `;
+         }
+    </script>
+</body>
+</html>

@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en" class="pixel-art dark-theme">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SQL Quest - SQL INSERT INTO</title>
+    <link rel="stylesheet" href="stylesheets/style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        .highlight-inserted {
+            background-color: #2a2f4a;
+            border-top: 2px dashed lime;
+        }
+    </style>
+    <script src="javascripts/loadComponents.js" defer></script>
+    <script src="javascripts/script.js" defer></script>
+    <script src="javascripts/lessonTracker.js" defer></script>
+
+</head>
+<body class="pixel-art dark-theme">
+    <div id="header"></div>
+    <div class="lesson-layout">
+        <div id="sidebar"></div>
+
+        <section class="lesson-content">
+            <h2>➕ SQL INSERT INTO</h2>
+
+            <!-- Add bookmark buttons -->
+            <div class="bookmark-container">
+                <button id="bookmarkBtn" style="display: none;">🔖 Bookmark</button>
+                <button id="unbookmarkBtn" style="display: none;">❌ Remove Bookmark</button>
+                <span id="bookmarkStatus"></span>
+            </div>
+
+            <!-- Explanation of INSERT INTO Statement -->
+            <h3>📌 What is the INSERT INTO Statement?</h3>
+            <p>The <code class="tooltip" title="Used to insert data into a table">INSERT INTO</code> statement is used to add new rows of data into a table in SQL. You specify the table name and the values you wish to insert into each column.</p>
+
+            <h3>🧠 Basic Syntax</h3>
+            <pre><code>INSERT INTO table_name (column1, column2, column3)
+VALUES (value1, value2, value3);</code></pre>
+
+            <h3>💡 Example</h3>
+            <pre><code>INSERT INTO users (user_id, username, email, created_at)
+VALUES (1, 'john_doe', 'john@example.com', '2024-05-01 10:30:00');</code></pre>
+
+            <!-- Try a Query Section - User Data -->
+            <h3>🧪 Try a Query (User Data)</h3>
+            <p><strong>Note:</strong> Semicolon <code>;</code> is optional in many systems but required when running multiple statements.</p>
+            <p>✍️ Edit the SQL query below and press "Run" to see the result. This feature will display mock data from the table after the `INSERT INTO` query runs.</p>
+            <div class="code-block">
+                <textarea class="code-editor">INSERT INTO users (user_id, username, email, created_at)
+VALUES (4, 'bob_jones', 'bob@example.com', '2024-08-10 09:00:00');</textarea>
+                <button class="neon-button" onclick="displayMockTable('user')">View Mock Table</button>
+                <div class="query-output" id="mockTableOutput"></div>
+            </div>
+
+            <h3>🌍 Real-World Use Case</h3>
+            <p>SQL <code>INSERT INTO</code> is commonly used in web applications to add new user records, product listings, or other transactional data. For example, an e-commerce platform might use the `INSERT INTO` statement to add a new product:</p>
+            <pre><code>INSERT INTO products (product_id, product_name, price, quantity)
+VALUES (1, 'Laptop', 999.99, 10);</code></pre>
+
+            <h3>💡 Helpful Tips</h3>
+            <ul>
+                <li>Always specify the correct data types for each column (e.g., <code>INT</code>, <code>VARCHAR</code>, <code>DECIMAL</code>).</li>
+                <li>If you're inserting multiple rows, you can separate them with commas. <span class="tooltip" title="Insert multiple rows with commas after each set of values">Tip: Multiple rows</span></li>
+                <li>Make sure to match the column order when specifying values.</li>
+            </ul>
+
+            <!-- Summary -->
+            <h3>🧠 Summary</h3>
+            <ul>
+                <li><code>INSERT INTO</code> is used to insert new records into a table.</li>
+                <li>Specify the columns in the table and the corresponding values for each column.</li>
+                <li>Ensure data types match between columns and values.</li>
+            </ul>
+
+            <!-- Practice Section - Product Data -->
+            <h3>🧪 Practice: Insert Data into the Products Table</h3>
+            <p>Write an <code>INSERT INTO</code> insert a product like a "Tablet" with a price of 499.99 and a release date of "2024-08-01" and the product id is 4 </p>statement to insert data into the <code>products</code> table with:</p>
+            <ul>
+                <li><code>product_id</code> (INT)</li>
+                <li><code>product_name</code> (VARCHAR(100))</li>
+                <li><code>price</code> (DECIMAL(8,2))</li>
+                <li><code>release_date</code> (DATE)</li>
+            </ul>
+
+            <div class="editor-container">
+                <textarea class="code-editor" id="exerciseInput" placeholder="Write your INSERT INTO query here..."></textarea>
+                <button class="neon-button" onclick="validateInsertData()">Submit</button>
+                <div id="exerciseFeedback" style="margin-top: 15px;"></div>
+            </div>
+
+            <!-- Mock Table for Displaying After Submit -->
+            <div class="mock-table" id="mockTable" style="display: none;">
+                <h4>Preview: What the table would look like before and after inserting data:</h4>
+
+                <!-- Before Insert Table (Product Data)-->
+                <h5>Before Insert:</h5>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>product_id</th>
+                            <th>product_name</th>
+                            <th>price</th>
+                            <th>release_date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>Laptop</td>
+                            <td>999.99</td>
+                            <td>2024-05-01</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Smartphone</td>
+                            <td>799.49</td>
+                            <td>2024-06-15</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>Headphones</td>
+                            <td>120.99</td>
+                            <td>2024-07-25</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- After Insert Table (Product Data)-->
+                <h5>After Insert:</h5>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>product_id</th>
+                            <th>product_name</th>
+                            <th>price</th>
+                            <th>release_date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>Laptop</td>
+                            <td>999.99</td>
+                            <td>2024-05-01</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Smartphone</td>
+                            <td>799.49</td>
+                            <td>2024-06-15</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>Headphones</td>
+                            <td>120.99</td>
+                            <td>2024-07-25</td>
+                        </tr>
+                        <!-- New Record Inserted -->
+                        <tr class="highlight-inserted">
+                            <td>4</td>
+                            <td>Tablet</td>
+                            <td>499.99</td>
+                            <td>2024-08-01</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Quiz Section -->
+            <h3>🎯 Quiz</h3>
+            <p><strong>What does the <code>INSERT INTO</code> statement do in SQL?</strong></p>
+            <div class="quiz">
+                <button onclick="checkAnswer(this, false)">A) Deletes a table</button>
+                <button onclick="checkAnswer(this, true)">B) Inserts data into a table</button>
+                <button onclick="checkAnswer(this, false)">C) Updates data in a table</button>
+                <button onclick="checkAnswer(this, false)">D) Selects data from a table</button>
+                <p class="quiz-feedback"></p>
+                <div id="quizExplanation" class="quiz-explanation neon-box" style="display: none;"></div>
+            </div>
+        </section>
+    </div>
+
+    <div id="footer"></div>
+
+ 
+    <script>
+        // Function to display mock data for the users table
+        function displayMockTable(tableType) {
+            const output = document.getElementById("mockTableOutput");
+            if (tableType === "user") {
+                output.innerHTML = `
+                            <h5>Before Insert:</h5>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>user_id</th>
+                                        <th>username</th>
+                                        <th>email</th>
+                                        <th>created_at</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>john_doe</td>
+                                        <td>john@example.com</td>
+                                        <td>2024-05-01 10:30:00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>jane_smith</td>
+                                        <td>jane@example.com</td>
+                                        <td>2024-06-15 11:45:00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td>alice_wong</td>
+                                        <td>alice@example.com</td>
+                                        <td>2024-07-20 14:00:00</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <h5>After Insert:</h5>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>user_id</th>
+                                        <th>username</th>
+                                        <th>email</th>
+                                        <th>created_at</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>john_doe</td>
+                                        <td>john@example.com</td>
+                                        <td>2024-05-01 10:30:00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>jane_smith</td>
+                                        <td>jane@example.com</td>
+                                        <td>2024-06-15 11:45:00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td>alice_wong</td>
+                                        <td>alice@example.com</td>
+                                        <td>2024-07-20 14:00:00</td>
+                                    </tr>
+                                    <!-- Highlight New Inserted Row -->
+                                    <tr class="highlight-inserted">
+                                        <td>4</td>
+                                        <td>bob_jones</td>
+                                        <td>bob@example.com</td>
+                                        <td>2024-08-10 09:00:00</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        `;
+            }
+        }
+        let quizCompleted = false;
+        
+        // Function to check the quiz answer
+        function checkAnswer(button, isCorrect) {
+            // If quiz is already completed, don't allow further clicks
+            if (quizCompleted) {
+                return;
+            }
+
+            const feedback = button.parentElement.querySelector(".quiz-feedback");
+            const explanationBox = document.getElementById("quizExplanation");
+            const quizContainer = button.parentElement;
+
+            feedback.innerHTML = "";
+            explanationBox.style.display = "block";
+
+            if (isCorrect) {
+                // Correct answer - disable all buttons and mark as completed
+                quizCompleted = true;
+                const allButtons = quizContainer.querySelectorAll('button');
+                allButtons.forEach(btn => {
+                    btn.disabled = true;
+                    if (btn === button) {
+                        btn.style.backgroundColor = '#44ff44';
+                        btn.style.boxShadow = '0 0 15px rgba(68, 255, 68, 0.5)';
+                    }
+                });
+                
+                feedback.style.color = "lightgreen";
+                feedback.innerHTML = "✅ Correct! Quiz completed!";
+                explanationBox.innerHTML = `
+                <p><strong>Explanation:</strong></p>
+                <ul>
+                    <li>The <code>INSERT INTO</code> statement is used to insert new rows of data into a table.</li>
+                    <li>It specifies the table name and the values to be inserted into each column.</li>
+                    <li>This is the fundamental SQL command for adding data to databases.</li>
+                </ul>
+            `;
+            } else {
+                // Incorrect answer - disable this button only
+                button.disabled = true;
+                button.style.backgroundColor = '#ff4444';
+                button.style.opacity = '0.6';
+                button.style.cursor = 'not-allowed';
+                
+                feedback.style.color = "red";
+                feedback.innerHTML = "❌ Incorrect. Try another answer!";
+                
+                // Add retry message if not already present
+                let retryMsg = quizContainer.querySelector('.retry-message');
+                if (!retryMsg) {
+                    retryMsg = document.createElement('p');
+                    retryMsg.className = 'retry-message';
+                    retryMsg.style.color = '#ffd700';
+                    retryMsg.style.fontWeight = 'bold';
+                    retryMsg.style.marginTop = '10px';
+                    retryMsg.innerHTML = '💡 Keep trying! Choose another answer.';
+                    feedback.parentNode.insertBefore(retryMsg, feedback.nextSibling);
+                }
+                
+                let explanation = "";
+                switch (button.innerText.trim().charAt(0)) {
+                    case "A":
+                        explanation = `
+                        <p><strong>Explanation:</strong></p>
+                        <ul>
+                            <li><code>INSERT INTO</code> does not delete tables - that would be <code>DROP TABLE</code>.</li>
+                            <li>The <code>INSERT INTO</code> statement is specifically for adding new data to existing tables.</li>
+                        </ul>
+                    `;
+                        break;
+                    case "C":
+                        explanation = `
+                        <p><strong>Explanation:</strong></p>
+                        <ul>
+                            <li><code>INSERT INTO</code> does not update existing data - that would be <code>UPDATE</code>.</li>
+                            <li>The <code>INSERT INTO</code> statement creates new rows with new data.</li>
+                        </ul>
+                    `;
+                        break;
+                    case "D":
+                        explanation = `
+                        <p><strong>Explanation:</strong></p>
+                        <ul>
+                            <li><code>INSERT INTO</code> does not select data - that would be <code>SELECT</code>.</li>
+                            <li>The <code>INSERT INTO</code> statement adds new data to tables.</li>
+                        </ul>
+                    `;
+                        break;
+                }
+
+                explanationBox.innerHTML = explanation;
+            }
+
+            explanationBox.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+        function validateInsertData() {
+            const userSQL = document.getElementById("exerciseInput").value.trim().toLowerCase().replace(/\s+/g, " ");
+            const feedback = document.getElementById("exerciseFeedback");
+
+            const expected =
+                "insert into products (product_id, product_name, price, release_date) values (4, 'tablet', 499.99, '2024-08-01');";
+
+            if (userSQL === expected) {
+                feedback.style.color = "lightgreen";
+                feedback.innerHTML = "✅ Perfect! Your INSERT INTO syntax is correct.";
+                // Show the mock table after a correct submission
+                document.getElementById("mockTable").style.display = "block";
+                // Scroll the mock table into view
+                document.getElementById("mockTable").scrollIntoView({ behavior: "smooth" });
+            } else if (userSQL.includes("insert into") && userSQL.includes("products")) {
+                feedback.style.color = "orange";
+                feedback.innerHTML = "⚠️ You're close! Double-check the order of columns, spelling, and if your values use the correct format (e.g. strings wrapped in single quotes).";
+            } else {
+                feedback.style.color = "red";
+                feedback.innerHTML = "❌ That's not quite right. Make sure you're inserting the correct data into the `products` table.";
+            }
+        }
+
+        // Bookmark functionality
+        const lessonId = "Insert_Into";
+        const bookmarkBtn = document.getElementById("bookmarkBtn");
+        const unbookmarkBtn = document.getElementById("unbookmarkBtn");
+        const statusText = document.getElementById("bookmarkStatus");
+
+        // Function to check bookmark status with retry
+        function checkBookmarkStatus(retries = 3) {
+            fetch(`http://localhost:5000/bookmark-status?lessonId=${lessonId}`, {
+                credentials: 'include',
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+                .then(res => {
+                    if (!res.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return res.json();
+                })
+                .then(data => {
+                    if (data.bookmarked) {
+                        bookmarkBtn.style.display = "none";
+                        unbookmarkBtn.style.display = "inline-block";
+                        statusText.textContent = "📌 Bookmarked";
+                    } else {
+                        bookmarkBtn.style.display = "inline-block";
+                        unbookmarkBtn.style.display = "none";
+                        statusText.textContent = "";
+                    }
+                })
+                .catch(error => {
+                    console.error('Error checking bookmark status:', error);
+                    if (retries > 0) {
+                        setTimeout(() => checkBookmarkStatus(retries - 1), 1000);
+                    }
+                });
+        }
+
+        // Add bookmark
+        bookmarkBtn.addEventListener("click", () => {
+            fetch("http://localhost:5000/bookmark", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                    lessonId: lessonId,
+                    bookmarked: true
+                })
+            })
+                .then(res => res.json())
+                .then(() => {
+                    checkBookmarkStatus();
+                });
+        });
+
+        // Remove bookmark
+        unbookmarkBtn.addEventListener("click", () => {
+            fetch("http://localhost:5000/bookmark", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                    lessonId: lessonId,
+                    bookmarked: false
+                })
+            })
+                .then(res => res.json())
+                .then(() => {
+                    checkBookmarkStatus();
+                });
+        });
+
+        // Check initial status when page loads
+        checkBookmarkStatus();
+    </script>
+
+
+</body>
+</html>
+

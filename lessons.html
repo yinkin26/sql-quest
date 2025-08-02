@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Quest - Lessons</title>
+    <link rel="stylesheet" href="stylesheets/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="javascripts/loadComponents.js" defer></script>
+    <script src="javascripts/script.js" defer></script>
+</head>
+<body class="pixel-art dark-theme">
+
+    <!-- Injected Header -->
+    <div id="header"></div>
+
+    <!-- SQL Code Editor -->
+    <div class="editor-container">
+        <h2>Try SQL Commands</h2>
+        <p>Write and execute SQL queries in real-time.</p>
+
+        <!-- Query Input Box & Button -->
+        <div class="query-container">
+            <textarea class="code-editor pixel-font" id="sqlInput" placeholder="Enter SQL query here"></textarea>
+            <button id="runQuery" class="neon-button pixel-font" onclick="runQuery()">Run Query</button>
+        </div>
+
+        <!-- Query Result Display -->
+        <h3>Result:</h3>
+        <div id="queryResult"></div>
+    </div>
+
+    <!-- Injected Footer -->
+    <div id="footer"></div>
+
+    <!-- CodeMirror Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/sql/sql.min.js"></script>
+</body>
+</html>
+

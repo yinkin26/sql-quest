@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en" class="pixel-art dark-theme">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Quest - SQL IN & NOT IN</title>
+    <link rel="stylesheet" href="stylesheets/style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <script src="javascripts/loadComponents.js" defer></script>
+    <script src="javascripts/script.js" defer></script>
+    <script src="javascripts/lessonTracker.js" defer></script>
+</head>
+<body class="pixel-art dark-theme">
+    <div id="header"></div>
+    <div class="lesson-layout">
+        <section class="lesson">
+            <div class="lesson-header">
+                <h1>📋 SQL IN & NOT IN</h1>
+                <div class="bookmark-container">
+                    <button id="bookmarkBtn" class="bookmark-btn" onclick="toggleBookmark('in_not_in')">
+                        <span class="bookmark-icon">🔖</span>
+                        <span class="bookmark-text">Bookmark</span>
+                    </button>
+                    <span id="bookmarkStatus"></span>
+                </div>
+            </div>
+
+            <h3>🤔 What are IN and NOT IN?</h3>
+            <p>The <strong>IN</strong> and <strong>NOT IN</strong> operators are powerful SQL tools that allow you to filter data based on whether a column's value matches any value in a specified list or subquery. These operators provide a clean, readable alternative to multiple OR conditions and are essential for efficient data filtering and analysis.</p>
+            
+            <p><strong>IN and NOT IN are essential for:</strong></p>
+            <ul>
+                <li><strong>Multiple Value Filtering</strong>: Check if a value exists in a predefined list</li>
+                <li><strong>Subquery Integration</strong>: Filter based on results from another query</li>
+                <li><strong>Data Validation</strong>: Verify if values belong to acceptable sets</li>
+                <li><strong>Category Filtering</strong>: Select records from specific categories or groups</li>
+                <li><strong>Exclusion Logic</strong>: Remove unwanted records efficiently</li>
+                <li><strong>Performance Optimization</strong>: More efficient than multiple OR/AND conditions</li>
+                <li><strong>Code Readability</strong>: Cleaner syntax than complex conditional statements</li>
+            </ul>
+            
+            <p><strong>How IN and NOT IN Work:</strong></p>
+            <div class="code-block">
+                <pre><code>-- IN operator: Returns TRUE if value matches ANY in the list
+column_name IN (value1, value2, value3)
+-- Equivalent to:
+column_name = value1 OR column_name = value2 OR column_name = value3
+
+-- NOT IN operator: Returns TRUE if value matches NONE in the list
+column_name NOT IN (value1, value2, value3)
+-- Equivalent to:
+column_name != value1 AND column_name != value2 AND column_name != value3</code></pre>
+            </div>
+            
+            <p><strong>Real-World Applications:</strong></p>
+            <div class="code-block">
+                <pre><code>-- E-commerce: Find products in specific categories
+SELECT * FROM products WHERE category IN ('Electronics', 'Books', 'Clothing');
+
+-- HR: Find employees in certain departments
+SELECT * FROM employees WHERE department IN ('IT', 'Marketing', 'Sales');
+
+-- Finance: Exclude test transactions
+SELECT * FROM transactions WHERE status NOT IN ('Test', 'Cancelled', 'Pending');</code></pre>
+            </div>
+
+            <h3>📝 Basic Syntax</h3>
+            <div class="code-block">
+                <pre><code>-- Basic IN syntax with literal values
+SELECT column1, column2
+FROM table_name
+WHERE column_name IN (value1, value2, value3, ...);
+
+-- Basic NOT IN syntax with literal values
+SELECT column1, column2
+FROM table_name
+WHERE column_name NOT IN (value1, value2, value3, ...);
+
+-- IN with subquery
+SELECT column1, column2
+FROM table_name
+WHERE column_name IN (
+    SELECT column_name
+    FROM another_table
+    WHERE condition
+);
+
+-- NOT IN with subquery
+SELECT column1, column2
+FROM table_name
+WHERE column_name NOT IN (
+    SELECT column_name
+    FROM another_table
+    WHERE condition
+);</code></pre>
+            </div>
+            
+            <p><strong>Key Components:</strong></p>
+            <ul>
+                <li><strong>Column Name</strong>: The field you want to filter</li>
+                <li><strong>Value List</strong>: Comma-separated values in parentheses</li>
+                <li><strong>Data Types</strong>: All values must be compatible with the column type</li>
+                <li><strong>NULL Handling</strong>: Special considerations for NULL values</li>
+                <li><strong>Subqueries</strong>: Dynamic lists from other tables or queries</li>
+            </ul>
+            
+            <p><strong>Important Considerations:</strong></p>
+            <div class="code-block">
+                <pre><code>-- NULL value considerations
+-- If the list contains NULL, IN may return unexpected results
+SELECT * FROM table WHERE column IN (1, 2, NULL);  -- Works as expected
+SELECT * FROM table WHERE column NOT IN (1, 2, NULL);  -- May return no results!
+
+-- Safe NULL handling
+SELECT * FROM table 
+WHERE column NOT IN (1, 2) 
+   OR column IS NULL;
+
+-- Performance considerations
+-- IN is generally faster than multiple OR conditions
+-- For large lists, consider using EXISTS with subqueries
+-- Index on the filtered column improves performance</code></pre>
+            </div>
+
+            <h3>🧪 Try It Yourself</h3>
+            <div class="code-block">
+                <div class="editor-container">
+                    <div class="editor-header">
+                        <span>SQL Editor</span>
+                        <button onclick="runQuery()" class="run-btn">▶ Run Query</button>
+                    </div>
+                    <textarea id="sqlEditor" placeholder="-- Try writing an IN query here\nSELECT name FROM customers WHERE city IN ('New York', 'Los Angeles', 'Chicago');">SELECT name FROM customers WHERE city IN ('New York', 'Los Angeles', 'Chicago');</textarea>
+                </div>
+                <div class="result-container">
+                    <div class="result-header">Query Result</div>
+                    <div id="queryResult" class="result-content">
+                        <p>Click "Run Query" to see results</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3>💡 Examples</h3>
+            
+            <h4>1. E-commerce Product Management</h4>
+            <div class="code-block">
+                <pre><code>-- Find products in specific categories
+SELECT 
+    product_id,
+    product_name,
+    category,
+    price,
+    stock_quantity
+FROM products
+WHERE category IN ('Electronics', 'Books', 'Clothing', 'Home & Garden')
+  AND stock_quantity > 0
+ORDER BY category, price DESC;
+
+-- Find products NOT in discontinued categories
+SELECT 
+    product_id,
+    product_name,
+    category,
+    price,
+    created_date
+FROM products
+WHERE category NOT IN ('Discontinued', 'Seasonal', 'Limited Edition')
+  AND price BETWEEN 10 AND 500
+ORDER BY created_date DESC;</code></pre>
+            </div>
+            
+            <h4>2. Customer Segmentation and Analysis</h4>
+            <div class="code-block">
+                <pre><code>-- Find customers from major cities
+SELECT 
+    customer_id,
+    CONCAT(first_name, ' ', last_name) as full_name,
+    city,
+    state,
+    email,
+    registration_date
+FROM customers
+WHERE city IN (
+    'New York', 'Los Angeles', 'Chicago', 'Houston', 
+    'Phoenix', 'Philadelphia', 'San Antonio', 'San Diego'
+)
+ORDER BY state, city, registration_date DESC;
+
+-- Find customers NOT from specific regions (for targeted campaigns)
+SELECT 
+    customer_id,
+    first_name,
+    last_name,
+    city,
+    state,
+    total_orders,
+    total_spent
+FROM customers
+WHERE state NOT IN ('CA', 'NY', 'TX', 'FL')  -- Exclude major states
+  AND total_spent > 1000
+ORDER BY total_spent DESC;</code></pre>
+            </div>
+            
+            <h4>3. Order and Transaction Processing</h4>
+            <div class="code-block">
+                <pre><code>-- Find orders with specific statuses
+SELECT 
+    order_id,
+    customer_id,
+    order_date,
+    status,
+    total_amount,
+    shipping_address
+FROM orders
+WHERE status IN ('Processing', 'Shipped', 'Delivered')
+  AND order_date >= DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY)
+ORDER BY order_date DESC, total_amount DESC;
+
+-- Find problematic orders (excluding normal statuses)
+SELECT 
+    order_id,
+    customer_id,
+    order_date,
+    status,
+    total_amount,
+    DATEDIFF(CURRENT_DATE, order_date) as days_since_order
+FROM orders
+WHERE status NOT IN ('Delivered', 'Cancelled')
+  AND order_date < DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY)
+ORDER BY days_since_order DESC;</code></pre>
+            </div>
+            
+            <h4>4. Employee Management and HR Analytics</h4>
+            <div class="code-block">
+                <pre><code>-- Find employees in technical departments
+SELECT 
+    employee_id,
+    CONCAT(first_name, ' ', last_name) as full_name,
+    department,
+    job_title,
+    salary,
+    hire_date
+FROM employees
+WHERE department IN (
+    'Information Technology', 'Software Development', 
+    'Data Science', 'DevOps', 'Quality Assurance'
+)
+ORDER BY department, salary DESC;
+
+-- Find employees eligible for promotion (excluding recent hires and interns)
+SELECT 
+    employee_id,
+    first_name,
+    last_name,
+    department,
+    job_title,
+    salary,
+    DATEDIFF(CURRENT_DATE, hire_date) / 365 as years_employed
+FROM employees
+WHERE job_title NOT IN ('Intern', 'Trainee', 'Contractor')
+  AND hire_date < DATE_SUB(CURRENT_DATE, INTERVAL 2 YEAR)
+  AND performance_rating >= 4
+ORDER BY years_employed DESC, performance_rating DESC;</code></pre>
+            </div>
+            
+            <h4>5. Subquery-Based Filtering</h4>
+            <div class="code-block">
+                <pre><code>-- Find customers who have purchased specific product categories
+SELECT DISTINCT
+    c.customer_id,
+    c.first_name,
+    c.last_name,
+    c.email,
+    c.total_spent
+FROM customers c
+WHERE c.customer_id IN (
+    SELECT DISTINCT o.customer_id
+    FROM orders o
+    JOIN order_items oi ON o.order_id = oi.order_id
+    JOIN products p ON oi.product_id = p.product_id
+    WHERE p.category IN ('Electronics', 'Books')
+      AND o.order_date >= DATE_SUB(CURRENT_DATE, INTERVAL 6 MONTH)
+)
+ORDER BY c.total_spent DESC;
+
+-- Find products that have never been ordered
+SELECT 
+    product_id,
+    product_name,
+    category,
+    price,
+    stock_quantity,
+    created_date
+FROM products
+WHERE product_id NOT IN (
+    SELECT DISTINCT product_id
+    FROM order_items
+    WHERE product_id IS NOT NULL
+)
+ORDER BY created_date DESC;</code></pre>
+            </div>
+            
+            <h4>6. Advanced Data Analysis and Reporting</h4>
+            <div class="code-block">
+                <pre><code>-- Analyze sales performance by region
+SELECT 
+    region,
+    COUNT(*) as total_orders,
+    SUM(total_amount) as total_revenue,
+    AVG(total_amount) as avg_order_value,
+    COUNT(DISTINCT customer_id) as unique_customers
+FROM orders o
+JOIN customers c ON o.customer_id = c.customer_id
+WHERE c.state IN (
+    -- West Coast
+    'CA', 'OR', 'WA', 'NV', 'AZ',
+    -- East Coast  
+    'NY', 'NJ', 'CT', 'MA', 'FL'
+)
+  AND o.order_date >= DATE_SUB(CURRENT_DATE, INTERVAL 1 YEAR)
+GROUP BY 
+    CASE 
+        WHEN c.state IN ('CA', 'OR', 'WA', 'NV', 'AZ') THEN 'West Coast'
+        WHEN c.state IN ('NY', 'NJ', 'CT', 'MA', 'FL') THEN 'East Coast'
+    END
+ORDER BY total_revenue DESC;
+
+-- Complex inventory analysis
+SELECT 
+    p.category,
+    COUNT(*) as total_products,
+    SUM(CASE WHEN p.stock_quantity > 0 THEN 1 ELSE 0 END) as in_stock_products,
+    AVG(p.price) as avg_price,
+    SUM(p.stock_quantity * p.price) as total_inventory_value
+FROM products p
+WHERE p.category NOT IN ('Discontinued', 'Clearance')
+  AND p.product_id IN (
+      SELECT DISTINCT oi.product_id
+      FROM order_items oi
+      JOIN orders o ON oi.order_id = o.order_id
+      WHERE o.order_date >= DATE_SUB(CURRENT_DATE, INTERVAL 3 MONTH)
+  )
+GROUP BY p.category
+HAVING COUNT(*) >= 5
+ORDER BY total_inventory_value DESC;</code></pre>
+            </div>
+
+            <h3>💡 Helpful Tips</h3>
+            <ul>
+                <li><strong>NULL Handling</strong>: Be careful with NOT IN when the list might contain NULL values</li>
+                <li><strong>Performance</strong>: IN is generally faster than multiple OR conditions</li>
+                <li><strong>Readability</strong>: Use IN/NOT IN for better code readability and maintenance</li>
+                <li><strong>Data Types</strong>: Ensure all values in the list match the column's data type</li>
+                <li><strong>Subqueries</strong>: Use subqueries for dynamic lists based on other table data</li>
+                <li><strong>Index Usage</strong>: Create indexes on frequently filtered columns</li>
+                <li><strong>List Size</strong>: For very large lists, consider using temporary tables or EXISTS</li>
+                <li><strong>Case Sensitivity</strong>: String comparisons may be case-sensitive depending on database settings</li>
+                <li><strong>Duplicates</strong>: Duplicate values in the IN list don't affect results</li>
+                <li><strong>Empty Lists</strong>: IN with an empty list returns no results; NOT IN returns all results</li>
+                <li><strong>Optimization</strong>: Database optimizers often convert IN to EXISTS for better performance</li>
+                <li><strong>Maintenance</strong>: Consider using lookup tables instead of hardcoded lists for better maintainability</li>
+            </ul>
+
+            <h3>🧠 Summary</h3>
+            <ul>
+                <li><strong>Efficiency</strong>: IN and NOT IN provide efficient filtering for multiple values</li>
+                <li><strong>Flexibility</strong>: Work with both literal values and subqueries</li>
+                <li><strong>Readability</strong>: Cleaner syntax than multiple OR/AND conditions</li>
+                <li><strong>Performance</strong>: Generally faster than equivalent OR conditions</li>
+                <li><strong>Versatility</strong>: Essential for data filtering, validation, and analysis</li>
+                <li><strong>Best Practices</strong>: Handle NULL values carefully and consider indexing strategies</li>
+            </ul>
+
+            <h3>🧪 Practice: Find Customers from Specific Cities</h3>
+            <div class="mock-table" id="mockTable" style="display: none;">
+                <h4>Preview: What the table would look like when queried:</h4>
+                <h5>After Query (Example Result):</h5>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>name</th>
+                            <th>city</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>John Smith</td>
+                            <td>New York</td>
+                        </tr>
+                        <tr>
+                            <td>Jane Doe</td>
+                            <td>Los Angeles</td>
+                        </tr>
+                        <tr>
+                            <td>Mike Johnson</td>
+                            <td>Chicago</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>🎯 Quiz</h3>
+            <p><strong>Which operator would you use to find records where a column value matches ANY value in a list?</strong></p>
+            <div class="quiz">
+                <button onclick="checkAnswer(this, true)">A) IN</button>
+                <button onclick="checkAnswer(this, false)">B) NOT IN</button>
+                <button onclick="checkAnswer(this, false)">C) LIKE</button>
+                <button onclick="checkAnswer(this, false)">D) BETWEEN</button>
+                <p class="quiz-feedback"></p>
+                <div id="quizExplanation" class="quiz-explanation" style="display: none;"></div>
+            </div>
+        </section>
+    </div>
+    <div id="footer"></div>
+</body>
+</html>

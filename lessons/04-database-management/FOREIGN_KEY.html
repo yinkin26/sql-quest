@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en" class="pixel-art dark-theme">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Quest - FOREIGN KEY</title>
+    <link rel="stylesheet" href="../../stylesheets/style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <script src="../../javascripts/loadComponents.js" defer></script>
+    <script src="../../javascripts/script.js" defer></script>
+    <script src="../../javascripts/lessonTracker.js" defer></script>
+    <script type="module" src="../../javascripts/mockTables.js"></script>
+</head>
+<body class="pixel-art dark-theme">
+    <div id="header"></div>
+    <div class="lesson-layout">
+        <div id="sidebar"></div>
+
+        <section class="lesson-content">
+            <h2>🔗 FOREIGN KEY</h2>
+
+            <!-- Bookmark buttons -->
+            <div class="bookmark-container">
+                <button id="bookmarkBtn" style="display: none;">🔖 Bookmark</button>
+                <button id="unbookmarkBtn" style="display: none;">❌ Remove Bookmark</button>
+                <span id="bookmarkStatus"></span>
+            </div>
+
+            <div class="callout-box">
+                <p>🔗 The bridge between tables! FOREIGN KEY creates relationships and maintains data integrity across your database.</p>
+            </div>
+
+            <h3>📌 What is a FOREIGN KEY?</h3>
+            <p>A <code class="tooltip" title="Links tables together">FOREIGN KEY</code> is a constraint that creates a link between two tables. It's like a 🌉 bridge that connects related data across different tables. The foreign key in one table points to a primary key in another table, ensuring referential integrity!</p>
+
+            <h3>🎯 FOREIGN KEY Rules</h3>
+            <div style="background: rgba(255, 165, 0, 0.1); border: 2px solid #ffa500; border-radius: 8px; padding: 15px; margin: 15px 0;">
+                <h4 style="color: #ffa500; margin-top: 0;">🔒 Key Rules</h4>
+                <ul style="color: #ffe4b5;">
+                    <li>🎯 <strong>REFERENCES</strong> - Must point to a PRIMARY KEY or UNIQUE column</li>
+                    <li>🔍 <strong>VALID VALUES</strong> - Can only contain values that exist in referenced table</li>
+                    <li>🔄 <strong>NULL ALLOWED</strong> - Can be NULL (unless NOT NULL specified)</li>
+                    <li>🛡️ <strong>REFERENTIAL INTEGRITY</strong> - Prevents orphaned records</li>
+                    <li>🔗 <strong>CASCADE OPTIONS</strong> - Controls what happens when referenced data changes</li>
+                </ul>
+            </div>
+
+            <h3>🧠 Basic Syntax</h3>
+
+            <h4>Method 1: Column-Level Definition</h4>
+            <pre><code>CREATE TABLE <span style="color: #00ffff;">orders</span> (
+    order_id INT PRIMARY KEY AUTO_INCREMENT,
+    <span style="color: #ffd700;">customer_id</span> INT <span style="color: #ffa500;">REFERENCES customers(customer_id)</span>,
+    order_date DATE,
+    total_amount DECIMAL(10,2)
+);</code></pre>
+
+            <h4>Method 2: Table-Level Definition</h4>
+            <pre><code>CREATE TABLE <span style="color: #00ffff;">orders</span> (
+    order_id INT PRIMARY KEY AUTO_INCREMENT,
+    <span style="color: #ffd700;">customer_id</span> INT,
+    order_date DATE,
+    total_amount DECIMAL(10,2),
+    <span style="color: #ffa500;">FOREIGN KEY</span> (<span style="color: #ffd700;">customer_id</span>) <span style="color: #ffa500;">REFERENCES</span> <span style="color: #00ffff;">customers</span>(<span style="color: #98fb98;">customer_id</span>)
+);</code></pre>
+
+            <h4>Method 3: Named Constraint</h4>
+            <pre><code>CREATE TABLE <span style="color: #00ffff;">orders</span> (
+    order_id INT PRIMARY KEY AUTO_INCREMENT,
+    <span style="color: #ffd700;">customer_id</span> INT,
+    order_date DATE,
+    total_amount DECIMAL(10,2),
+    <span style="color: #ffa500;">CONSTRAINT</span> <span style="color: #98fb98;">fk_orders_customer</span> 
+    <span style="color: #ffa500;">FOREIGN KEY</span> (<span style="color: #ffd700;">customer_id</span>) <span style="color: #ffa500;">REFERENCES</span> <span style="color: #00ffff;">customers</span>(<span style="color: #98fb98;">customer_id</span>)
+);</code></pre>
+
+
+
+            <h3>📊 Mock Tables: Customer-Order Relationship</h3>
+            <p>🔍 See how FOREIGN KEY creates relationships between tables:</p>
+            
+            <h4>👥 customers (Parent Table)</h4>
+            <button class="neon-button" onclick="displayMockTable('customers')">👥 View Customers Table</button>
+            <div class="query-output" id="customersTableOutput"></div>
+
+            <h4>🛒 orders (Child Table)</h4>
+            <button class="neon-button" onclick="displayMockTable('orders')">🛒 View Orders Table</button>
+            <div class="query-output" id="ordersTableOutput"></div>
+            <p style="color: #a0a0a0; font-size: 0.9em; margin-top: 10px;">💡 Notice how customer_id in orders matches customer_id in customers!</p>
+
+            <h3>🔄 CASCADE Options</h3>
+            <p>Control what happens when referenced data is modified:</p>
+            
+            <h4>🗑️ ON DELETE CASCADE</h4>
+            <pre><code>CREATE TABLE <span style="color: #00ffff;">orders</span> (
+    order_id INT PRIMARY KEY AUTO_INCREMENT,
+    customer_id INT,
+    order_date DATE,
+    FOREIGN KEY (customer_id) REFERENCES customers(customer_id)
+    <span style="color: #ff6b6b;">ON DELETE CASCADE</span>  -- 🗑️ Delete orders when customer is deleted
+);</code></pre>
+
+            <h4>🔄 ON UPDATE CASCADE</h4>
+            <pre><code>CREATE TABLE <span style="color: #00ffff;">orders</span> (
+    order_id INT PRIMARY KEY AUTO_INCREMENT,
+    customer_id INT,
+    order_date DATE,
+    FOREIGN KEY (customer_id) REFERENCES customers(customer_id)
+    <span style="color: #4ecdc4;">ON UPDATE CASCADE</span>  -- 🔄 Update orders when customer_id changes
+);</code></pre>
+
+            <h4>🚫 ON DELETE RESTRICT</h4>
+            <pre><code>CREATE TABLE <span style="color: #00ffff;">orders</span> (
+    order_id INT PRIMARY KEY AUTO_INCREMENT,
+    customer_id INT,
+    order_date DATE,
+    FOREIGN KEY (customer_id) REFERENCES customers(customer_id)
+    <span style="color: #ffa500;">ON DELETE RESTRICT</span>  -- 🚫 Prevent deletion if orders exist
+);</code></pre>
+
+            <h4>🔄 ON DELETE SET NULL</h4>
+            <pre><code>CREATE TABLE <span style="color: #00ffff;">orders</span> (
+    order_id INT PRIMARY KEY AUTO_INCREMENT,
+    customer_id INT,  -- Must allow NULL
+    order_date DATE,
+    FOREIGN KEY (customer_id) REFERENCES customers(customer_id)
+    <span style="color: #9b59b6;">ON DELETE SET NULL</span>  -- 🔄 Set to NULL when customer deleted
+);</code></pre>
+
+            <h3>📋 CASCADE Options Showcase</h3>
+            <button class="neon-button" onclick="showCascadeExamples()">Show CASCADE Examples</button>
+            <div id="cascadeExamplesOutput" class="query-output" style="margin-top: 10px;"></div>
+
+            <h3>🔧 Adding FOREIGN KEY to Existing Table</h3>
+            <pre><code>-- Add foreign key to existing table
+ALTER TABLE <span style="color: #00ffff;">orders</span>
+ADD CONSTRAINT <span style="color: #98fb98;">fk_orders_customer</span>
+FOREIGN KEY (<span style="color: #ffd700;">customer_id</span>) REFERENCES <span style="color: #00ffff;">customers</span>(<span style="color: #98fb98;">customer_id</span>);
+
+-- Drop foreign key
+ALTER TABLE <span style="color: #00ffff;">orders</span>
+DROP FOREIGN KEY <span style="color: #98fb98;">fk_orders_customer</span>;</code></pre>
+
+            <h3>🌍 Real-World FOREIGN KEY Examples</h3>
+            
+            <h4>🛒 E-commerce System</h4>
+            <pre><code>-- Products table
+CREATE TABLE <span style="color: #00ffff;">products</span> (
+    product_id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100),
+    price DECIMAL(10,2)
+);
+
+-- Order items with foreign keys
+CREATE TABLE <span style="color: #00ffff;">order_items</span> (
+    item_id INT PRIMARY KEY AUTO_INCREMENT,
+    <span style="color: #ffd700;">order_id</span> INT,
+    <span style="color: #ffd700;">product_id</span> INT,
+    quantity INT,
+    price DECIMAL(10,2),
+    <span style="color: #ffa500;">FOREIGN KEY</span> (<span style="color: #ffd700;">order_id</span>) <span style="color: #ffa500;">REFERENCES</span> <span style="color: #00ffff;">orders</span>(<span style="color: #98fb98;">order_id</span>) ON DELETE CASCADE,
+    <span style="color: #ffa500;">FOREIGN KEY</span> (<span style="color: #ffd700;">product_id</span>) <span style="color: #ffa500;">REFERENCES</span> <span style="color: #00ffff;">products</span>(<span style="color: #98fb98;">product_id</span>) ON DELETE RESTRICT
+);</code></pre>
+
+            <h4>📚 Blog System</h4>
+            <pre><code>-- Users table
+CREATE TABLE <span style="color: #00ffff;">users</span> (
+    user_id INT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(50) UNIQUE,
+    email VARCHAR(100)
+);
+
+-- Posts with author reference
+CREATE TABLE <span style="color: #00ffff;">posts</span> (
+    post_id INT PRIMARY KEY AUTO_INCREMENT,
+    title VARCHAR(200),
+    content TEXT,
+    <span style="color: #ffd700;">author_id</span> INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    <span style="color: #ffa500;">FOREIGN KEY</span> (<span style="color: #ffd700;">author_id</span>) <span style="color: #ffa500;">REFERENCES</span> <span style="color: #00ffff;">users</span>(<span style="color: #98fb98;">user_id</span>) ON DELETE SET NULL
+);
+
+-- Comments with post and user references
+CREATE TABLE <span style="color: #00ffff;">comments</span> (
+    comment_id INT PRIMARY KEY AUTO_INCREMENT,
+    <span style="color: #ffd700;">post_id</span> INT,
+    <span style="color: #ffd700;">user_id</span> INT,
+    comment_text TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    <span style="color: #ffa500;">FOREIGN KEY</span> (<span style="color: #ffd700;">post_id</span>) <span style="color: #ffa500;">REFERENCES</span> <span style="color: #00ffff;">posts</span>(<span style="color: #98fb98;">post_id</span>) ON DELETE CASCADE,
+    <span style="color: #ffa500;">FOREIGN KEY</span> (<span style="color: #ffd700;">user_id</span>) <span style="color: #ffa500;">REFERENCES</span> <span style="color: #00ffff;">users</span>(<span style="color: #98fb98;">user_id</span>) ON DELETE SET NULL
+);</code></pre>
+
+            <h4>🏫 School Management</h4>
+            <pre><code>-- Students and courses with enrollment
+CREATE TABLE <span style="color: #00ffff;">students</span> (
+    student_id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100),
+    email VARCHAR(100)
+);
+
+CREATE TABLE <span style="color: #00ffff;">courses</span> (
+    course_id INT PRIMARY KEY AUTO_INCREMENT,
+    course_name VARCHAR(100),
+    credits INT
+);
+
+CREATE TABLE <span style="color: #00ffff;">enrollments</span> (
+    enrollment_id INT PRIMARY KEY AUTO_INCREMENT,
+    <span style="color: #ffd700;">student_id</span> INT,
+    <span style="color: #ffd700;">course_id</span> INT,
+    enrollment_date DATE,
+    grade CHAR(2),
+    <span style="color: #ffa500;">FOREIGN KEY</span> (<span style="color: #ffd700;">student_id</span>) <span style="color: #ffa500;">REFERENCES</span> <span style="color: #00ffff;">students</span>(<span style="color: #98fb98;">student_id</span>) ON DELETE CASCADE,
+    <span style="color: #ffa500;">FOREIGN KEY</span> (<span style="color: #ffd700;">course_id</span>) <span style="color: #ffa500;">REFERENCES</span> <span style="color: #00ffff;">courses</span>(<span style="color: #98fb98;">course_id</span>) ON DELETE CASCADE
+);</code></pre>
+
+            <h3>⚠️ FOREIGN KEY Best Practices</h3>
+            <div style="background: rgba(40, 167, 69, 0.2); border: 2px solid #28a745; border-radius: 8px; padding: 15px; margin: 15px 0;">
+                <h4 style="color: #28a745; margin-top: 0;">✅ Do's</h4>
+                <ul style="color: #d4edda;">
+                    <li>📝 <strong>Name constraints</strong> - use descriptive names like 'fk_orders_customer'</li>
+                    <li>🎯 <strong>Choose appropriate CASCADE</strong> - think about business logic</li>
+                    <li>📊 <strong>Index foreign keys</strong> - improves JOIN performance</li>
+                    <li>🔍 <strong>Validate data first</strong> - ensure referenced records exist</li>
+                    <li>📋 <strong>Document relationships</strong> - maintain clear ER diagrams</li>
+                </ul>
+            </div>
+
+            <div style="background: rgba(220, 53, 69, 0.2); border: 2px solid #dc3545; border-radius: 8px; padding: 15px; margin: 15px 0;">
+                <h4 style="color: #dc3545; margin-top: 0;">❌ Don'ts</h4>
+                <ul style="color: #f8d7da;">
+                    <li>🚫 <strong>Don't create circular references</strong> - avoid table A → B → A</li>
+                    <li>⚡ <strong>Don't over-cascade</strong> - be careful with CASCADE DELETE</li>
+                    <li>🔄 <strong>Don't ignore orphaned data</strong> - clean up before adding constraints</li>
+                    <li>📏 <strong>Don't reference non-indexed columns</strong> - impacts performance</li>
+                    <li>🔗 <strong>Don't forget to handle NULLs</strong> - decide if foreign keys can be NULL</li>
+                </ul>
+            </div>
+
+            <h3>💡 Helpful Tips</h3>
+            <ul>
+                <li>🔍 Use <code>SHOW CREATE TABLE table_name;</code> to see foreign key definitions</li>
+                <li>📊 <strong>Performance</strong> - foreign keys automatically create indexes in some databases</li>
+                <li>🔗 <strong>Relationships</strong> - foreign keys enable JOINs between tables</li>
+                <li>🛡️ <strong>Data integrity</strong> - prevents invalid references</li>
+                <li>🔄 <strong>CASCADE carefully</strong> - test cascade behavior thoroughly</li>
+                <li>📋 <strong>Naming convention</strong> - use 'fk_childtable_parenttable' pattern</li>
+            </ul>
+
+            <h3>🧠 Summary</h3>
+            <ul>
+                <li>🔗 <strong>FOREIGN KEY</strong> creates relationships between tables</li>
+                <li>🎯 <strong>References</strong> primary key or unique column in another table</li>
+                <li>🛡️ <strong>Referential integrity</strong> - prevents orphaned records</li>
+                <li>🔄 <strong>CASCADE options</strong> control behavior when referenced data changes</li>
+                <li>⚡ <strong>Performance impact</strong> - enables efficient JOINs</li>
+                <li>📊 <strong>Data modeling</strong> - essential for normalized database design</li>
+            </ul>
+
+            <h3>🧪 Practice</h3>
+            <p>📚 Create a table called <code>"book_reviews"</code> with foreign keys to both <code>"books"</code> and <code>"users"</code> tables.</p>
+            <div class="editor-container">
+                <textarea class="code-editor" id="exerciseInput" placeholder="Write your CREATE TABLE statement with FOREIGN KEYs here..."></textarea>
+                <button class="neon-button" onclick="validateExercise()">Submit</button>
+                <div id="exerciseFeedback" style="margin-top:15px;"></div>
+            </div>
+
+            <h3>🎯 Quiz</h3>
+            <p><strong>What happens when you try to insert a foreign key value that doesn't exist in the referenced table?</strong></p>
+            <div class="quiz">
+                <button onclick="checkAnswer(this,'A')">A) The record is inserted with NULL</button>
+                <button onclick="checkAnswer(this,'B')">B) The database throws an error</button>
+                <button onclick="checkAnswer(this,'C')">C) The referenced record is created automatically</button>
+                <button onclick="checkAnswer(this,'D')">D) The foreign key is ignored</button>
+                <p class="quiz-feedback"></p>
+                <div id="quizExplanation" class="quiz-explanation" style="display:none;"></div>
+            </div>
+        </section>
+    </div>
+
+    <div id="footer"></div>
+
+    <script>
+        function runForeignKeyDemo() {
+            const textarea = document.querySelector('.code-editor');
+            const output = document.querySelector('.query-output');
+            const query = textarea.value.trim().toLowerCase();
+            
+            if (query.includes('create table') && query.includes('foreign key') && query.includes('references')) {
+                const tableName = query.match(/create table\s+(\w+)/)?.[1] || 'table';
+                const hasCascade = query.includes('on delete') || query.includes('on update');
+                
+                output.innerHTML = `
+                    <div style='background: rgba(40, 167, 69, 0.2); border: 1px solid #28a745; border-radius: 8px; padding: 15px;'>
+                        <p style='color: #28a745; margin: 0;'>✅ <strong>Table '${tableName}' created with FOREIGN KEY!</strong></p>
+                        <p style='color: #d4edda; margin: 8px 0 0 0;'>🔗 <strong>Relationship Features:</strong></p>
+                        <ul style='color: #d4edda; margin: 5px 0 0 20px;'>
+                            <li>🛡️ Referential integrity enforced</li>
+                            <li>🔍 Only valid references allowed</li>
+                            <li>🔗 Table relationships established</li>
+                            ${hasCascade ? '<li>🔄 CASCADE behavior configured</li>' : ''}
+                        </ul>
+                        <p style='color: #a0a0a0; margin: 8px 0 0 0; font-size: 0.8em;'>💡 Your tables are now properly connected!</p>
+                    </div>
+                `;
+            } else if (query.includes('create table')) {
+                output.innerHTML = `
+                    <div style='background: rgba(255, 193, 7, 0.2); border: 1px solid #ffc107; border-radius: 8px; padding: 15px;'>
+                        <p style='color: #ffc107; margin: 0;'>⚠️ <strong>Table created, but no FOREIGN KEY found!</strong></p>
+                        <p style='color: #fff3cd; margin: 5px 0 0 0;'>🔗 Consider adding FOREIGN KEY constraints for data integrity.</p>
+                    </div>
+                `;
+            } else {
+                output.innerHTML = `<p style='color: red;'>❌ Invalid query. Try using CREATE TABLE with FOREIGN KEY.</p>`;
+            }
+        }
+        
+        function showCascadeExamples() {
+            const output = document.getElementById('cascadeExamplesOutput');
+            const examples = [
+                {
+                    title: '🗑️ CASCADE DELETE',
+                    sql: 'FOREIGN KEY (customer_id) REFERENCES customers(customer_id)\nON DELETE CASCADE',
+                    description: 'When customer is deleted, all their orders are automatically deleted',
+                    effect: '🔄 Child records deleted automatically'
+                },
+                {
+                    title: '🚫 RESTRICT DELETE',
+                    sql: 'FOREIGN KEY (customer_id) REFERENCES customers(customer_id)\nON DELETE RESTRICT',
+                    description: 'Prevents deletion of customer if they have orders',
+                    effect: '🛡️ Protects against accidental data loss'
+                },
+                {
+                    title: '🔄 SET NULL',
+                    sql: 'FOREIGN KEY (customer_id) REFERENCES customers(customer_id)\nON DELETE SET NULL',
+                    description: 'Sets foreign key to NULL when referenced record is deleted',
+                    effect: '🔄 Preserves child records, removes reference'
+                },
+                {
+                    title: '⚡ CASCADE UPDATE',
+                    sql: 'FOREIGN KEY (customer_id) REFERENCES customers(customer_id)\nON UPDATE CASCADE',
+                    description: 'Updates foreign key when primary key changes',
+                    effect: '🔄 Maintains referential integrity on updates'
+                }
+            ];
+            
+            let html = '<div style="background: rgba(26, 32, 44, 0.8); border: 1px solid #4a5568; border-radius: 8px; padding: 15px; margin-top: 10px;">';
+            html += '<h4 style="color: #ffa500; margin-top: 0;">🔄 CASCADE Options</h4>';
+            
+            examples.forEach((example, index) => {
+                html += `
+                    <div style="margin-bottom: 15px; padding: 10px; background: rgba(45, 55, 72, 0.6); border-radius: 6px;">
+                        <h5 style="color: #ffd700; margin: 0 0 8px 0;">${example.title}</h5>
+                        <pre style="background: rgba(0, 0, 0, 0.4); padding: 8px; border-radius: 4px; margin: 5px 0; overflow-x: auto; white-space: pre-wrap;"><code style="color: #e2e8f0;">${example.sql}</code></pre>
+                        <p style="color: #a0aec0; margin: 5px 0; font-size: 0.9em;">${example.description}</p>
+                        <p style="color: #68d391; margin: 0; font-size: 0.8em; font-weight: bold;">${example.effect}</p>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            output.innerHTML = html;
+        }
+        
+        function validateExercise() {
+            const sql = document.getElementById("exerciseInput").value.trim().toLowerCase();
+            const feedback = document.getElementById("exerciseFeedback");
+            
+            if (sql.includes("create table book_reviews") && sql.includes("foreign key") && 
+                (sql.includes("references books") || sql.includes("references users")) &&
+                sql.split("foreign key").length >= 3) {
+                feedback.style.color = "lightgreen";
+                feedback.textContent = "✅ Excellent! You created book_reviews with foreign keys to both books and users tables.";
+            } else if (sql.includes("create table book_reviews") && sql.includes("foreign key")) {
+                feedback.style.color = "orange";
+                feedback.textContent = "⚠️ Good start! Make sure to include foreign keys to both books and users tables.";
+            } else if (sql.includes("create table book_reviews")) {
+                feedback.style.color = "orange";
+                feedback.textContent = "⚠️ Table created! Don't forget to add FOREIGN KEY constraints.";
+            } else {
+                feedback.style.color = "red";
+                feedback.textContent = "❌ Try: CREATE TABLE book_reviews with FOREIGN KEY references to books and users.";
+            }
+        }
+        
+        function checkAnswer(btn, opt) {
+            const fb = btn.parentElement.querySelector('.quiz-feedback');
+            const exp = document.getElementById('quizExplanation');
+            const buttons = btn.parentElement.querySelectorAll('button');
+            
+            // Disable all buttons after selection
+            buttons.forEach(b => b.disabled = true);
+            
+            if (opt === 'B') {
+                fb.style.color = 'lightgreen';
+                fb.textContent = '✅ Correct! The database throws a referential integrity error.';
+                btn.style.backgroundColor = '#28a745';
+                exp.innerHTML = `
+                    <p><strong>🎯 Explanation:</strong></p>
+                    <ul>
+                        <li>🛡️ <strong>Referential integrity</strong> prevents invalid foreign key values.</li>
+                        <li>🚫 The database will <strong>reject the INSERT</strong> and throw an error.</li>
+                        <li>🔍 Foreign key values must <strong>exist in the referenced table</strong>.</li>
+                        <li>💡 This prevents orphaned records and maintains data consistency.</li>
+                    </ul>
+                `;
+            } else {
+                fb.style.color = 'red';
+                fb.textContent = '❌ Incorrect. The correct answer is B.';
+                btn.style.backgroundColor = '#dc3545';
+                // Highlight correct answer
+                buttons[1].style.backgroundColor = '#28a745';
+                exp.innerHTML = `
+                    <p><strong>❌ Explanation:</strong></p>
+                    <ul>
+                        <li>🚫 Foreign keys don't automatically become NULL or get ignored.</li>
+                        <li>🤖 Referenced records are not created automatically.</li>
+                        <li>🛡️ The database enforces referential integrity by rejecting invalid values.</li>
+                    </ul>
+                `;
+            }
+            exp.style.display = 'block';
+            exp.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // Bookmark functionality
+        const lessonId = "FOREIGN_KEY";
+        const bookmarkBtn = document.getElementById("bookmarkBtn");
+        const unbookmarkBtn = document.getElementById("unbookmarkBtn");
+        const statusText = document.getElementById("bookmarkStatus");
+
+        function checkBookmarkStatus(retries = 3) {
+            fetch(`http://localhost:5000/bookmark-status?lessonId=${lessonId}`, {
+                credentials: 'include',
+                headers: { "Content-Type": "application/json" }
+            })
+            .then(res => {
+                if (!res.ok) throw new Error('Network response was not ok');
+                return res.json();
+            })
+            .then(data => {
+                if (data.bookmarked) {
+                    bookmarkBtn.style.display = "none";
+                    unbookmarkBtn.style.display = "inline-block";
+                    statusText.textContent = "📌 Bookmarked";
+                } else {
+                    bookmarkBtn.style.display = "inline-block";
+                    unbookmarkBtn.style.display = "none";
+                    statusText.textContent = "";
+                }
+            })
+            .catch(error => {
+                console.error('Error checking bookmark status:', error);
+                if (retries > 0) {
+                    setTimeout(() => checkBookmarkStatus(retries - 1), 1000);
+                }
+            });
+        }
+
+        bookmarkBtn.addEventListener("click", () => {
+            fetch("http://localhost:5000/bookmark", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({ lessonId: lessonId, bookmarked: true })
+            })
+            .then(res => res.json())
+            .then(() => checkBookmarkStatus());
+        });
+
+        unbookmarkBtn.addEventListener("click", () => {
+            fetch("http://localhost:5000/bookmark", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({ lessonId: lessonId, bookmarked: false })
+            })
+            .then(res => res.json())
+            .then(() => checkBookmarkStatus());
+        });
+
+        checkBookmarkStatus();
+    </script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" class="pixel-art dark-theme">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Profile - SQL Quest</title>
+    <link rel="stylesheet" href="stylesheets/style.css" />
+    <link rel="stylesheet" href="stylesheets/profile.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="stylesheets/cyberpunk.css" />
+    <script src="javascripts/loadComponents.js" defer></script>
+    <script src="javascripts/profile.js" defer></script>
+</head>
+<body class="pixel-art dark-theme">
+    <div id="header"></div>
+
+    <div class="profile-container cyberpunk-theme">
+        <!-- Profile Card -->
+        <div class="profile-card neon-border">
+            <div class="profile-header">
+                <h2>🎮 My Profile</h2>
+                <div class="profile-badge-container">
+                    <img id="profileBadge" class="badge" src="/images/badges/none.png" alt="Rank Badge" />
+                    <div class="badge-glow"></div>
+                </div>
+            </div>
+
+            <div class="profile-stats">
+                <div class="stat-item neon-text">
+                    <span class="stat-icon">👤</span>
+                    <span class="stat-label">Username</span>
+                    <span id="profileUsername" class="stat-value">Loading...</span>
+                </div>
+
+                <div class="stat-item neon-text">
+                    <span class="stat-icon">🌟</span>
+                    <span class="stat-label">Total XP</span>
+                    <span id="profileXP" class="stat-value">0</span>
+                </div>
+
+                <div class="stat-item neon-text">
+                    <span class="stat-icon">🏅</span>
+                    <span class="stat-label">Rank</span>
+                    <span id="profileRank" class="stat-value">None</span>
+                </div>
+            </div>
+
+            <!-- XP Progress Bar -->
+            <div class="xp-bar-container">
+                <div class="xp-bar-fill" id="xpProgressBar" style="width: 0%;"></div>
+            </div>
+            <div id="progressBarContainer" style="margin: 2rem 0;">
+                <div style="font-family: 'Press Start 2P', monospace; color: #00fff7; margin-bottom: 0.5rem;">
+                    Beginner Progress: <span id="progressPercent">0%</span>
+                </div>
+                <div style="background: #222; border-radius: 8px; overflow: hidden; box-shadow: 0 0 10px #00fff7;">
+                    <div id="progressBar" style="height: 24px; width: 0; background: linear-gradient(90deg, #00fff7, #ff00ea); transition: width 0.5s;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Section -->
+        <div class="progress-section">
+            <!-- Bookmarked Lessons -->
+            <div class="progress-card neon-border">
+                <h3>⭐ Bookmarked Lessons</h3>
+                <div class="scroll-container">
+                    <ul id="bookmarkedList" class="progress-list">Loading...</ul>
+                </div>
+            </div>
+
+            <!-- Completed Lessons -->
+            <div class="progress-card neon-border">
+                <h3>✅ Completed Lessons</h3>
+                <div class="scroll-container">
+                    <ul id="completedList" class="progress-list">Loading...</ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="footer"></div>
+</body>
+</html>
+

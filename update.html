@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en" class="pixel-art dark-theme">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SQL Quest – SQL UPDATE</title>
+    <link rel="stylesheet" href="stylesheets/style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        .highlight-updated {
+            background: #2a2f4a;
+            border-top: 2px dashed lime
+        }
+
+        table.mock {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 6px
+        }
+
+            table.mock th, table.mock td {
+                border: 1px solid #555;
+                padding: 6px;
+                text-align: left
+            }
+    </style>
+    <script src="javascripts/loadComponents.js" defer></script>
+    <script src="javascripts/lessonTracker.js" defer></script>
+</head>
+<body class="pixel-art dark-theme">
+    <div id="header"></div>
+    <div class="lesson-layout">
+        <div id="sidebar"></div>
+
+        <section class="lesson-content">
+            <h2>✏️ SQL UPDATE</h2>
+
+            <!-- Bookmark buttons -->
+            <div class="bookmark-container">
+                <button id="bookmarkBtn" style="display:none;">🔖 Bookmark</button>
+                <button id="unbookmarkBtn" style="display:none;">❌ Remove Bookmark</button>
+                <span id="bookmarkStatus"></span>
+            </div>
+
+            <h3>📌 What is UPDATE?</h3>
+            <p>
+                The <code class="tooltip" title="Modifies existing rows">UPDATE</code> statement changes data already stored
+                in a table. We’ll practise on <strong>mock tables only</strong>; no real database is touched.
+            </p>
+
+            <h3>🧠 Basic Syntax</h3>
+<pre><code>UPDATE table_name
+SET column1 = new_value [, column2 = new_value2 …]
+WHERE condition;  -- omit WHERE and every row changes!
+</code></pre>
+
+            <!-- Try‑it‑Yourself block -->
+            <h3>🧪 Try It Yourself (Customers)</h3>
+            <p>
+                Change <code>city</code> for <em>id = 3</em> from <code>Kyoto</code> ➜ <code>Osaka</code>.
+                Edit the query and press <strong>Run</strong> to see <em>Before</em> vs <em>After</em>.
+            </p>
+
+            <div class="code-block">
+                <textarea class="code-editor" id="updateInput">UPDATE customers SET city = 'Osaka' WHERE id = 3;</textarea>
+                <button class="neon-button run-btn" onclick="runUpdateMock()">Run</button>
+            </div>
+
+            <h4>Before Update:</h4>
+            <table class="mock" id="custBefore">
+                <thead><tr><th>id</th><th>name</th><th>city</th></tr></thead>
+                <tbody>
+                    <tr><td>1</td><td>Aiko</td><td>Tokyo</td></tr>
+                    <tr><td>2</td><td>Hiro</td><td>Nagoya</td></tr>
+                    <tr><td>3</td><td>Kenji</td><td>Kyoto</td></tr>
+                </tbody>
+            </table>
+
+            <h4>After Update:</h4>
+            <table class="mock" id="custAfter" style="display:none;">
+                <thead><tr><th>id</th><th>name</th><th>city</th></tr></thead>
+                <tbody>
+                    <tr><td>1</td><td>Aiko</td><td>Tokyo</td></tr>
+                    <tr><td>2</td><td>Hiro</td><td>Nagoya</td></tr>
+                    <tr class="highlight-updated"><td>3</td><td>Kenji</td><td>Osaka</td></tr>
+                </tbody>
+            </table>
+            <div class="query-output" id="runMsg" style="margin-top:10px;"></div>
+
+            <h3>🔍 Update Multiple Columns</h3>
+<pre><code>UPDATE customers
+SET city  = 'Tokyo',
+    phone = '+81‑3‑5555‑1234'
+WHERE id = 3;
+</code></pre>
+
+            <h3>⚠️ Update Without WHERE</h3>
+<pre><code>UPDATE customers SET city = 'Unknown';  -- every row would change!</code></pre>
+
+            <h3>💡 Helpful Tips</h3>
+            <ul>
+                <li>Always preview affected rows with <code>SELECT ... WHERE ...</code> first.</li>
+                <li>Wrap critical updates in a transaction so you can <code>ROLLBACK</code>.</li>
+                <li>Use parameters / escaping to avoid SQL injection.</li>
+            </ul>
+
+            <!-- Practice challenge -->
+            <h3>🧪 Practice: Update Product Price</h3>
+            <p>Set <code>Smartphone</code> price to <code>749.99</code> in the <code>products</code> table.</p>
+
+            <div class="editor-container">
+                <textarea class="code-editor" id="exerciseInput" placeholder="Write your UPDATE query here..."></textarea>
+                <button class="neon-button" onclick="validateUpdateQuery()">Submit</button>
+                <div id="exerciseFeedback" style="margin-top:15px;"></div>
+            </div>
+
+            <div id="prodPreview" style="display:none;">
+                <h4>Before Update:</h4>
+                <table class="mock">
+                    <thead><tr><th>product_name</th><th>price</th></tr></thead>
+                    <tbody><tr><td>Smartphone</td><td>799.49</td></tr></tbody>
+                </table>
+
+                <h4>After Update:</h4>
+                <table class="mock" id="prodAfter" style="display:none;">
+                    <thead><tr><th>product_name</th><th>price</th></tr></thead>
+                    <tbody><tr class="highlight-updated"><td>Smartphone</td><td>749.99</td></tr></tbody>
+                </table>
+            </div>
+
+            <!-- Quiz -->
+            <h3>🎯 Quiz</h3>
+            <p><strong>Which statement correctly updates the email of customer <code>id = 5</code>?</strong></p>
+            <div class="quiz">
+                <button onclick="quizCheck(this,false)">A) UPDATE customers email = 'new@domain.com' WHERE id = 5;</button>
+                <button onclick="quizCheck(this,false)">B) SET email = 'new@domain.com' IN customers WHERE id = 5;</button>
+                <button onclick="quizCheck(this,true)">C) UPDATE customers SET email = 'new@domain.com' WHERE id = 5;</button>
+                <button onclick="quizCheck(this,false)">D) CHANGE customers SET email 'new@domain.com' WHERE id == 5;</button>
+                <p class="quiz-feedback"></p>
+                <div id="quizExplanation" class="quiz-explanation" style="display:none;"></div>
+            </div>
+        </section>
+    </div>
+    <div id="footer"></div>
+
+    <script>
+        // Bookmark stub (front‑end only)
+        const bookmarkBtn = document.getElementById('bookmarkBtn'),
+            unbookmarkBtn = document.getElementById('unbookmarkBtn'),
+            statusText = document.getElementById('bookmarkStatus');
+        function fakeStatus(marked) {
+            bookmarkBtn.style.display = marked ? 'none' : 'inline-block';
+            unbookmarkBtn.style.display = marked ? 'inline-block' : 'none';
+            statusText.textContent = marked ? '📌 Bookmarked' : '';
+        }
+        fakeStatus(false);
+        bookmarkBtn?.addEventListener('click', () => fakeStatus(true));
+        unbookmarkBtn?.addEventListener('click', () => fakeStatus(false));
+
+        // Helper: Normalize SQL (case and spaces)
+        function normalizeSQL(str) {
+            return str.trim().toLowerCase().replace(/\s+/g, ' ');
+        }
+
+        // Try‑it‑yourself runner
+        function runUpdateMock() {
+            const sql = document.getElementById('updateInput').value.trim().toLowerCase().replace(/\\s+/g, ' ');
+            const msg = document.getElementById('runMsg');
+            if (sql === "update customers set city = 'osaka' where id = 3;" ||
+                sql === "update customers set city = 'osaka' where id = 3") {
+                document.getElementById('custAfter').style.display = 'table';
+                msg.style.color = 'lightgreen';
+                msg.textContent = '✅ Mock UPDATE applied — compare the tables above.';
+                document.getElementById('custAfter').scrollIntoView({ behavior: 'smooth' });
+            } else {
+                msg.style.color = 'red';
+                msg.textContent = '❌ Could not parse or match your UPDATE statement.';
+            }
+        }
+
+        // Practice validation
+        // --- Practice validation (Products) ---
+        function validateUpdateQuery() {
+            const raw = document.getElementById('exerciseInput').value;
+            const sql = normalizeSQL(raw);
+            const pattern = /^update products set price\s*=\s*749\.99 where product_name\s*=\s*'smartphone';?$/;
+            const fb = document.getElementById('exerciseFeedback');
+            if (pattern.test(sql)) {
+                fb.style.color = 'lightgreen';
+                fb.textContent = '✅ Perfect!';
+                document.getElementById('prodPreview').style.display = 'block';
+                document.getElementById('prodAfter').style.display = 'table';
+                document.getElementById('prodAfter').scrollIntoView({ behavior: 'smooth' });
+            } else if (sql.includes('update') && sql.includes('set') && sql.includes('where')) {
+                fb.style.color = 'orange';
+                fb.textContent = '⚠️ Close — check column names, quoting, or value.';
+            } else {
+                fb.style.color = 'red';
+                fb.textContent = '❌ Not quite right — remember UPDATE ... SET ... WHERE ...;';
+            }
+        }
+
+        // Quiz
+        let quizDone = false;
+        function quizCheck(btn, right) {
+            if (quizDone) return;
+            const fb = btn.parentElement.querySelector('.quiz-feedback');
+            const exp = document.getElementById('quizExplanation');
+            const all = btn.parentElement.querySelectorAll('button');
+            fb.innerHTML = '';
+            exp.style.display = 'block';
+            if (right) {
+                quizDone = true;
+                all.forEach(b => { b.disabled = true; if (b === btn) { b.style.backgroundColor = '#44ff44'; b.style.boxShadow = '0 0 15px rgba(68,255,68,.5)'; } });
+                fb.style.color = 'lightgreen';
+                fb.textContent = '✅ Correct!';
+                exp.innerHTML = '<p><strong>Explanation:</strong> Use <code>UPDATE table SET column = value WHERE condition;</code></p>';
+            } else {
+                btn.disabled = true;
+                btn.style.backgroundColor = '#ff4444';
+                btn.style.opacity = '.6';
+                fb.style.color = 'red';
+                fb.textContent = '❌ Incorrect. Try again.';
+                exp.innerHTML = '<p>Remember the correct syntax: <code>UPDATE table SET column = value WHERE condition;</code></p>';
+            }
+        }
+    </script>
+</body>
+</html>

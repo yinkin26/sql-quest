@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en" class="pixel-art dark-theme">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SQL Quest - SQL DELETE</title>
+    <link rel="stylesheet" href="stylesheets/style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        .highlight-deleted {
+            background-color: #331717;
+            color: #bbb;
+            text-decoration: line-through;
+        }
+
+        table.mock {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 6px
+        }
+
+            table.mock th, table.mock td {
+                border: 1px solid #555;
+                padding: 6px;
+                text-align: left
+            }
+    </style>
+    <script src="javascripts/loadComponents.js" defer></script>
+    <script src="javascripts/lessonTracker.js" defer></script>
+</head>
+<body class="pixel-art dark-theme">
+    <div id="header"></div>
+    <div class="lesson-layout">
+        <div id="sidebar"></div>
+        <section class="lesson-content">
+            <h2>🗑️ SQL DELETE</h2>
+            <div class="bookmark-container">
+                <button id="bookmarkBtn" style="display:none">🔖 Bookmark</button>
+                <button id="unbookmarkBtn" style="display:none">❌ Remove Bookmark</button>
+                <span id="bookmarkStatus"></span>
+            </div>
+
+            <h3>📌 What is DELETE?</h3>
+            <p>The <code class="tooltip" title="Removes rows from a table">DELETE</code> statement is used to remove existing rows from a table. <strong>Always use with caution</strong>—here you can safely try it on a <strong>mock table only</strong>.</p>
+
+            <h3>🧠 Basic Syntax</h3>
+<pre><code>DELETE FROM table_name
+WHERE condition;  -- omit WHERE and ALL rows are deleted!
+</code></pre>
+
+            <!-- Try‑it‑Yourself -->
+            <h3>🧪 Try It Yourself (Customers)</h3>
+            <p>Remove the customer <code>id = 3</code> (Kenji) from the table. Edit the query and press <strong>Run</strong> to see before and after.</p>
+            <div class="code-block">
+                <textarea class="code-editor" id="deleteInput">DELETE FROM customers WHERE id = 3;</textarea>
+                <button class="neon-button run-btn" onclick="runDeleteMock()">Run</button>
+            </div>
+            <h4>Before Delete:</h4>
+            <table class="mock" id="custDelBefore">
+                <thead><tr><th>id</th><th>name</th><th>city</th></tr></thead>
+                <tbody>
+                    <tr><td>1</td><td>Aiko</td><td>Tokyo</td></tr>
+                    <tr><td>2</td><td>Hiro</td><td>Nagoya</td></tr>
+                    <tr><td>3</td><td>Kenji</td><td>Kyoto</td></tr>
+                </tbody>
+            </table>
+            <h4 id="afterCustDelHdr" style="display:none">After Delete:</h4>
+            <table class="mock" id="custDelAfter" style="display:none">
+                <thead><tr><th>id</th><th>name</th><th>city</th></tr></thead>
+                <tbody>
+                    <tr><td>1</td><td>Aiko</td><td>Tokyo</td></tr>
+                    <tr><td>2</td><td>Hiro</td><td>Nagoya</td></tr>
+                    <!-- Kenji deleted -->
+                </tbody>
+            </table>
+            <div class="query-output" id="runDeleteMsg" style="margin-top:10px"></div>
+
+            <h3>⚠️ Danger: No WHERE</h3>
+<pre><code>DELETE FROM customers;  -- removes ALL rows! Be careful.
+</code></pre>
+
+            <h3>💡 Helpful Tips</h3>
+            <ul>
+                <li>Always run <code>SELECT ... WHERE ...</code> first to check which rows will be deleted.</li>
+                <li>If you forget <code>WHERE</code>, <strong>all data is deleted</strong> from the table!</li>
+                <li>For permanent removal, use transactions so you can <code>ROLLBACK</code> if needed.</li>
+            </ul>
+
+            <!-- Practice Challenge -->
+            <h3>🧪 Practice: Delete a Product</h3>
+            <p>Delete the <code>Headphones</code> product from the <code>products</code> table.</p>
+            <div class="editor-container">
+                <textarea class="code-editor" id="deletePracticeInput" placeholder="Write your DELETE query here..."></textarea>
+                <button class="neon-button" onclick="validateDeletePractice()">Submit</button>
+                <div id="deletePracticeFeedback" style="margin-top:15px;"></div>
+            </div>
+            <div class="mock-table" id="prodDelPreview" style="display:none">
+                <h4>Before Delete:</h4>
+                <table class="mock">
+                    <thead><tr><th>product_id</th><th>product_name</th><th>price</th></tr></thead>
+                    <tbody>
+                        <tr><td>1</td><td>Laptop</td><td>999.99</td></tr>
+                        <tr><td>2</td><td>Smartphone</td><td>799.49</td></tr>
+                        <tr><td>3</td><td>Headphones</td><td>120.99</td></tr>
+                    </tbody>
+                </table>
+                <h4 id="prodDelAfterHdr" style="display:none">After Delete:</h4>
+                <table class="mock" id="prodDelAfter" style="display:none">
+                    <thead><tr><th>product_id</th><th>product_name</th><th>price</th></tr></thead>
+                    <tbody>
+                        <tr><td>1</td><td>Laptop</td><td>999.99</td></tr>
+                        <tr><td>2</td><td>Smartphone</td><td>799.49</td></tr>
+                        <!-- Headphones deleted -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Quiz -->
+            <h3>🎯 Quiz</h3>
+            <p><strong>Which statement will remove all rows from the <code>orders</code> table?</strong></p>
+            <div class="quiz">
+                <button onclick="checkDeleteQuiz(this,false)">A) DROP orders;</button>
+                <button onclick="checkDeleteQuiz(this,true)">B) DELETE FROM orders;</button>
+                <button onclick="checkDeleteQuiz(this,false)">C) REMOVE ALL FROM orders;</button>
+                <button onclick="checkDeleteQuiz(this,false)">D) DELETE orders WHERE *;</button>
+                <p class="quiz-feedback"></p>
+                <div id="deleteQuizExplanation" class="quiz-explanation" style="display:none"></div>
+            </div>
+        </section>
+    </div>
+    <div id="footer"></div>
+
+    <script>
+        // --- Bookmark stub ---
+        const bookmarkBtn = document.getElementById('bookmarkBtn'),
+            unbookmarkBtn = document.getElementById('unbookmarkBtn'),
+            statusText = document.getElementById('bookmarkStatus');
+        function fakeStatus(b) { bookmarkBtn.style.display = b ? 'none' : 'inline-block'; unbookmarkBtn.style.display = b ? 'inline-block' : 'none'; statusText.textContent = b ? '📌 Bookmarked' : ''; }
+        fakeStatus(false);
+        bookmarkBtn && bookmarkBtn.addEventListener('click', () => fakeStatus(true));
+        unbookmarkBtn && unbookmarkBtn.addEventListener('click', () => fakeStatus(false));
+
+        // Helper to normalize SQL
+        function normalizeSQL(str) { return str.trim().toLowerCase().replace(/\s+/g, ' '); }
+
+        // --- Try‑it‑yourself (Customers) ---
+        function runDeleteMock() {
+            const raw = document.getElementById('deleteInput').value;
+            const sql = normalizeSQL(raw);
+            const pattern = /^delete from customers where id\s*=\s*3;?$/;
+            const msg = document.getElementById('runDeleteMsg');
+            if (pattern.test(sql)) {
+                document.getElementById('custDelAfter').style.display = 'table';
+                document.getElementById('afterCustDelHdr').style.display = 'block';
+                msg.style.color = 'lightgreen';
+                msg.textContent = '✅ Mock DELETE applied — compare the tables:';
+                document.getElementById('custDelAfter').scrollIntoView({ behavior: 'smooth' });
+            } else {
+                msg.style.color = 'red';
+                msg.textContent = '❌ Could not match your DELETE statement. Ensure it targets id=3.';
+            }
+        }
+
+        // --- Practice Challenge (Products) ---
+        function validateDeletePractice() {
+            const raw = document.getElementById('deletePracticeInput').value;
+            const sql = normalizeSQL(raw);
+            const pattern = /^delete from products where product_name\s*=\s*'headphones';?$/;
+            const fb = document.getElementById('deletePracticeFeedback');
+            if (pattern.test(sql)) {
+                fb.style.color = 'lightgreen';
+                fb.textContent = '✅ Correct!';
+                document.getElementById('prodDelPreview').style.display = 'block';
+                document.getElementById('prodDelAfter').style.display = 'table';
+                document.getElementById('prodDelAfterHdr').style.display = 'block';
+                document.getElementById('prodDelAfter').scrollIntoView({ behavior: 'smooth' });
+            } else if (sql.includes('delete') && sql.includes('from') && sql.includes('where')) {
+                fb.style.color = 'orange';
+                fb.textContent = '⚠️ Close — check column names, quoting, or value.';
+            } else {
+                fb.style.color = 'red';
+                fb.textContent = '❌ Not quite right — remember DELETE FROM ... WHERE ...;';
+            }
+        }
+
+        // --- Quiz logic ---
+        let quizCompleted = false;
+        function checkDeleteQuiz(button, isCorrect) {
+            if (quizCompleted) return;
+            const feedback = button.parentElement.querySelector('.quiz-feedback');
+            const exp = document.getElementById('deleteQuizExplanation');
+            const quizContainer = button.parentElement;
+            feedback.innerHTML = '';
+            exp.style.display = 'block';
+
+            if (isCorrect) {
+                quizCompleted = true;
+                const allButtons = quizContainer.querySelectorAll('button');
+                allButtons.forEach(btn => {
+                    btn.disabled = true;
+                    if (btn === button) {
+                        btn.style.backgroundColor = '#44ff44';
+                        btn.style.boxShadow = '0 0 15px rgba(68,255,68,0.5)';
+                    }
+                });
+                feedback.style.color = 'lightgreen';
+                feedback.textContent = '✅ Correct!';
+                exp.innerHTML = `<p><strong>Explanation:</strong> <code>DELETE FROM table;</code> removes all rows. <code>DROP</code> deletes the table itself!</p>`;
+            } else {
+                button.disabled = true;
+                button.style.backgroundColor = '#ff4444';
+                button.style.opacity = '.6';
+                feedback.style.color = 'red';
+                feedback.textContent = '❌ Incorrect. Try again.';
+                exp.innerHTML = `<p>Remember: <code>DELETE FROM table;</code> removes all rows, <code>DROP</code> deletes the table!</p>`;
+            }
+        }
+    </script>
+</body>
+</html>

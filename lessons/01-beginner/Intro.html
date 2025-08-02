@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en" class="pixel-art dark-theme">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SQL Quest - Introduction</title>
+    <link rel="stylesheet" href="stylesheets/style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="stylesheets/xp.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <!-- Make sure challengeEngine.js is a module -->
+    <script src="javascripts/loadComponents.js" defer></script>
+    <script src="javascripts/script.js" defer></script>
+    <script src="javascripts/lessonTracker.js" defer></script>
+
+</head>
+<body class="pixel-art dark-theme">
+    <div id="header"></div>
+    <div class="lesson-layout">
+        <!-- Sidebar loaded dynamically -->
+        <div id="sidebar"></div>
+
+        <section class="lesson-content">
+            <div class="callout-box">
+                <p>👋 Welcome to SQL Quest! This adventure will guide you through the world of databases, one query at a time.</p>
+            </div>
+
+            <h2>📘 Introduction to SQL</h2>
+
+            <!-- Update bookmark buttons -->
+            <div class="bookmark-container">
+                <button id="bookmarkBtn" style="display: none;">🔖 Bookmark</button>
+                <button id="unbookmarkBtn" style="display: none;">❌ Remove Bookmark</button>
+                <span id="bookmarkStatus"></span>
+            </div>
+
+            <h3>📌 What is SQL?</h3>
+            <p><code class="tooltip" title="Structured Query Language">SQL</code> is a standard language used to communicate with relational databases. It allows you to <strong>view</strong>, <strong>insert</strong>, <strong>update</strong>, and <strong>delete</strong> data in a database.</p>
+
+            <h3>🧠 Basic SQL Syntax</h3>
+            <pre><code>SELECT * FROM customers;
+INSERT INTO users (name, email) VALUES ('Lina', 'lina@mail.com');</code></pre>
+
+            <h3>🧪 Try a Query</h3>
+            <p>✍️ Edit the SQL query below and press "Run" to see results.</p>
+            <div class="code-block">
+                <textarea class="code-editor">SELECT * FROM customers;</textarea>
+                <button class="neon-button run-btn">Run</button>
+                <div class="query-output"></div>
+            </div>
+
+            <h3>📋 Preview Table Data</h3>
+            <p>👀 This shows the current data in the <code>customers</code> table. Use this for reference.</p>
+            <button class="neon-button" onclick="viewCustomers()">View Customers</button>
+            <div id="customersOutput" class="query-output" style="margin-top: 10px;"></div>
+
+            <h3>🌍 Real-World Use Case</h3>
+            <p>SQL is used by companies like Amazon, Google, and Netflix to handle everything from user accounts to product listings and order history. Example:</p>
+            <pre><code>SELECT * FROM orders WHERE user_id = 3;</code></pre>
+
+            <h3>💡 Helpful Tips</h3>
+            <ul>
+                <li><code class="tooltip" title="SQL keywords are not case-sensitive, but table and column names may be.">SELECT</code>, <code>select</code>, and <code>Select</code> all work the same.</li>
+                <li>Always use correct table and column names.</li>
+                <li><code class="tooltip" title="A semicolon ends an SQL statement">;</code> is required when writing multiple queries.</li>
+            </ul>
+
+            <h3>🧠 Summary</h3>
+            <ul>
+                <li><code>SQL</code> is a language for interacting with databases</li>
+                <li><code>SELECT</code> retrieves data</li>
+                <li><code>INSERT</code> adds new data</li>
+                <li><code>UPDATE</code> modifies data</li>
+                <li><code>DELETE</code> removes data</li>
+            </ul>
+
+            <h3>🎯 Quiz</h3>
+            <p><strong>What does SQL stand for?</strong></p>
+            <div class="quiz">
+                <button onclick="checkAnswer(this, false)">A) Simple Query Language</button>
+                <button onclick="checkAnswer(this, true)">B) Structured Query Language</button>
+                <button onclick="checkAnswer(this, false)">C) Strong Quick Logic</button>
+                <button onclick="checkAnswer(this, false)">D) Software Query Link</button>
+                <p class="quiz-feedback"></p>
+                <div id="quizExplanation" class="quiz-explanation neon-box" style="display: none;"></div>
+            </div>
+        </section>
+    </div>
+
+    <div id="footer"></div>
+
+
+    <script>
+        let quizCompleted = false;
+        
+        function checkAnswer(button, isCorrect) {
+            // If quiz is already completed, don't allow further clicks
+            if (quizCompleted) {
+                return;
+            }
+
+            const feedback = button.parentElement.querySelector(".quiz-feedback");
+            const explanationBox = document.getElementById("quizExplanation");
+            const quizContainer = button.parentElement;
+            
+            feedback.innerHTML = "";
+            explanationBox.style.display = "block";
+
+            if (isCorrect) {
+                // Correct answer - disable all buttons and mark as completed
+                quizCompleted = true;
+                const allButtons = quizContainer.querySelectorAll('button');
+                allButtons.forEach(btn => {
+                    btn.disabled = true;
+                    if (btn === button) {
+                        btn.style.backgroundColor = '#44ff44';
+                        btn.style.boxShadow = '0 0 15px rgba(68, 255, 68, 0.5)';
+                    }
+                });
+                
+                feedback.style.color = "lightgreen";
+                feedback.innerHTML = "✅ Correct! Quiz completed!";
+                explanationBox.innerHTML = `<p><strong>Explanation:</strong></p><ul><li><code>SQL</code> means Structured Query Language — used to communicate with databases.</li></ul>`;
+                
+                // Update lesson progress when correct answer is selected
+                fetch("http://localhost:5000/update-progress", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    credentials: "include",
+                    body: JSON.stringify({ lessonId, completed: true })
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            console.log("Progress updated successfully");
+                        }
+                    })
+                    .catch(err => console.error("Error updating progress:", err));
+            } else {
+                // Incorrect answer - disable this button only
+                button.disabled = true;
+                button.style.backgroundColor = '#ff4444';
+                button.style.opacity = '0.6';
+                button.style.cursor = 'not-allowed';
+                
+                feedback.style.color = "red";
+                feedback.innerHTML = "❌ Incorrect. Try another answer!";
+                
+                // Add retry message if not already present
+                let retryMsg = quizContainer.querySelector('.retry-message');
+                if (!retryMsg) {
+                    retryMsg = document.createElement('p');
+                    retryMsg.className = 'retry-message';
+                    retryMsg.style.color = '#ffd700';
+                    retryMsg.style.fontWeight = 'bold';
+                    retryMsg.style.marginTop = '10px';
+                    retryMsg.innerHTML = '💡 Keep trying! Choose another answer.';
+                    feedback.parentNode.insertBefore(retryMsg, feedback.nextSibling);
+                }
+                
+                let explanation = "";
+                switch (button.innerText.trim().charAt(0)) {
+                    case "A":
+                        explanation = `<p><strong>Explanation:</strong></p><ul><li><code>SQL</code> stands for Structured Query Language, not Simple.</li></ul>`;
+                        break;
+                    case "C":
+                        explanation = `<p><strong>Explanation:</strong></p><ul><li><code>Strong Quick Logic</code> isn't a real term in SQL.</li></ul>`;
+                        break;
+                    case "D":
+                        explanation = `<p><strong>Explanation:</strong></p><ul><li><code>Software Query Link</code> is not what SQL stands for.</li></ul>`;
+                        break;
+                }
+                explanationBox.innerHTML = explanation;
+            }
+
+            explanationBox.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+
+        function viewCustomers() {
+            const output = document.getElementById("customersOutput");
+            fetch("http://localhost:5000/execute", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ query: "SELECT * FROM customers;" })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (Array.isArray(data.result) && data.result.length > 0) {
+                        output.innerHTML = renderMiniTable(data.result);
+                    } else {
+                        output.innerHTML = "<p style='color: orange;'>⚠️ No customer data found.</p>";
+                    }
+                });
+        }
+
+
+        const lessonId = "Intro";
+        const bookmarkBtn = document.getElementById("bookmarkBtn");
+        const unbookmarkBtn = document.getElementById("unbookmarkBtn");
+        const statusText = document.getElementById("bookmarkStatus");
+
+        // Function to check bookmark status with retry
+        function checkBookmarkStatus(retries = 3) {
+            fetch(`http://localhost:5000/bookmark-status?lessonId=${lessonId}`, {
+                credentials: 'include',
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+                .then(res => {
+                    if (!res.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return res.json();
+                })
+                .then(data => {
+                    if (data.bookmarked) {
+                        bookmarkBtn.style.display = "none";
+                        unbookmarkBtn.style.display = "inline-block";
+                        statusText.textContent = "📌 Bookmarked";
+                    } else {
+                        bookmarkBtn.style.display = "inline-block";
+                        unbookmarkBtn.style.display = "none";
+                        statusText.textContent = "";
+                    }
+                })
+                .catch(error => {
+                    console.error('Error checking bookmark status:', error);
+                    if (retries > 0) {
+                        setTimeout(() => checkBookmarkStatus(retries - 1), 1000);
+                    }
+                });
+        }
+
+        // Add bookmark
+        bookmarkBtn.addEventListener("click", () => {
+            fetch("http://localhost:5000/bookmark", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                    lessonId: lessonId,
+                    bookmarked: true
+                })
+            })
+                .then(res => res.json())
+                .then(() => {
+                    checkBookmarkStatus();
+                });
+        });
+
+        // Remove bookmark
+        unbookmarkBtn.addEventListener("click", () => {
+            fetch("http://localhost:5000/bookmark", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                    lessonId: lessonId,
+                    bookmarked: false
+                })
+            })
+                .then(res => res.json())
+                .then(() => {
+                    checkBookmarkStatus();
+                });
+        });
+
+        // Check initial status when page loads
+        checkBookmarkStatus();
+
+        // --- Auto-complete lesson logic ---
+        let lessonCompleted = false;
+        let isAuthenticated = false;
+
+        // Check authentication status on page load
+        fetch("http://localhost:5000/check-auth", {
+            credentials: "include"
+        })
+            .then(res => res.json())
+            .then(data => {
+                isAuthenticated = data.authenticated;
+                if (!isAuthenticated) {
+                    console.log("Guest user detected, hiding lesson completion");
+                }
+            })
+            .catch(err => console.error("Error checking authentication:", err));
+
+        function markLessonCompleted() {
+            if (lessonCompleted || !isAuthenticated) return;
+
+            lessonCompleted = true;
+            fetch("http://localhost:5000/complete-lesson", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({ lessonId, completed: true })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        console.log("Lesson auto-marked as completed");
+                    }
+                })
+                .catch(err => console.error("Error auto-marking lesson as completed:", err));
+        }
+
+        // Only add event listeners if user is authenticated
+        if (isAuthenticated) {
+            // Scroll detection
+            window.addEventListener("scroll", () => {
+                if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 2) {
+                    markLessonCompleted();
+                }
+            });
+
+            // Timer-based completion (e.g., after 30 seconds)
+            setTimeout(() => {
+                markLessonCompleted();
+            }, 30000);
+        }
+        // --- End auto-complete lesson logic ---
+    </script>
+</body>
+</html>

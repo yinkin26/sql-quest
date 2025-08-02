@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en" class="pixel-art dark-theme">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Quest - SQL Built-In Functions</title>
+    <link rel="stylesheet" href="stylesheets/style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <script src="javascripts/loadComponents.js" defer></script>
+    <script src="javascripts/script.js" defer></script>
+    <script src="javascripts/lessonTracker.js" defer></script>
+</head>
+<body class="pixel-art dark-theme">
+    <div id="header"></div>
+    <div class="lesson-layout">
+        <section class="lesson">
+            <div class="lesson-header">
+                <h1>🔧 SQL Built-In Functions</h1>
+                <div class="bookmark-container">
+                    <button id="bookmarkBtn" class="bookmark-btn" onclick="toggleBookmark('builtin_functions')">
+                        <span class="bookmark-icon">🔖</span>
+                        <span class="bookmark-text">Bookmark</span>
+                    </button>
+                    <span id="bookmarkStatus"></span>
+                </div>
+            </div>
+
+            <h3>🤔 What are Built-In Functions?</h3>
+            <p>SQL <strong>Built-In Functions</strong> are pre-defined, ready-to-use functions provided by the database management system that perform specific operations on data. These functions are essential tools that enable you to manipulate, transform, analyze, and format data directly within your SQL queries without requiring external programming or complex logic.</p>
+            
+            <p><strong>Built-In Functions are crucial for:</strong></p>
+            <ul>
+                <li><strong>Data Transformation</strong>: Convert data types, formats, and structures</li>
+                <li><strong>Mathematical Calculations</strong>: Perform arithmetic, statistical, and mathematical operations</li>
+                <li><strong>String Manipulation</strong>: Process, format, and analyze text data</li>
+                <li><strong>Date and Time Operations</strong>: Handle temporal data and calculations</li>
+                <li><strong>Data Validation</strong>: Check data integrity and consistency</li>
+                <li><strong>Conditional Logic</strong>: Implement business rules and decision-making</li>
+                <li><strong>Data Aggregation</strong>: Summarize and analyze large datasets</li>
+                <li><strong>Performance Optimization</strong>: Reduce processing time and resource usage</li>
+                <li><strong>Report Generation</strong>: Format data for presentation and analysis</li>
+                <li><strong>Data Cleaning</strong>: Standardize and normalize inconsistent data</li>
+            </ul>
+            
+            <p><strong>Categories of Built-In Functions:</strong></p>
+            <div class="code-block">
+                <pre><code>-- String Functions: Manipulate text data
+UPPER('hello world')           -- 'HELLO WORLD'
+LOWER('HELLO WORLD')           -- 'hello world'
+SUBSTRING('Hello World', 1, 5) -- 'Hello'
+CONCAT('Hello', ' ', 'World')  -- 'Hello World'
+LENGTH('Hello World')          -- 11
+TRIM('  Hello World  ')       -- 'Hello World'
+
+-- Numeric Functions: Mathematical operations
+ROUND(123.456, 2)              -- 123.46
+CEIL(123.45)                   -- 124
+FLOOR(123.95)                  -- 123
+ABS(-123.45)                   -- 123.45
+POWER(2, 3)                    -- 8
+SQRT(16)                       -- 4
+
+-- Date Functions: Handle temporal data
+CURRENT_DATE()                 -- Today's date
+CURRENT_TIMESTAMP()            -- Current date and time
+DATEDIFF('2024-12-31', '2024-01-01') -- 365
+DATE_ADD('2024-01-01', INTERVAL 30 DAY) -- '2024-01-31'
+EXTRACT(YEAR FROM '2024-01-01') -- 2024
+
+-- Conditional Functions: Implement logic
+COALESCE(NULL, NULL, 'Default') -- 'Default'
+NULLIF('A', 'A')               -- NULL
+IFNULL(NULL, 'Default')        -- 'Default'
+GREATEST(10, 20, 5)            -- 20
+LEAST(10, 20, 5)               -- 5</code></pre>
+            </div>
+            
+            <p><strong>Real-World Applications:</strong></p>
+            <div class="code-block">
+                <pre><code>-- E-commerce: Format product information
+SELECT 
+    product_id,
+    UPPER(product_name) as display_name,
+    CONCAT('$', FORMAT(price, 2)) as formatted_price,
+    CASE 
+        WHEN stock_quantity > 0 THEN 'In Stock'
+        ELSE 'Out of Stock'
+    END as availability
+FROM products;
+
+-- HR: Calculate employee tenure and format names
+SELECT 
+    employee_id,
+    CONCAT(UPPER(LEFT(first_name, 1)), LOWER(SUBSTRING(first_name, 2))) as first_name_formatted,
+    CONCAT(UPPER(LEFT(last_name, 1)), LOWER(SUBSTRING(last_name, 2))) as last_name_formatted,
+    DATEDIFF(CURRENT_DATE, hire_date) / 365 as years_employed,
+    ROUND(salary * 1.05, 2) as projected_salary
+FROM employees;</code></pre>
+            </div>
+
+            <h3>📝 Basic Syntax and Categories</h3>
+            
+            <h4>🔤 String Functions</h4>
+            <div class="code-block">
+                <pre><code>-- Text Transformation Functions
+SELECT 
+    customer_name,
+    UPPER(customer_name) as uppercase_name,
+    LOWER(customer_name) as lowercase_name,
+    INITCAP(customer_name) as proper_case_name,
+    LENGTH(customer_name) as name_length,
+    REVERSE(customer_name) as reversed_name
+FROM customers;
+
+-- Text Extraction and Manipulation
+SELECT 
+    email,
+    SUBSTRING(email, 1, POSITION('@' IN email) - 1) as username,
+    SUBSTRING(email, POSITION('@' IN email) + 1) as domain,
+    LEFT(phone_number, 3) as area_code,
+    RIGHT(phone_number, 4) as last_four_digits,
+    REPLACE(phone_number, '-', '') as clean_phone
+FROM customers;
+
+-- Text Search and Pattern Matching
+SELECT 
+    product_name,
+    POSITION('Pro' IN product_name) as pro_position,
+    CHARINDEX('Max', product_name) as max_position,
+    PATINDEX('%[0-9]%', product_name) as first_number_position
+FROM products
+WHERE product_name LIKE '%Pro%' OR product_name LIKE '%Max%';
+
+-- Text Cleaning and Formatting
+SELECT 
+    customer_id,
+    TRIM(BOTH ' ' FROM customer_name) as trimmed_name,
+    LTRIM(customer_name) as left_trimmed,
+    RTRIM(customer_name) as right_trimmed,
+    REPLACE(REPLACE(customer_name, '  ', ' '), '  ', ' ') as single_spaced
+FROM customers
+WHERE customer_name LIKE '% %';</code></pre>
+            </div>
+            
+            <h4>🔢 Numeric Functions</h4>
+            <div class="code-block">
+                <pre><code>-- Mathematical Operations
+SELECT 
+    product_id,
+    price,
+    ROUND(price, 0) as rounded_price,
+    CEIL(price) as ceiling_price,
+    FLOOR(price) as floor_price,
+    TRUNCATE(price, 1) as truncated_price,
+    ABS(price - 100) as price_difference_from_100
+FROM products;
+
+-- Advanced Mathematical Functions
+SELECT 
+    order_id,
+    quantity,
+    unit_price,
+    POWER(quantity, 2) as quantity_squared,
+    SQRT(quantity) as quantity_square_root,
+    LOG(quantity) as natural_log,
+    LOG10(quantity) as base_10_log,
+    EXP(quantity / 10) as exponential
+FROM order_items
+WHERE quantity > 0;
+
+-- Statistical Functions
+SELECT 
+    category,
+    COUNT(*) as product_count,
+    AVG(price) as average_price,
+    STDDEV(price) as price_standard_deviation,
+    VARIANCE(price) as price_variance,
+    MIN(price) as min_price,
+    MAX(price) as max_price,
+    SUM(price) as total_price
+FROM products
+GROUP BY category;
+
+-- Financial Calculations
+SELECT 
+    loan_id,
+    principal_amount,
+    interest_rate,
+    loan_term_months,
+    ROUND(
+        (principal_amount * (interest_rate / 12)) / 
+        (1 - POWER(1 + (interest_rate / 12), -loan_term_months)), 2
+    ) as monthly_payment,
+    ROUND(
+        ((principal_amount * (interest_rate / 12)) / 
+        (1 - POWER(1 + (interest_rate / 12), -loan_term_months))) * loan_term_months - principal_amount, 2
+    ) as total_interest
+FROM loans;</code></pre>
+            </div>
+            
+            <h4>📅 Date and Time Functions</h4>
+            <div class="code-block">
+                <pre><code>-- Current Date and Time Functions
+SELECT 
+    CURRENT_DATE() as today,
+    CURRENT_TIME() as current_time,
+    CURRENT_TIMESTAMP() as now,
+    NOW() as now_alias,
+    UTC_TIMESTAMP() as utc_now,
+    UNIX_TIMESTAMP() as unix_timestamp;
+
+-- Date Extraction Functions
+SELECT 
+    order_date,
+    EXTRACT(YEAR FROM order_date) as order_year,
+    EXTRACT(MONTH FROM order_date) as order_month,
+    EXTRACT(DAY FROM order_date) as order_day,
+    EXTRACT(QUARTER FROM order_date) as order_quarter,
+    EXTRACT(WEEK FROM order_date) as order_week,
+    DAYOFWEEK(order_date) as day_of_week,
+    DAYNAME(order_date) as day_name,
+    MONTHNAME(order_date) as month_name
+FROM orders;
+
+-- Date Arithmetic and Manipulation
+SELECT 
+    customer_id,
+    registration_date,
+    DATEDIFF(CURRENT_DATE, registration_date) as days_since_registration,
+    TIMESTAMPDIFF(YEAR, registration_date, CURRENT_DATE) as years_as_customer,
+    DATE_ADD(registration_date, INTERVAL 1 YEAR) as first_anniversary,
+    DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY) as thirty_days_ago,
+    LAST_DAY(registration_date) as last_day_of_registration_month
+FROM customers;
+
+-- Date Formatting Functions
+SELECT 
+    order_id,
+    order_date,
+    DATE_FORMAT(order_date, '%Y-%m-%d') as iso_date,
+    DATE_FORMAT(order_date, '%M %d, %Y') as formatted_date,
+    DATE_FORMAT(order_date, '%W, %M %e, %Y') as full_date,
+    TIME_FORMAT(order_date, '%H:%i:%s') as time_only,
+    DATE_FORMAT(order_date, '%Y-Q%q') as year_quarter
+FROM orders
+ORDER BY order_date DESC;
+
+-- Business Date Calculations
+SELECT 
+    employee_id,
+    hire_date,
+    CASE 
+        WHEN DAYOFWEEK(hire_date) IN (1, 7) THEN 'Weekend Hire'
+        ELSE 'Weekday Hire'
+    END as hire_day_type,
+    CASE 
+        WHEN EXTRACT(MONTH FROM hire_date) IN (12, 1, 2) THEN 'Winter'
+        WHEN EXTRACT(MONTH FROM hire_date) IN (3, 4, 5) THEN 'Spring'
+        WHEN EXTRACT(MONTH FROM hire_date) IN (6, 7, 8) THEN 'Summer'
+        ELSE 'Fall'
+    END as hire_season,
+    TIMESTAMPDIFF(MONTH, hire_date, CURRENT_DATE) as months_employed,
+    CASE 
+        WHEN TIMESTAMPDIFF(YEAR, hire_date, CURRENT_DATE) >= 5 THEN 'Veteran'
+        WHEN TIMESTAMPDIFF(YEAR, hire_date, CURRENT_DATE) >= 2 THEN 'Experienced'
+        ELSE 'New Employee'
+    END as experience_level
+FROM employees;</code></pre>
+            </div>
+            
+            <h4>🔄 Conditional and Null-Handling Functions</h4>
+            <div class="code-block">
+                <pre><code>-- NULL Handling Functions
+SELECT 
+    customer_id,
+    first_name,
+    middle_name,
+    last_name,
+    COALESCE(middle_name, 'N/A') as middle_name_display,
+    IFNULL(phone_number, 'No Phone') as phone_display,
+    ISNULL(email) as email_is_null,
+    NULLIF(discount_rate, 0) as non_zero_discount,
+    CONCAT(
+        first_name, 
+        CASE WHEN middle_name IS NOT NULL THEN CONCAT(' ', middle_name, ' ') ELSE ' ' END,
+        last_name
+    ) as full_name
+FROM customers;
+
+-- Comparison and Selection Functions
+SELECT 
+    product_id,
+    regular_price,
+    sale_price,
+    wholesale_price,
+    GREATEST(regular_price, sale_price, wholesale_price) as highest_price,
+    LEAST(regular_price, sale_price, wholesale_price) as lowest_price,
+    CASE 
+        WHEN sale_price < regular_price THEN 'On Sale'
+        WHEN sale_price = regular_price THEN 'Regular Price'
+        ELSE 'Premium Pricing'
+    END as pricing_status
+FROM products;
+
+-- Advanced Conditional Logic
+SELECT 
+    order_id,
+    customer_id,
+    order_total,
+    shipping_cost,
+    CASE 
+        WHEN order_total >= 100 THEN 0
+        WHEN order_total >= 50 THEN shipping_cost * 0.5
+        ELSE shipping_cost
+    END as final_shipping_cost,
+    CASE 
+        WHEN customer_tier = 'Premium' THEN order_total * 0.1
+        WHEN customer_tier = 'Gold' THEN order_total * 0.05
+        WHEN order_total >= 200 THEN order_total * 0.02
+        ELSE 0
+    END as discount_amount
+FROM orders o
+JOIN customers c ON o.customer_id = c.customer_id;</code></pre>
+            </div>
+
+            <h3>🧪 Try It Yourself</h3>
+            <div class="code-block">
+                <div class="editor-container">
+                    <div class="editor-header">
+                        <span>SQL Editor</span>
+                        <button onclick="runQuery()" class="run-btn">▶ Run Query</button>
+                    </div>
+                    <textarea id="sqlEditor" placeholder="-- Try using built-in functions here\nSELECT \n    UPPER(name) as uppercase_name,\n    ROUND(price, 2) as rounded_price,\n    CURRENT_DATE() as today\nFROM products;">SELECT 
+    UPPER(name) as uppercase_name,
+    ROUND(price, 2) as rounded_price,
+    CURRENT_DATE() as today
+FROM products;</textarea>
+                </div>
+                <div class="result-container">
+                    <div class="result-header">Query Result</div>
+                    <div id="queryResult" class="result-content">
+                        <p>Click "Run Query" to see results</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3>💡 Examples</h3>
+            
+            <h4>1. E-commerce Data Processing and Analytics</h4>
+            <div class="code-block">
+                <pre><code>-- Product catalog enhancement and analysis
+SELECT 
+    product_id,
+    TRIM(UPPER(product_name)) as clean_product_name,
+    CONCAT(
+        UPPER(LEFT(category, 1)), 
+        LOWER(SUBSTRING(category, 2))
+    ) as formatted_category,
+    ROUND(price, 2) as display_price,
+    CONCAT('$', FORMAT(price, 2)) as formatted_price,
+    CASE 
+        WHEN LENGTH(description) > 100 THEN CONCAT(LEFT(description, 97), '...')
+        ELSE description
+    END as truncated_description,
+    ROUND((price - cost) / NULLIF(cost, 0) * 100, 2) as profit_margin_percent,
+    CASE 
+        WHEN stock_quantity = 0 THEN 'Out of Stock'
+        WHEN stock_quantity <= reorder_level THEN CONCAT('Low Stock (', stock_quantity, ' left)')
+        ELSE CONCAT('In Stock (', stock_quantity, ' available)')
+    END as stock_status,
+    DATEDIFF(CURRENT_DATE, created_date) as days_since_created,
+    CASE 
+        WHEN DATEDIFF(CURRENT_DATE, created_date) <= 30 THEN 'New Product'
+        WHEN DATEDIFF(CURRENT_DATE, created_date) <= 90 THEN 'Recent Product'
+        WHEN DATEDIFF(CURRENT_DATE, created_date) <= 365 THEN 'Established Product'
+        ELSE 'Legacy Product'
+    END as product_age_category
+FROM products
+WHERE status = 'Active'
+ORDER BY created_date DESC;
+
+-- Customer order analysis with advanced formatting
+SELECT 
+    o.order_id,
+    CONCAT(
+        UPPER(LEFT(c.first_name, 1)), LOWER(SUBSTRING(c.first_name, 2)), ' ',
+        UPPER(LEFT(c.last_name, 1)), LOWER(SUBSTRING(c.last_name, 2))
+    ) as customer_name,
+    DATE_FORMAT(o.order_date, '%M %d, %Y at %h:%i %p') as formatted_order_date,
+    EXTRACT(QUARTER FROM o.order_date) as order_quarter,
+    DAYNAME(o.order_date) as order_day_name,
+    COUNT(oi.product_id) as total_items,
+    SUM(oi.quantity) as total_quantity,
+    ROUND(SUM(oi.quantity * oi.unit_price), 2) as subtotal,
+    ROUND(SUM(oi.quantity * oi.unit_price) * 0.08, 2) as tax_amount,
+    ROUND(SUM(oi.quantity * oi.unit_price) * 1.08, 2) as total_with_tax,
+    CASE 
+        WHEN SUM(oi.quantity * oi.unit_price) >= 500 THEN 'Large Order'
+        WHEN SUM(oi.quantity * oi.unit_price) >= 100 THEN 'Medium Order'
+        ELSE 'Small Order'
+    END as order_size,
+    ROUND(AVG(oi.unit_price), 2) as average_item_price,
+    CONCAT(
+        ROUND((SUM(oi.quantity * oi.unit_price) / 
+               NULLIF((SELECT AVG(total_amount) FROM orders), 0) - 1) * 100, 1), '%'
+    ) as vs_average_order
+FROM orders o
+JOIN customers c ON o.customer_id = c.customer_id
+JOIN order_items oi ON o.order_id = oi.order_id
+WHERE o.order_date >= DATE_SUB(CURRENT_DATE, INTERVAL 1 YEAR)
+GROUP BY o.order_id, c.first_name, c.last_name, o.order_date
+ORDER BY o.order_date DESC;</code></pre>
+            </div>
+            
+            <h4>2. Financial Analysis and Reporting</h4>
+            <div class="code-block">
+                <pre><code>-- Revenue analysis with time-based calculations
+SELECT 
+    DATE_FORMAT(order_date, '%Y-%m') as month_year,
+    EXTRACT(YEAR FROM order_date) as year,
+    EXTRACT(MONTH FROM order_date) as month,
+    MONTHNAME(order_date) as month_name,
+    COUNT(DISTINCT order_id) as total_orders,
+    COUNT(DISTINCT customer_id) as unique_customers,
+    SUM(total_amount) as monthly_revenue,
+    ROUND(AVG(total_amount), 2) as average_order_value,
+    ROUND(STDDEV(total_amount), 2) as order_value_std_dev,
+    MIN(total_amount) as min_order_value,
+    MAX(total_amount) as max_order_value,
+    ROUND(
+        SUM(total_amount) / NULLIF(COUNT(DISTINCT customer_id), 0), 2
+    ) as revenue_per_customer,
+    ROUND(
+        (SUM(total_amount) - LAG(SUM(total_amount)) OVER (ORDER BY EXTRACT(YEAR FROM order_date), EXTRACT(MONTH FROM order_date))) /
+        NULLIF(LAG(SUM(total_amount)) OVER (ORDER BY EXTRACT(YEAR FROM order_date), EXTRACT(MONTH FROM order_date)), 0) * 100, 2
+    ) as month_over_month_growth_percent,
+    CASE 
+        WHEN EXTRACT(MONTH FROM order_date) IN (12, 1, 2) THEN 'Winter'
+        WHEN EXTRACT(MONTH FROM order_date) IN (3, 4, 5) THEN 'Spring'
+        WHEN EXTRACT(MONTH FROM order_date) IN (6, 7, 8) THEN 'Summer'
+        ELSE 'Fall'
+    END as season
+FROM orders
+WHERE order_date >= DATE_SUB(CURRENT_DATE, INTERVAL 2 YEAR)
+GROUP BY EXTRACT(YEAR FROM order_date), EXTRACT(MONTH FROM order_date)
+ORDER BY year DESC, month DESC;
+
+-- Customer lifetime value and segmentation analysis
+SELECT 
+    c.customer_id,
+    CONCAT(
+        INITCAP(c.first_name), ' ', INITCAP(c.last_name)
+    ) as full_name,
+    COALESCE(c.email, 'No Email') as email,
+    DATE_FORMAT(c.registration_date, '%M %d, %Y') as registration_date_formatted,
+    DATEDIFF(CURRENT_DATE, c.registration_date) as days_as_customer,
+    ROUND(DATEDIFF(CURRENT_DATE, c.registration_date) / 365.25, 1) as years_as_customer,
+    COUNT(o.order_id) as total_orders,
+    COALESCE(SUM(o.total_amount), 0) as total_spent,
+    COALESCE(ROUND(AVG(o.total_amount), 2), 0) as average_order_value,
+    COALESCE(MAX(o.order_date), 'Never Ordered') as last_order_date,
+    CASE 
+        WHEN MAX(o.order_date) IS NULL THEN 'Never Ordered'
+        ELSE CONCAT(DATEDIFF(CURRENT_DATE, MAX(o.order_date)), ' days ago')
+    END as days_since_last_order,
+    ROUND(
+        COALESCE(SUM(o.total_amount), 0) / 
+        GREATEST(DATEDIFF(CURRENT_DATE, c.registration_date) / 365.25, 0.1), 2
+    ) as annual_value,
+    CASE 
+        WHEN COUNT(o.order_id) = 0 THEN 'Never Purchased'
+        WHEN COUNT(o.order_id) = 1 THEN 'One-Time Buyer'
+        WHEN COUNT(o.order_id) BETWEEN 2 AND 5 THEN 'Occasional Buyer'
+        WHEN COUNT(o.order_id) BETWEEN 6 AND 15 THEN 'Regular Customer'
+        ELSE 'VIP Customer'
+    END as customer_segment,
+    CASE 
+        WHEN SUM(o.total_amount) >= 5000 THEN 'High Value'
+        WHEN SUM(o.total_amount) >= 1000 THEN 'Medium Value'
+        WHEN SUM(o.total_amount) >= 100 THEN 'Low Value'
+        WHEN SUM(o.total_amount) > 0 THEN 'Minimal Value'
+        ELSE 'No Value'
+    END as value_tier
+FROM customers c
+LEFT JOIN orders o ON c.customer_id = o.customer_id
+GROUP BY c.customer_id, c.first_name, c.last_name, c.email, c.registration_date
+ORDER BY total_spent DESC, total_orders DESC;</code></pre>
+            </div>
+            
+            <h4>3. Employee Management and HR Analytics</h4>
+            <div class="code-block">
+                <pre><code>-- Employee information processing and analysis
+SELECT 
+    employee_id,
+    CONCAT(
+        UPPER(LEFT(first_name, 1)), LOWER(SUBSTRING(first_name, 2)), ' ',
+        UPPER(LEFT(last_name, 1)), LOWER(SUBSTRING(last_name, 2))
+    ) as formatted_name,
+    UPPER(department) as department_code,
+    INITCAP(job_title) as job_title_formatted,
+    CONCAT('$', FORMAT(salary, 0)) as formatted_salary,
+    DATE_FORMAT(hire_date, '%M %d, %Y') as hire_date_formatted,
+    DATEDIFF(CURRENT_DATE, hire_date) as days_employed,
+    ROUND(DATEDIFF(CURRENT_DATE, hire_date) / 365.25, 1) as years_employed,
+    TIMESTAMPDIFF(MONTH, hire_date, CURRENT_DATE) as months_employed,
+    CASE 
+        WHEN TIMESTAMPDIFF(YEAR, hire_date, CURRENT_DATE) < 1 THEN 'New Hire'
+        WHEN TIMESTAMPDIFF(YEAR, hire_date, CURRENT_DATE) < 3 THEN 'Junior'
+        WHEN TIMESTAMPDIFF(YEAR, hire_date, CURRENT_DATE) < 7 THEN 'Experienced'
+        WHEN TIMESTAMPDIFF(YEAR, hire_date, CURRENT_DATE) < 15 THEN 'Senior'
+        ELSE 'Veteran'
+    END as experience_level,
+    ROUND(performance_rating, 2) as performance_score,
+    CASE 
+        WHEN performance_rating >= 4.5 THEN 'Outstanding'
+        WHEN performance_rating >= 4.0 THEN 'Exceeds Expectations'
+        WHEN performance_rating >= 3.5 THEN 'Meets Expectations'
+        WHEN performance_rating >= 2.5 THEN 'Below Expectations'
+        ELSE 'Unsatisfactory'
+    END as performance_category,
+    ROUND(salary * CASE 
+        WHEN performance_rating >= 4.5 THEN 0.15
+        WHEN performance_rating >= 4.0 THEN 0.12
+        WHEN performance_rating >= 3.5 THEN 0.08
+        WHEN performance_rating >= 3.0 THEN 0.05
+        ELSE 0
+    END, 2) as annual_bonus,
+    DATE_ADD(hire_date, INTERVAL 1 YEAR) as first_anniversary,
+    CASE 
+        WHEN MONTH(hire_date) = MONTH(CURRENT_DATE) AND DAY(hire_date) = DAY(CURRENT_DATE) THEN 'Work Anniversary Today!'
+        WHEN MONTH(hire_date) = MONTH(CURRENT_DATE) THEN CONCAT('Work Anniversary this month (', DAY(hire_date), 'th)')
+        ELSE 'No anniversary this month'
+    END as anniversary_status
+FROM employees
+WHERE status = 'Active'
+ORDER BY department, years_employed DESC;
+
+-- Payroll and compensation analysis
+SELECT 
+    department,
+    job_title,
+    COUNT(*) as employee_count,
+    ROUND(AVG(salary), 2) as average_salary,
+    ROUND(STDDEV(salary), 2) as salary_std_dev,
+    MIN(salary) as min_salary,
+    MAX(salary) as max_salary,
+    ROUND(PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY salary), 2) as median_salary,
+    ROUND(AVG(performance_rating), 2) as avg_performance,
+    ROUND(AVG(TIMESTAMPDIFF(YEAR, hire_date, CURRENT_DATE)), 1) as avg_tenure_years,
+    SUM(salary) as total_department_payroll,
+    ROUND(SUM(salary * CASE 
+        WHEN performance_rating >= 4.5 THEN 0.15
+        WHEN performance_rating >= 4.0 THEN 0.12
+        WHEN performance_rating >= 3.5 THEN 0.08
+        WHEN performance_rating >= 3.0 THEN 0.05
+        ELSE 0
+    END), 2) as total_bonus_pool,
+    CONCAT(
+        ROUND((SUM(salary) + SUM(salary * CASE 
+            WHEN performance_rating >= 4.5 THEN 0.15
+            WHEN performance_rating >= 4.0 THEN 0.12
+            WHEN performance_rating >= 3.5 THEN 0.08
+            WHEN performance_rating >= 3.0 THEN 0.05
+            ELSE 0
+        END)) / 1000, 0), 'K'
+    ) as total_compensation_k
+FROM employees
+WHERE status = 'Active'
+GROUP BY department, job_title
+HAVING COUNT(*) >= 2
+ORDER BY department, average_salary DESC;</code></pre>
+            </div>
+            
+            <h4>4. Inventory Management and Supply Chain Analytics</h4>
+            <div class="code-block">
+                <pre><code>-- Inventory status and reorder analysis
+SELECT 
+    product_id,
+    TRIM(UPPER(product_name)) as product_name_clean,
+    INITCAP(category) as category_formatted,
+    CONCAT('SKU-', LPAD(product_id, 6, '0')) as formatted_sku,
+    stock_quantity,
+    reorder_level,
+    max_stock_level,
+    ROUND(unit_cost, 2) as unit_cost,
+    ROUND(selling_price, 2) as selling_price,
+    ROUND((selling_price - unit_cost) / NULLIF(unit_cost, 0) * 100, 2) as profit_margin_percent,
+    stock_quantity * unit_cost as inventory_value,
+    CASE 
+        WHEN stock_quantity = 0 THEN 'OUT OF STOCK - URGENT'
+        WHEN stock_quantity <= reorder_level THEN 'REORDER REQUIRED'
+        WHEN stock_quantity <= (reorder_level * 1.5) THEN 'LOW STOCK WARNING'
+        WHEN stock_quantity >= max_stock_level THEN 'OVERSTOCK'
+        ELSE 'NORMAL STOCK'
+    END as stock_status,
+    CASE 
+        WHEN stock_quantity = 0 THEN reorder_level * 2
+        WHEN stock_quantity <= reorder_level THEN (max_stock_level - stock_quantity)
+        ELSE 0
+    END as recommended_order_quantity,
+    CASE 
+        WHEN stock_quantity = 0 THEN 'IMMEDIATE'
+        WHEN stock_quantity <= reorder_level THEN 'WITHIN 1 WEEK'
+        WHEN stock_quantity <= (reorder_level * 1.5) THEN 'WITHIN 2 WEEKS'
+        ELSE 'NO ACTION REQUIRED'
+    END as urgency_level,
+    DATEDIFF(CURRENT_DATE, last_restock_date) as days_since_restock,
+    CASE 
+        WHEN DATEDIFF(CURRENT_DATE, last_restock_date) <= 30 THEN 'Recently Restocked'
+        WHEN DATEDIFF(CURRENT_DATE, last_restock_date) <= 90 THEN 'Moderately Stocked'
+        WHEN DATEDIFF(CURRENT_DATE, last_restock_date) <= 180 THEN 'Needs Attention'
+        ELSE 'Long Overdue'
+    END as restock_status,
+    ROUND(
+        stock_quantity / GREATEST(
+            COALESCE(
+                (SELECT AVG(quantity) 
+                 FROM order_items oi 
+                 WHERE oi.product_id = p.product_id 
+                   AND oi.order_date >= DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY)
+                ), 1
+            ), 1
+        ), 1
+    ) as days_of_stock_remaining
+FROM products p
+WHERE status = 'Active'
+ORDER BY 
+    CASE 
+        WHEN stock_quantity = 0 THEN 1
+        WHEN stock_quantity <= reorder_level THEN 2
+        WHEN stock_quantity <= (reorder_level * 1.5) THEN 3
+        WHEN stock_quantity >= max_stock_level THEN 4
+        ELSE 5
+    END,
+    inventory_value DESC;</code></pre>
+            </div>
+            
+            <h4>5. Advanced Data Cleaning and Standardization</h4>
+            <div class="code-block">
+                <pre><code>-- Customer data cleaning and standardization
+SELECT 
+    customer_id,
+    -- Name standardization
+    TRIM(REGEXP_REPLACE(first_name, '[^a-zA-Z\s]', '')) as clean_first_name,
+    TRIM(REGEXP_REPLACE(last_name, '[^a-zA-Z\s]', '')) as clean_last_name,
+    CONCAT(
+        UPPER(LEFT(TRIM(first_name), 1)), 
+        LOWER(SUBSTRING(TRIM(first_name), 2)), ' ',
+        UPPER(LEFT(TRIM(last_name), 1)), 
+        LOWER(SUBSTRING(TRIM(last_name), 2))
+    ) as standardized_full_name,
+    
+    -- Email validation and cleaning
+    LOWER(TRIM(email)) as clean_email,
+    CASE 
+        WHEN email REGEXP '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$' THEN 'Valid'
+        WHEN email IS NULL OR email = '' THEN 'Missing'
+        ELSE 'Invalid'
+    END as email_status,
+    
+    -- Phone number standardization
+    REGEXP_REPLACE(phone_number, '[^0-9]', '') as digits_only_phone,
+    CASE 
+        WHEN LENGTH(REGEXP_REPLACE(phone_number, '[^0-9]', '')) = 10 THEN 
+            CONCAT(
+                '(', SUBSTRING(REGEXP_REPLACE(phone_number, '[^0-9]', ''), 1, 3), ') ',
+                SUBSTRING(REGEXP_REPLACE(phone_number, '[^0-9]', ''), 4, 3), '-',
+                SUBSTRING(REGEXP_REPLACE(phone_number, '[^0-9]', ''), 7, 4)
+            )
+        WHEN LENGTH(REGEXP_REPLACE(phone_number, '[^0-9]', '')) = 11 AND 
+             LEFT(REGEXP_REPLACE(phone_number, '[^0-9]', ''), 1) = '1' THEN
+            CONCAT(
+                '+1 (', SUBSTRING(REGEXP_REPLACE(phone_number, '[^0-9]', ''), 2, 3), ') ',
+                SUBSTRING(REGEXP_REPLACE(phone_number, '[^0-9]', ''), 5, 3), '-',
+                SUBSTRING(REGEXP_REPLACE(phone_number, '[^0-9]', ''), 8, 4)
+            )
+        ELSE phone_number
+    END as formatted_phone,
+    
+    -- Address standardization
+    TRIM(UPPER(street_address)) as clean_street_address,
+    TRIM(INITCAP(city)) as clean_city,
+    TRIM(UPPER(state)) as clean_state,
+    REGEXP_REPLACE(zip_code, '[^0-9-]', '') as clean_zip_code,
+    CASE 
+        WHEN LENGTH(REGEXP_REPLACE(zip_code, '[^0-9]', '')) = 5 THEN 'Standard ZIP'
+        WHEN LENGTH(REGEXP_REPLACE(zip_code, '[^0-9]', '')) = 9 THEN 'ZIP+4'
+        ELSE 'Invalid ZIP'
+    END as zip_code_type,
+    
+    -- Data quality score
+    (
+        CASE WHEN first_name IS NOT NULL AND TRIM(first_name) != '' THEN 1 ELSE 0 END +
+        CASE WHEN last_name IS NOT NULL AND TRIM(last_name) != '' THEN 1 ELSE 0 END +
+        CASE WHEN email REGEXP '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$' THEN 1 ELSE 0 END +
+        CASE WHEN LENGTH(REGEXP_REPLACE(phone_number, '[^0-9]', '')) IN (10, 11) THEN 1 ELSE 0 END +
+        CASE WHEN street_address IS NOT NULL AND TRIM(street_address) != '' THEN 1 ELSE 0 END +
+        CASE WHEN city IS NOT NULL AND TRIM(city) != '' THEN 1 ELSE 0 END +
+        CASE WHEN state IS NOT NULL AND TRIM(state) != '' THEN 1 ELSE 0 END +
+        CASE WHEN LENGTH(REGEXP_REPLACE(zip_code, '[^0-9]', '')) >= 5 THEN 1 ELSE 0 END
+    ) as data_quality_score,
+    
+    CASE 
+        WHEN (
+            CASE WHEN first_name IS NOT NULL AND TRIM(first_name) != '' THEN 1 ELSE 0 END +
+            CASE WHEN last_name IS NOT NULL AND TRIM(last_name) != '' THEN 1 ELSE 0 END +
+            CASE WHEN email REGEXP '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$' THEN 1 ELSE 0 END +
+            CASE WHEN LENGTH(REGEXP_REPLACE(phone_number, '[^0-9]', '')) IN (10, 11) THEN 1 ELSE 0 END +
+            CASE WHEN street_address IS NOT NULL AND TRIM(street_address) != '' THEN 1 ELSE 0 END +
+            CASE WHEN city IS NOT NULL AND TRIM(city) != '' THEN 1 ELSE 0 END +
+            CASE WHEN state IS NOT NULL AND TRIM(state) != '' THEN 1 ELSE 0 END +
+            CASE WHEN LENGTH(REGEXP_REPLACE(zip_code, '[^0-9]', '')) >= 5 THEN 1 ELSE 0 END
+        ) >= 7 THEN 'Excellent'
+        WHEN (
+            CASE WHEN first_name IS NOT NULL AND TRIM(first_name) != '' THEN 1 ELSE 0 END +
+            CASE WHEN last_name IS NOT NULL AND TRIM(last_name) != '' THEN 1 ELSE 0 END +
+            CASE WHEN email REGEXP '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$' THEN 1 ELSE 0 END +
+            CASE WHEN LENGTH(REGEXP_REPLACE(phone_number, '[^0-9]', '')) IN (10, 11) THEN 1 ELSE 0 END +
+            CASE WHEN street_address IS NOT NULL AND TRIM(street_address) != '' THEN 1 ELSE 0 END +
+            CASE WHEN city IS NOT NULL AND TRIM(city) != '' THEN 1 ELSE 0 END +
+            CASE WHEN state IS NOT NULL AND TRIM(state) != '' THEN 1 ELSE 0 END +
+            CASE WHEN LENGTH(REGEXP_REPLACE(zip_code, '[^0-9]', '')) >= 5 THEN 1 ELSE 0 END
+        ) >= 5 THEN 'Good'
+        WHEN (
+            CASE WHEN first_name IS NOT NULL AND TRIM(first_name) != '' THEN 1 ELSE 0 END +
+            CASE WHEN last_name IS NOT NULL AND TRIM(last_name) != '' THEN 1 ELSE 0 END +
+            CASE WHEN email REGEXP '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$' THEN 1 ELSE 0 END +
+            CASE WHEN LENGTH(REGEXP_REPLACE(phone_number, '[^0-9]', '')) IN (10, 11) THEN 1 ELSE 0 END +
+            CASE WHEN street_address IS NOT NULL AND TRIM(street_address) != '' THEN 1 ELSE 0 END +
+            CASE WHEN city IS NOT NULL AND TRIM(city) != '' THEN 1 ELSE 0 END +
+            CASE WHEN state IS NOT NULL AND TRIM(state) != '' THEN 1 ELSE 0 END +
+            CASE WHEN LENGTH(REGEXP_REPLACE(zip_code, '[^0-9]', '')) >= 5 THEN 1 ELSE 0 END
+        ) >= 3 THEN 'Fair'
+        ELSE 'Poor'
+    END as data_quality_rating
+FROM customers
+ORDER BY data_quality_score DESC, customer_id;</code></pre>
+            </div>
+
+            <h3>💡 Helpful Tips</h3>
+            <ul>
+                <li><strong>Function Compatibility</strong>: Different database systems may have variations in function names and syntax</li>
+                <li><strong>Performance Considerations</strong>: Use functions efficiently; avoid applying functions to columns in WHERE clauses when possible</li>
+                <li><strong>NULL Handling</strong>: Always consider how functions handle NULL values in your data</li>
+                <li><strong>Data Type Awareness</strong>: Understand the data types returned by functions and ensure compatibility</li>
+                <li><strong>Nested Functions</strong>: Functions can be nested, but keep readability in mind</li>
+                <li><strong>Index Impact</strong>: Functions on columns in WHERE clauses may prevent index usage</li>
+                <li><strong>String Length Limits</strong>: Be aware of maximum string lengths when concatenating or manipulating text</li>
+                <li><strong>Date Format Standards</strong>: Use consistent date formats across your application</li>
+                <li><strong>Precision and Rounding</strong>: Specify appropriate precision for numeric calculations</li>
+                <li><strong>Error Handling</strong>: Use functions like NULLIF to prevent division by zero errors</li>
+                <li><strong>Documentation</strong>: Comment complex function combinations for future maintenance</li>
+                <li><strong>Testing</strong>: Test functions with edge cases and boundary values</li>
+            </ul>
+
+            <h3>🧠 Summary</h3>
+            <ul>
+                <li><strong>Essential Tools</strong>: Built-in functions are fundamental for data manipulation and analysis</li>
+                <li><strong>Multiple Categories</strong>: String, numeric, date/time, and conditional functions serve different purposes</li>
+                <li><strong>Data Transformation</strong>: Enable complex data processing without external tools</li>
+                <li><strong>Performance Benefits</strong>: Database-level processing is typically faster than application-level</li>
+                <li><strong>Business Logic</strong>: Implement complex business rules directly in SQL queries</li>
+                <li><strong>Data Quality</strong>: Essential for cleaning, validating, and standardizing data</li>
+            </ul>
+
+            <h3>🧪 Practice: Format Customer Data</h3>
+            <div class="mock-table" id="mockTable" style="display: none;">
+                <h4>Preview: What the table would look like when queried:</h4>
+                <h5>After Query (Example Result):</h5>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>uppercase_name</th>
+                            <th>rounded_price</th>
+                            <th>today</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>WIRELESS MOUSE</td>
+                            <td>25.99</td>
+                            <td>2024-01-15</td>
+                        </tr>
+                        <tr>
+                            <td>GAMING KEYBOARD</td>
+                            <td>75.00</td>
+                            <td>2024-01-15</td>
+                        </tr>
+                        <tr>
+                            <td>4K MONITOR</td>
+                            <td>299.99</td>
+                            <td>2024-01-15</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>🎯 Quiz</h3>
+            <p><strong>Which function would you use to convert text to uppercase in SQL?</strong></p>
+            <div class="quiz">
+                <button onclick="checkAnswer(this, true)">A) UPPER()</button>
+                <button onclick="checkAnswer(this, false)">B) UPPERCASE()</button>
+                <button onclick="checkAnswer(this, false)">C) CAPS()</button>
+                <button onclick="checkAnswer(this, false)">D) UPCASE()</button>
+                <p class="quiz-feedback"></p>
+                <div id="quizExplanation" class="quiz-explanation" style="display: none;"></div>
+            </div>
+        </section>
+    </div>
+    <div id="footer"></div>
+</body>
+</html>

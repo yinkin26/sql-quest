@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en" class="pixel-art dark-theme">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Quest - DROP DATABASE</title>
+    <link rel="stylesheet" href="stylesheets/style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <script type="module" src="javascripts/mockTables.js"></script>
+    <script src="javascripts/loadComponents.js" defer></script>
+    <script src="javascripts/script.js" defer></script>
+    <script src="javascripts/lessonTracker.js" defer></script>
+</head>
+<body class="pixel-art dark-theme">
+    <div id="header"></div>
+    <div class="lesson-layout">
+        <div id="sidebar"></div>
+
+        <section class="lesson-content">
+            <h2>🗑️ DROP DATABASE</h2>
+
+            <!-- Bookmark buttons -->
+            <div class="bookmark-container">
+                <button id="bookmarkBtn" style="display: none;">🔖 Bookmark</button>
+                <button id="unbookmarkBtn" style="display: none;">❌ Remove Bookmark</button>
+                <span id="bookmarkStatus"></span>
+            </div>
+
+            <div class="callout-box">
+                <p>⚠️ DANGER ZONE: Learn how to safely delete databases - but be very careful!</p>
+            </div>
+
+            <h3>📌 What is DROP DATABASE?</h3>
+            <p>The <code class="tooltip" title="Permanently deletes an entire database">DROP DATABASE</code> statement is used to delete an existing SQL database completely. This operation is <strong>irreversible</strong> and will permanently remove the database and all its contents including tables, data, views, and indexes. Think of it as 🔥 burning down an entire building - everything inside is gone forever!</p>
+
+            <h3>🧠 Basic Syntax</h3>
+            <pre><code>DROP DATABASE <span style="color: #ff6b6b;">database_name</span>;</code></pre>
+
+            <h3>⚠️ CRITICAL WARNING</h3>
+            <div style="background: rgba(255, 107, 107, 0.2); border: 2px solid #ff6b6b; border-radius: 8px; padding: 15px; margin: 15px 0;">
+                <h4 style="color: #ff6b6b; margin-top: 0;">🚨 PERMANENT DELETION</h4>
+                <ul style="color: #ffcccc;">
+                    <li>💀 <strong>ALL DATA WILL BE LOST</strong> - tables, records, everything!</li>
+                    <li>🚫 <strong>NO UNDO</strong> - this action cannot be reversed</li>
+                    <li>⚡ <strong>IMMEDIATE EFFECT</strong> - deletion happens instantly</li>
+                    <li>🔒 Always backup your data before dropping a database</li>
+                </ul>
+            </div>
+
+            <h3>💡 Example</h3>
+            <pre><code>-- ⚠️ Delete a test database (be very careful!)
+DROP DATABASE <span style="color: #ff6b6b;">test_database</span>;
+
+-- 🧪 Delete an old development database
+DROP DATABASE <span style="color: #ff6b6b;">old_dev_environment</span>;</code></pre>
+
+
+
+            <h3>🛠️ Database Management Simulator</h3>
+            <p>🎯 Practice creating and dropping databases safely:</p>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin: 15px 0;">
+                <button class="neon-button" onclick="showDatabaseState()">📋 Show Database State</button>
+                <button class="neon-button" onclick="simulateCreateDatabase('sample_database')">➕ CREATE sample_database</button>
+                <button class="neon-button" onclick="simulateDropDatabase('sample_database', false)">🗑️ DROP sample_database</button>
+                <button class="neon-button" onclick="simulateDropDatabase('sample_database', true)">🛡️ DROP IF EXISTS</button>
+            </div>
+            <div class="query-output" id="mockTableOutput"></div>
+
+            <h3>📋 Mock Database List</h3>
+            <p>👀 View available databases before deciding what to drop.</p>
+            <button class="neon-button" onclick="viewDatabases()">View Databases</button>
+            <div id="databasesOutput" class="query-output" style="margin-top: 10px;"></div>
+
+            <h3>🛡️ Safe Practices</h3>
+            <h4>1. Check if Database Exists</h4>
+            <pre><code>-- ✅ Safe way to drop a database
+DROP DATABASE IF EXISTS <span style="color: #ff6b6b;">database_name</span>;</code></pre>
+
+            <h4>2. Backup Before Dropping</h4>
+            <pre><code>-- 💾 Always backup first!
+mysqldump -u username -p database_name > backup.sql
+-- Then safely drop
+DROP DATABASE <span style="color: #ff6b6b;">database_name</span>;</code></pre>
+
+            <h4>3. Double-Check Database Name</h4>
+            <pre><code>-- 🔍 List databases first
+SHOW DATABASES;
+-- Then drop the correct one
+DROP DATABASE <span style="color: #ff6b6b;">confirmed_database_name</span>;</code></pre>
+
+            <h3>🌍 Real-World Use Cases</h3>
+            <p>When would you actually use DROP DATABASE?</p>
+            <ul>
+                <li>🧪 <strong>Cleaning up test environments</strong> - removing temporary databases after testing</li>
+                <li>🔄 <strong>Database migrations</strong> - removing old database versions</li>
+                <li>🗂️ <strong>Project cleanup</strong> - removing databases from cancelled projects</li>
+                <li>💾 <strong>Storage management</strong> - freeing up disk space by removing unused databases</li>
+            </ul>
+
+            <h3>📊 Mock Database Cleanup Scenario</h3>
+            <div class="mock-table">
+                <p>🎯 View databases and their cleanup recommendations:</p>
+                <button class="neon-button" onclick="displayMockTable('databaseCleanup')">🗂️ View Database List</button>
+                <button class="neon-button" onclick="simulateDrop('databaseCleanup')">🗑️ Simulate DROP DATABASE</button>
+                <div class="query-output" id="mockTableOutput"></div>
+            </div>
+
+            <h3>💡 Helpful Tips</h3>
+            <ul>
+                <li>🔍 Always use <code>SHOW DATABASES;</code> to list databases before dropping</li>
+                <li>💾 <strong>Backup critical data</strong> before any DROP operation</li>
+                <li>🛡️ Use <code>IF EXISTS</code> to avoid errors if database doesn't exist</li>
+                <li>👥 <strong>Coordinate with your team</strong> before dropping shared databases</li>
+                <li>📝 <strong>Document</strong> why you're dropping a database for future reference</li>
+                <li>🔒 Consider database permissions - you need DROP privileges</li>
+            </ul>
+
+            <h3>🧠 Summary</h3>
+            <ul>
+                <li>🗑️ <code>DROP DATABASE</code> permanently deletes an entire database</li>
+                <li>⚠️ <strong>Irreversible operation</strong> - no undo possible</li>
+                <li>💾 Always <strong>backup important data</strong> before dropping</li>
+                <li>🛡️ Use <code>IF EXISTS</code> for safer database deletion</li>
+                <li>🎯 Useful for cleanup, migrations, and storage management</li>
+            </ul>
+
+            <h3>🧪 Practice</h3>
+            <p>📚 Write a safe DROP DATABASE statement for a database called <code>"old_test_db"</code> that won't cause an error if the database doesn't exist.</p>
+            <div class="editor-container">
+                <textarea class="code-editor" id="exerciseInput" placeholder="Write your safe DROP DATABASE statement here..."></textarea>
+                <button class="neon-button" onclick="validateExercise()">Submit</button>
+                <div id="exerciseFeedback" style="margin-top:15px;"></div>
+            </div>
+
+            <h3>🎯 Quiz</h3>
+            <p><strong>What happens when you execute DROP DATABASE?</strong></p>
+            <div class="quiz">
+                <button onclick="checkAnswer(this,'A')">A) Creates a backup of the database</button>
+                <button onclick="checkAnswer(this,'B')">B) Permanently deletes the entire database</button>
+                <button onclick="checkAnswer(this,'C')">C) Renames the database</button>
+                <button onclick="checkAnswer(this,'D')">D) Temporarily hides the database</button>
+                <p class="quiz-feedback"></p>
+                <div id="quizExplanation" class="quiz-explanation" style="display:none;"></div>
+            </div>
+        </section>
+    </div>
+
+    <div id="footer"></div>
+
+    <script>
+        function runDropQuery() {
+            const textarea = document.querySelector('.code-editor');
+            const output = document.querySelector('.query-output');
+            const query = textarea.value.trim().toLowerCase();
+            
+            if (query.includes('drop database')) {
+                const dbName = query.match(/drop database\s+(?:if exists\s+)?(\w+)/)?.[1] || 'unknown_db';
+                const isIfExists = query.includes('if exists');
+                
+                output.innerHTML = `
+                    <div style='background: rgba(255, 107, 107, 0.2); border: 1px solid #ff6b6b; border-radius: 8px; padding: 15px;'>
+                        <p style='color: #ff6b6b; margin: 0;'>🗑️ <strong>MOCK DELETION:</strong> Database '${dbName}' would be permanently deleted!</p>
+                        <p style='color: #ffcccc; margin: 5px 0 0 0; font-size: 0.9em;'>
+                            ${isIfExists ? '✅ Safe syntax with IF EXISTS used' : '⚠️ Consider using IF EXISTS for safer deletion'}
+                        </p>
+                        <p style='color: #a0a0a0; margin: 5px 0 0 0; font-size: 0.8em;'>💡 This is just a simulation - no real database was harmed!</p>
+                    </div>
+                `;
+            } else {
+                output.innerHTML = `<p style='color: red;'>❌ Invalid query. Try using DROP DATABASE syntax.</p>`;
+            }
+        }
+        
+        function runAdvancedDropQuery() {
+            const textarea = document.querySelector('.code-editor');
+            const output = document.querySelector('.query-output');
+            const query = textarea.value.trim().toLowerCase();
+            
+            if (query.includes('create database')) {
+                const dbName = query.match(/create database\s+(?:if not exists\s+)?(\w+)/)?.[1] || 'unknown_db';
+                simulateCreateDatabase(dbName, 'mockTableOutput');
+                // Copy the output to the query output div
+                setTimeout(() => {
+                    const mockOutput = document.getElementById('mockTableOutput');
+                    if (mockOutput) {
+                        output.innerHTML = mockOutput.innerHTML;
+                    }
+                }, 100);
+            } else if (query.includes('drop database')) {
+                const dbName = query.match(/drop database\s+(?:if exists\s+)?(\w+)/)?.[1] || 'unknown_db';
+                const isIfExists = query.includes('if exists');
+                simulateDropDatabase(dbName, isIfExists, 'mockTableOutput');
+                // Copy the output to the query output div
+                setTimeout(() => {
+                    const mockOutput = document.getElementById('mockTableOutput');
+                    if (mockOutput) {
+                        output.innerHTML = mockOutput.innerHTML;
+                    }
+                }, 100);
+            } else {
+                output.innerHTML = `<p style='color: red;'>❌ Invalid query. Try using CREATE DATABASE or DROP DATABASE syntax.</p>`;
+            }
+        }
+        
+        function viewDatabases() {
+            const output = document.getElementById('databasesOutput');
+            const mockDatabases = [
+                { name: 'ecommerce_prod', description: '🛒 Production store data', status: '🟢 Critical' },
+                { name: 'ecommerce_test', description: '🧪 Testing environment', status: '🟡 Safe to drop' },
+                { name: 'temp_experiment', description: '🔬 Developer sandbox', status: '🔴 Can drop' },
+                { name: 'backup_2023', description: '💾 Old backup copy', status: '🔴 Obsolete' },
+                { name: 'sample_database', description: '📚 Learning examples', status: '🟡 Practice only' }
+            ];
+            
+            let html = '<div style="background: rgba(26, 32, 44, 0.8); border: 1px solid #4a5568; border-radius: 8px; padding: 15px; margin-top: 10px;">';
+            html += '<h4 style="color: #00ffff; margin-top: 0;">📋 Available Databases</h4>';
+            html += '<table style="width: 100%; border-collapse: collapse;">';
+            html += '<thead><tr style="border-bottom: 1px solid #4a5568;"><th style="text-align: left; padding: 8px; color: #00ffff;">Database</th><th style="text-align: left; padding: 8px; color: #00ffff;">Description</th><th style="text-align: left; padding: 8px; color: #00ffff;">Status</th></tr></thead>';
+            html += '<tbody>';
+            
+            mockDatabases.forEach(db => {
+                html += `<tr style="border-bottom: 1px solid #4a5568;"><td style="padding: 8px;"><code style="color: #00ffff;">${db.name}</code></td><td style="padding: 8px; color: #e2e8f0;">${db.description}</td><td style="padding: 8px;">${db.status}</td></tr>`;
+            });
+            
+            html += '</tbody></table></div>';
+            output.innerHTML = html;
+        }
+        
+        function validateExercise() {
+            const sql = document.getElementById("exerciseInput").value.trim().toLowerCase();
+            const feedback = document.getElementById("exerciseFeedback");
+            
+            if (sql.includes("drop database if exists old_test_db")) {
+                feedback.style.color = "lightgreen";
+                feedback.textContent = "✅ Perfect! You used the safe IF EXISTS syntax to avoid errors.";
+            } else if (sql.includes("drop database old_test_db")) {
+                feedback.style.color = "orange";
+                feedback.textContent = "⚠️ Correct database name, but consider adding 'IF EXISTS' for safer deletion.";
+            } else if (sql.includes("drop database")) {
+                feedback.style.color = "orange";
+                feedback.textContent = "⚠️ Good use of DROP DATABASE, but make sure to target 'old_test_db' with IF EXISTS.";
+            } else {
+                feedback.style.color = "red";
+                feedback.textContent = "❌ Try using: DROP DATABASE IF EXISTS old_test_db;";
+            }
+        }
+        
+        function checkAnswer(btn, opt) {
+            const fb = btn.parentElement.querySelector('.quiz-feedback');
+            const exp = document.getElementById('quizExplanation');
+            const buttons = btn.parentElement.querySelectorAll('button');
+            
+            // Disable all buttons after selection
+            buttons.forEach(b => b.disabled = true);
+            
+            if (opt === 'B') {
+                fb.style.color = 'lightgreen';
+                fb.textContent = '✅ Correct! DROP DATABASE permanently deletes the entire database.';
+                btn.style.backgroundColor = '#28a745';
+                exp.innerHTML = `
+                    <p><strong>🎯 Explanation:</strong></p>
+                    <ul>
+                        <li>🗑️ <code>DROP DATABASE</code> completely and permanently removes a database.</li>
+                        <li>💀 All tables, data, views, and indexes are deleted instantly.</li>
+                        <li>🚫 This operation is irreversible - there's no undo!</li>
+                        <li>💾 Always backup important data before dropping a database.</li>
+                    </ul>
+                `;
+            } else {
+                fb.style.color = 'red';
+                fb.textContent = '❌ Incorrect. The correct answer is B.';
+                btn.style.backgroundColor = '#dc3545';
+                // Highlight correct answer
+                buttons[1].style.backgroundColor = '#28a745';
+                exp.innerHTML = `
+                    <p><strong>❌ Explanation:</strong></p>
+                    <ul>
+                        <li>🗑️ DROP DATABASE doesn't create backups, rename, or hide databases.</li>
+                        <li>💀 It permanently deletes everything - be very careful!</li>
+                        <li>📚 Remember: DROP = Delete permanently!</li>
+                    </ul>
+                `;
+            }
+            exp.style.display = 'block';
+            exp.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // Bookmark functionality
+        const lessonId = "DROP_DATABASE";
+        const bookmarkBtn = document.getElementById("bookmarkBtn");
+        const unbookmarkBtn = document.getElementById("unbookmarkBtn");
+        const statusText = document.getElementById("bookmarkStatus");
+
+        function checkBookmarkStatus(retries = 3) {
+            fetch(`http://localhost:5000/bookmark-status?lessonId=${lessonId}`, {
+                credentials: 'include',
+                headers: { "Content-Type": "application/json" }
+            })
+            .then(res => {
+                if (!res.ok) throw new Error('Network response was not ok');
+                return res.json();
+            })
+            .then(data => {
+                if (data.bookmarked) {
+                    bookmarkBtn.style.display = "none";
+                    unbookmarkBtn.style.display = "inline-block";
+                    statusText.textContent = "📌 Bookmarked";
+                } else {
+                    bookmarkBtn.style.display = "inline-block";
+                    unbookmarkBtn.style.display = "none";
+                    statusText.textContent = "";
+                }
+            })
+            .catch(error => {
+                console.error('Error checking bookmark status:', error);
+                if (retries > 0) {
+                    setTimeout(() => checkBookmarkStatus(retries - 1), 1000);
+                }
+            });
+        }
+
+        bookmarkBtn.addEventListener("click", () => {
+            fetch("http://localhost:5000/bookmark", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({ lessonId: lessonId, bookmarked: true })
+            })
+            .then(res => res.json())
+            .then(() => checkBookmarkStatus());
+        });
+
+        unbookmarkBtn.addEventListener("click", () => {
+            fetch("http://localhost:5000/bookmark", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({ lessonId: lessonId, bookmarked: false })
+            })
+            .then(res => res.json())
+            .then(() => checkBookmarkStatus());
+        });
+
+        checkBookmarkStatus();
+    </script>
+</body>
+</html>

@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en" class="pixel-art dark-theme">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Quest - SQL SELECT</title>
+    <link rel="stylesheet" href="stylesheets/style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        .highlight-inserted {
+            background-color: #2a2f4a;
+            border-top: 2px dashed lime;
+        }
+    </style>
+    <script src="javascripts/loadComponents.js" defer></script>
+    <script src="javascripts/script.js" defer></script>
+    <script src="javascripts/lessonTracker.js" defer></script>
+
+</head>
+<body class="pixel-art dark-theme">
+    <div id="header"></div>
+    <div class="lesson-layout">
+        <!-- Sidebar loaded dynamically -->
+        <div id="sidebar"></div>
+
+        <section class="lesson-content">
+            <h2>🔍 SQL SELECT</h2>
+
+            <!-- Add bookmark buttons -->
+            <div class="bookmark-container">
+                <button id="bookmarkBtn" style="display: none;">🔖 Bookmark</button>
+                <button id="unbookmarkBtn" style="display: none;">❌ Remove Bookmark</button>
+                <span id="bookmarkStatus"></span>
+            </div>
+
+            <h3>📌 What is SELECT?</h3>
+            <p>The <code class="tooltip" title="Used to retrieve data from a table in a database">SELECT</code> statement is used to fetch data from a table in a database. It's the most commonly used SQL command!</p>
+
+            <h3>🧠 Basic Syntax</h3>
+            <p>To retrieve data from all columns of a table:</p>
+            <pre><code>SELECT * FROM table_name;</code></pre>
+
+            <p>To get specific columns:</p>
+            <pre><code>SELECT column1, column2 FROM table_name;</code></pre>
+
+            <p>Example:</p>
+            <pre><code>SELECT name, email FROM customers;</code></pre>
+
+            <h3>🧪 Try It Yourself</h3>
+            <div class="code-block">
+                <textarea class="code-editor">SELECT * FROM customers;</textarea>
+                <button class="neon-button run-btn">Run</button>
+                <div class="query-output"></div>
+            </div>
+
+            <h3>📊 Select Specific Columns</h3>
+            <p>If you only want names and cities:</p>
+            <pre><code>SELECT name, city FROM customers;</code></pre>
+
+            <h3>🔍 Filtering Results with WHERE</h3>
+            <p>Use the <code class="tooltip" title="Adds a condition to limit which rows are returned">WHERE</code> clause to filter rows based on conditions:</p>
+            <pre><code>SELECT name, city FROM customers WHERE city = 'London';</code></pre>
+
+            <p><strong>Example:</strong> See customers who live in Tokyo</p>
+            <div class="code-block">
+                <textarea class="code-editor">SELECT name FROM customers WHERE city = 'Tokyo';</textarea>
+                <button class="neon-button run-btn">Run</button>
+                <div class="query-output"></div>
+            </div>
+
+            <h3>📦 Select from Another Table</h3>
+            <p>If you have more than one table, you can fetch data from any:</p>
+            <pre><code>SELECT * FROM orders;</code></pre>
+
+            <h3>💬 Behind the Scenes</h3>
+            <p>The <code>SELECT</code> statement sends a request to the database asking it to return specific rows and columns from a table. If a <code>WHERE</code> clause is included, only rows that match the condition are returned.</p>
+
+            <h3>💡 Helpful Tips</h3>
+            <ul>
+                <li><code class="tooltip" title="Selects all columns in a table">*</code> selects all columns, but it's better to name them explicitly for clarity and performance.</li>
+                <li>Use single quotes <code>' '</code> for text values in conditions.</li>
+                <li>SQL keywords like <code>SELECT</code>, <code>FROM</code>, and <code>WHERE</code> are not case-sensitive.</li>
+                <li><code>SELECT</code> only reads data; it does not change the database.</li>
+                <li>End your queries with a semicolon <code class="tooltip" title="Used to separate SQL statements when running multiple at once">;</code> especially when writing multiple queries.</li>
+            </ul>
+
+            <h3>🧠 Summary</h3>
+            <ul>
+                <li><code>SELECT</code> reads data from a table</li>
+                <li><code>*</code> selects all columns; use column names for specific ones</li>
+                <li><code>FROM</code> tells SQL which table to query</li>
+                <li><code>WHERE</code> filters the rows returned</li>
+            </ul>
+
+
+
+            <!-- Practice Section (Product Table) -->
+            <h3>🧪 Practice: Select Data from the Products Table</h3>
+            <p>Write a <code>SELECT</code> statement to select the <code>product_name</code> and <code>price</code> from the <code>products</code> table:</p>
+            <ul>
+                <li><code>product_name</code> (VARCHAR(100))</li>
+                <li><code>price</code> (DECIMAL(8, 2))</li>
+            </ul>
+
+            <div class="editor-container">
+                <textarea class="code-editor" id="exerciseInput" placeholder="Write your SELECT query here..."></textarea>
+                <button class="neon-button" onclick="validateSelectQuery()">Submit</button>
+                <div id="exerciseFeedback" style="margin-top: 15px;"></div>
+            </div>
+
+            <!-- Mock Table for Displaying After Submit (Product Data) -->
+            <div class="mock-table" id="mockTable" style="display: none;">
+                <h4>Preview: What the table would look like when queried:</h4>
+
+                <h5>After Query (Example Result):</h5>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>product_name</th>
+                            <th>price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Laptop</td>
+                            <td>999.99</td>
+                        </tr>
+                        <tr>
+                            <td>Smartphone</td>
+                            <td>799.49</td>
+                        </tr>
+                        <tr>
+                            <td>Headphones</td>
+                            <td>120.99</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>🎯 Quiz</h3>
+            <p><strong>Which command returns only the names and cities from the customers table?</strong></p>
+            <div class="quiz">
+                <button onclick="checkAnswer(this, false)">A) SELECT ALL FROM customers;</button>
+                <button onclick="checkAnswer(this, false)">B) SELECT name city FROM customers;</button>
+                <button onclick="checkAnswer(this, true)">C) SELECT name, city FROM customers;</button>
+                <button onclick="checkAnswer(this, false)">D) GET name, city FROM customers;</button>
+                <p class="quiz-feedback"></p>
+                <div id="quizExplanation" class="quiz-explanation" style="display: none;"></div>
+            </div>
+
+
+
+        </section>
+    </div>
+
+    <div id="footer"></div>
+
+ 
+  
+    <script>
+        // Function to validate the user's SELECT query
+        function validateSelectQuery() {
+            const userSQL = document.getElementById("exerciseInput").value.trim().toLowerCase().replace(/\s+/g, " ");
+            const feedback = document.getElementById("exerciseFeedback");
+
+            const expected =
+                "select product_name, price from products;";
+
+            if (userSQL === expected) {
+                feedback.style.color = "lightgreen";
+                feedback.innerHTML = "✅ Perfect! Your SELECT query is correct.";
+                // Show the mock table after a correct submission
+                document.getElementById("mockTable").style.display = "block";
+                // Scroll the mock table into view
+                document.getElementById("mockTable").scrollIntoView({ behavior: "smooth" });
+            } else if (userSQL.includes("select") && userSQL.includes("from products")) {
+                feedback.style.color = "orange";
+                feedback.innerHTML = "⚠️ You're close! Double-check the column names and syntax.";
+            } else {
+                feedback.style.color = "red";
+                feedback.innerHTML = "❌ That's not quite right. Make sure you're selecting the correct columns from the `products` table.";
+            }
+        }
+
+        let quizCompleted = false;
+        
+        // Function to check the quiz answer
+        function checkAnswer(button, isCorrect) {
+            // If quiz is already completed, don't allow further clicks
+            if (quizCompleted) {
+                return;
+            }
+
+            const feedback = button.parentElement.querySelector(".quiz-feedback");
+            const explanationBox = document.getElementById("quizExplanation");
+            const quizContainer = button.parentElement;
+
+            feedback.innerHTML = "";
+            explanationBox.style.display = "block";
+
+            if (isCorrect) {
+                // Correct answer - disable all buttons and mark as completed
+                quizCompleted = true;
+                const allButtons = quizContainer.querySelectorAll('button');
+                allButtons.forEach(btn => {
+                    btn.disabled = true;
+                    if (btn === button) {
+                        btn.style.backgroundColor = '#44ff44';
+                        btn.style.boxShadow = '0 0 15px rgba(68, 255, 68, 0.5)';
+                    }
+                });
+                
+                feedback.style.color = "lightgreen";
+                feedback.innerHTML = "✅ Correct! Quiz completed!";
+                explanationBox.innerHTML = `
+                <p><strong>Explanation:</strong></p>
+                <ul>
+                    <li><code>SELECT name, city FROM customers;</code> returns only the <code>name</code> and <code>city</code> columns from the table.</li>
+                    <li>This is the correct SQL syntax to select specific columns.</li>
+                </ul>
+            `;
+            } else {
+                // Incorrect answer - disable this button only
+                button.disabled = true;
+                button.style.backgroundColor = '#ff4444';
+                button.style.opacity = '0.6';
+                button.style.cursor = 'not-allowed';
+                
+                feedback.style.color = "red";
+                feedback.innerHTML = "❌ Incorrect. Try another answer!";
+                
+                // Add retry message if not already present
+                let retryMsg = quizContainer.querySelector('.retry-message');
+                if (!retryMsg) {
+                    retryMsg = document.createElement('p');
+                    retryMsg.className = 'retry-message';
+                    retryMsg.style.color = '#ffd700';
+                    retryMsg.style.fontWeight = 'bold';
+                    retryMsg.style.marginTop = '10px';
+                    retryMsg.innerHTML = '💡 Keep trying! Choose another answer.';
+                    feedback.parentNode.insertBefore(retryMsg, feedback.nextSibling);
+                }
+                
+                let explanation = "";
+                switch (button.innerText.trim().charAt(0)) {
+                    case "A":
+                        explanation = `
+                        <p><strong>Explanation:</strong></p>
+                        <ul>
+                            <li><code>SELECT ALL FROM customers;</code> is not valid SQL syntax. You need to specify the columns explicitly (e.g., <code>SELECT name, city FROM customers;</code>) or use <code>*</code> to select all columns.</li>
+                        </ul>
+                    `;
+                        break;
+                    case "B":
+                        explanation = `
+                        <p><strong>Explanation:</strong></p>
+                        <ul>
+                            <li><code>SELECT name city FROM customers;</code> is missing a comma between <code>name</code> and <code>city</code>. It should be <code>SELECT name, city FROM customers;</code>.</li>
+                        </ul>
+                    `;
+                        break;
+                    case "D":
+                        explanation = `
+                        <p><strong>Explanation:</strong></p>
+                        <ul>
+                            <li><code>GET name, city FROM customers;</code> is not a valid SQL statement. The correct SQL keyword is <code>SELECT</code>, not <code>GET</code>.</li>
+                        </ul>
+                    `;
+                        break;
+                }
+
+                explanationBox.innerHTML = explanation;
+            }
+
+            explanationBox.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+
+        // Bookmark functionality
+        const lessonId = "Select";
+        const bookmarkBtn = document.getElementById("bookmarkBtn");
+        const unbookmarkBtn = document.getElementById("unbookmarkBtn");
+        const statusText = document.getElementById("bookmarkStatus");
+
+        // Function to check bookmark status with retry
+        function checkBookmarkStatus(retries = 3) {
+            fetch(`http://localhost:5000/bookmark-status?lessonId=${lessonId}`, {
+                credentials: 'include',
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+                .then(res => {
+                    if (!res.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return res.json();
+                })
+                .then(data => {
+                    if (data.bookmarked) {
+                        bookmarkBtn.style.display = "none";
+                        unbookmarkBtn.style.display = "inline-block";
+                        statusText.textContent = "📌 Bookmarked";
+                    } else {
+                        bookmarkBtn.style.display = "inline-block";
+                        unbookmarkBtn.style.display = "none";
+                        statusText.textContent = "";
+                    }
+                })
+                .catch(error => {
+                    console.error('Error checking bookmark status:', error);
+                    if (retries > 0) {
+                        setTimeout(() => checkBookmarkStatus(retries - 1), 1000);
+                    }
+                });
+        }
+
+        // Add bookmark
+        bookmarkBtn.addEventListener("click", () => {
+            fetch("http://localhost:5000/bookmark", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                    lessonId: lessonId,
+                    bookmarked: true
+                })
+            })
+                .then(res => res.json())
+                .then(() => {
+                    checkBookmarkStatus();
+                });
+        });
+
+        // Remove bookmark
+        unbookmarkBtn.addEventListener("click", () => {
+            fetch("http://localhost:5000/bookmark", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                    lessonId: lessonId,
+                    bookmarked: false
+                })
+            })
+                .then(res => res.json())
+                .then(() => {
+                    checkBookmarkStatus();
+                });
+        });
+
+        // Check initial status when page loads
+        checkBookmarkStatus();
+    </script>
+</body>
+</html>

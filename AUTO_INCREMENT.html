@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en" class="pixel-art dark-theme">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Quest - AUTO_INCREMENT</title>
+    <link rel="stylesheet" href="stylesheets/style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <script src="javascripts/loadComponents.js" defer></script>
+    <script src="javascripts/script.js" defer></script>
+    <script src="javascripts/lessonTracker.js" defer></script>
+    <script type="module" src="javascripts/mockTables.js"></script>
+</head>
+<body class="pixel-art dark-theme">
+    <div id="header"></div>
+    <div class="lesson-layout">
+        <div id="sidebar"></div>
+
+        <section class="lesson-content">
+            <h2>🔢 AUTO_INCREMENT</h2>
+
+            <!-- Bookmark buttons -->
+            <div class="bookmark-container">
+                <button id="bookmarkBtn" style="display: none;">🔖 Bookmark</button>
+                <button id="unbookmarkBtn" style="display: none;">❌ Remove Bookmark</button>
+                <span id="bookmarkStatus"></span>
+            </div>
+
+            <div class="callout-box">
+                <p>🔢 The automatic counter! AUTO_INCREMENT generates unique sequential numbers for your primary keys.</p>
+            </div>
+
+            <h3>📌 What is AUTO_INCREMENT?</h3>
+            <p><code class="tooltip" title="Automatically generates sequential numbers">AUTO_INCREMENT</code> is a MySQL feature that automatically generates unique, sequential numbers for a column. It's like having a 🎫 ticket dispenser that gives each new record the next number in sequence!</p>
+
+            <h3>🎯 AUTO_INCREMENT Features</h3>
+            <div style="background: rgba(34, 139, 34, 0.1); border: 2px solid #228b22; border-radius: 8px; padding: 15px; margin: 15px 0;">
+                <h4 style="color: #228b22; margin-top: 0;">🔍 Key Features</h4>
+                <ul style="color: #90ee90;">
+                    <li>🔢 <strong>AUTOMATIC NUMBERING</strong> - Generates sequential values automatically</li>
+                    <li>🎯 <strong>UNIQUE VALUES</strong> - Each value is unique within the table</li>
+                    <li>⚡ <strong>FAST INSERTION</strong> - No need to calculate next ID manually</li>
+                    <li>🛡️ <strong>THREAD SAFE</strong> - Handles concurrent insertions safely</li>
+                    <li>🔄 <strong>CUSTOMIZABLE</strong> - Can set starting value and increment step</li>
+                </ul>
+            </div>
+
+            <h3>🧠 Basic Syntax</h3>
+
+            <h4>Method 1: Column Definition with AUTO_INCREMENT</h4>
+            <pre><code>CREATE TABLE <span style="color: #00ffff;">users</span> (
+    <span style="color: #ffd700;">id</span> INT PRIMARY KEY <span style="color: #dc3545;">AUTO_INCREMENT</span>,
+    username VARCHAR(50) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);</code></pre>
+
+            <h4>Method 2: Adding AUTO_INCREMENT to Existing Column</h4>
+            <pre><code>-- Add AUTO_INCREMENT to existing column (must be PRIMARY KEY or UNIQUE)
+ALTER TABLE <span style="color: #00ffff;">users</span>
+MODIFY COLUMN <span style="color: #ffd700;">id</span> INT <span style="color: #dc3545;">AUTO_INCREMENT</span>;
+
+-- Set starting value
+ALTER TABLE <span style="color: #00ffff;">users</span> <span style="color: #dc3545;">AUTO_INCREMENT</span> = 1000;</code></pre>
+
+            <h4>Method 3: Custom Starting Value</h4>
+            <pre><code>CREATE TABLE <span style="color: #00ffff;">products</span> (
+    <span style="color: #ffd700;">product_id</span> INT PRIMARY KEY <span style="color: #dc3545;">AUTO_INCREMENT</span>,
+    name VARCHAR(200) NOT NULL,
+    price DECIMAL(10,2) NOT NULL
+) <span style="color: #dc3545;">AUTO_INCREMENT</span> = 10001;  -- Start from 10001</code></pre>
+
+
+
+            <h3>📊 Mock Table: orders (With AUTO_INCREMENT)</h3>
+            <div class="mock-table">
+                <h4>Automatic ID Generation Example</h4>
+                <button class="neon-button" onclick="displayMockTable('orders')">View Orders Table</button>
+                <div class="query-output" id="query-output"></div>
+                <div style="background: rgba(34, 139, 34, 0.1); border: 1px solid #228b22; border-radius: 6px; padding: 10px; margin-top: 10px;">
+                    <h5 style="color: #228b22; margin: 0 0 5px 0;">✅ AUTO_INCREMENT Benefits:</h5>
+                    <ul style="color: #90ee90; margin: 5px 0 0 20px; font-size: 0.9em;">
+                        <li>🎯 Started from 1001 (custom starting value)</li>
+                        <li>🔢 Each new record gets next sequential number</li>
+                        <li>🚫 No need to specify order_id in INSERT statements</li>
+                        <li>🛡️ Guaranteed unique values</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>🔍 INSERT Operations with AUTO_INCREMENT</h3>
+            
+            <h4>✅ Inserting Without Specifying AUTO_INCREMENT Column</h4>
+            <pre><code>-- Don't specify the AUTO_INCREMENT column
+INSERT INTO <span style="color: #00ffff;">orders</span> (customer_id, order_date, total_amount, status)
+VALUES (501, '2024-01-15', 129.99, 'completed');
+-- order_id will be automatically set to 1001
+
+INSERT INTO <span style="color: #00ffff;">orders</span> (customer_id, order_date, total_amount)
+VALUES (502, '2024-01-15', 89.50);
+-- order_id will be automatically set to 1002, status gets DEFAULT value
+
+-- Multiple rows
+INSERT INTO <span style="color: #00ffff;">orders</span> (customer_id, order_date, total_amount)
+VALUES 
+    (501, '2024-01-16', 245.75),
+    (503, '2024-01-16', 67.25);
+-- order_ids will be 1003 and 1004</code></pre>
+
+            <h4>🎯 Alternative Ways to Insert</h4>
+            <pre><code>-- Method 1: Use NULL for AUTO_INCREMENT column
+INSERT INTO <span style="color: #00ffff;">orders</span> (order_id, customer_id, order_date, total_amount)
+VALUES (NULL, 504, '2024-01-17', 156.80);
+-- order_id will be automatically set to 1005
+
+-- Method 2: Use 0 for AUTO_INCREMENT column
+INSERT INTO <span style="color: #00ffff;">orders</span> (order_id, customer_id, order_date, total_amount)
+VALUES (0, 505, '2024-01-17', 98.45);
+-- order_id will be automatically set to 1006
+
+-- Method 3: Use DEFAULT keyword
+INSERT INTO <span style="color: #00ffff;">orders</span> (order_id, customer_id, order_date, total_amount)
+VALUES (DEFAULT, 506, '2024-01-17', 203.15);
+-- order_id will be automatically set to 1007</code></pre>
+
+            <h4>⚠️ Manual Value Assignment</h4>
+            <pre><code>-- You CAN specify a specific value (if it doesn't exist)
+INSERT INTO <span style="color: #00ffff;">orders</span> (order_id, customer_id, order_date, total_amount)
+VALUES (2000, 507, '2024-01-17', 175.30);
+-- order_id will be set to 2000
+
+-- Next AUTO_INCREMENT will be 2001 (one more than highest existing value)
+INSERT INTO <span style="color: #00ffff;">orders</span> (customer_id, order_date, total_amount)
+VALUES (508, '2024-01-17', 88.90);
+-- order_id will be automatically set to 2001</code></pre>
+
+            <h3>📋 AUTO_INCREMENT Management</h3>
+            <button class="neon-button" onclick="showAutoIncrementManagement()">Show Management Examples</button>
+            <div id="autoIncrementManagementOutput" class="query-output" style="margin-top: 10px;"></div>
+
+            <h3>🌍 Real-World AUTO_INCREMENT Examples</h3>
+            
+            <h4>👥 User Management System</h4>
+            <pre><code>CREATE TABLE <span style="color: #00ffff;">users</span> (
+    <span style="color: #ffd700;">user_id</span> INT PRIMARY KEY <span style="color: #dc3545;">AUTO_INCREMENT</span>,     -- 🎯 Unique user identifier
+    username VARCHAR(50) UNIQUE NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    status VARCHAR(20) DEFAULT 'active',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) <span style="color: #dc3545;">AUTO_INCREMENT</span> = 10001;  -- Start user IDs from 10001</code></pre>
+
+            <h4>🛒 E-commerce Product Catalog</h4>
+            <pre><code>CREATE TABLE <span style="color: #00ffff;">products</span> (
+    <span style="color: #ffd700;">product_id</span> INT PRIMARY KEY <span style="color: #dc3545;">AUTO_INCREMENT</span>,   -- 🏷️ Product identifier
+    sku VARCHAR(50) UNIQUE NOT NULL,
+    name VARCHAR(200) NOT NULL,
+    description TEXT,
+    price DECIMAL(10,2) NOT NULL,
+    category_id INT NOT NULL,
+    brand_id INT NOT NULL,
+    stock_quantity INT DEFAULT 0,
+    status VARCHAR(20) DEFAULT 'active',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) <span style="color: #dc3545;">AUTO_INCREMENT</span> = 100001;  -- Start product IDs from 100001
+
+CREATE TABLE <span style="color: #00ffff;">categories</span> (
+    <span style="color: #ffd700;">category_id</span> INT PRIMARY KEY <span style="color: #dc3545;">AUTO_INCREMENT</span>, -- 📂 Category identifier
+    name VARCHAR(100) NOT NULL,
+    description TEXT,
+    parent_category_id INT,
+    status VARCHAR(20) DEFAULT 'active'
+) <span style="color: #dc3545;">AUTO_INCREMENT</span> = 1001;   -- Start category IDs from 1001</code></pre>
+
+            <h4>🏦 Banking Transaction System</h4>
+            <pre><code>CREATE TABLE <span style="color: #00ffff;">accounts</span> (
+    <span style="color: #ffd700;">account_id</span> INT PRIMARY KEY <span style="color: #dc3545;">AUTO_INCREMENT</span>,   -- 🏦 Account identifier
+    account_number VARCHAR(20) UNIQUE NOT NULL,
+    customer_id INT NOT NULL,
+    account_type VARCHAR(20) NOT NULL,
+    balance DECIMAL(15,2) DEFAULT 0.00,
+    status VARCHAR(20) DEFAULT 'active',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) <span style="color: #dc3545;">AUTO_INCREMENT</span> = 1000001; -- Start account IDs from 1000001
+
+CREATE TABLE <span style="color: #00ffff;">transactions</span> (
+    <span style="color: #ffd700;">transaction_id</span> INT PRIMARY KEY <span style="color: #dc3545;">AUTO_INCREMENT</span>, -- 💳 Transaction identifier
+    account_id INT NOT NULL,
+    transaction_type VARCHAR(20) NOT NULL,
+    amount DECIMAL(15,2) NOT NULL,
+    description TEXT,
+    reference_number VARCHAR(50),
+    status VARCHAR(20) DEFAULT 'pending',
+    transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    processed_by INT NOT NULL
+) <span style="color: #dc3545;">AUTO_INCREMENT</span> = 10000001; -- Start transaction IDs from 10000001</code></pre>
+
+            <h4>📚 Educational Course Management</h4>
+            <pre><code>CREATE TABLE <span style="color: #00ffff;">students</span> (
+    <span style="color: #ffd700;">student_id</span> INT PRIMARY KEY <span style="color: #dc3545;">AUTO_INCREMENT</span>,   -- 🎓 Student identifier
+    student_number VARCHAR(20) UNIQUE NOT NULL,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    date_of_birth DATE NOT NULL,
+    enrollment_date DATE DEFAULT (CURRENT_DATE),
+    status VARCHAR(20) DEFAULT 'active'
+) <span style="color: #dc3545;">AUTO_INCREMENT</span> = 2024001;  -- Start student IDs from 2024001
+
+CREATE TABLE <span style="color: #00ffff;">courses</span> (
+    <span style="color: #ffd700;">course_id</span> INT PRIMARY KEY <span style="color: #dc3545;">AUTO_INCREMENT</span>,     -- 📚 Course identifier
+    course_code VARCHAR(20) UNIQUE NOT NULL,
+    title VARCHAR(200) NOT NULL,
+    description TEXT,
+    credits INT NOT NULL,
+    instructor_id INT NOT NULL,
+    department_id INT NOT NULL,
+    max_enrollment INT DEFAULT 30,
+    semester VARCHAR(20) NOT NULL,
+    year INT NOT NULL
+) <span style="color: #dc3545;">AUTO_INCREMENT</span> = 5001;     -- Start course IDs from 5001
+
+CREATE TABLE <span style="color: #00ffff;">enrollments</span> (
+    <span style="color: #ffd700;">enrollment_id</span> INT PRIMARY KEY <span style="color: #dc3545;">AUTO_INCREMENT</span>, -- 📝 Enrollment identifier
+    student_id INT NOT NULL,
+    course_id INT NOT NULL,
+    enrollment_date DATE DEFAULT (CURRENT_DATE),
+    grade VARCHAR(5),
+    status VARCHAR(20) DEFAULT 'enrolled',
+    UNIQUE KEY unique_enrollment (student_id, course_id)
+) <span style="color: #dc3545;">AUTO_INCREMENT</span> = 100001;   -- Start enrollment IDs from 100001</code></pre>
+
+            <h4>🏥 Healthcare Patient Records</h4>
+            <pre><code>CREATE TABLE <span style="color: #00ffff;">patients</span> (
+    <span style="color: #ffd700;">patient_id</span> INT PRIMARY KEY <span style="color: #dc3545;">AUTO_INCREMENT</span>,    -- 👤 Patient identifier
+    medical_record_number VARCHAR(20) UNIQUE NOT NULL,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    date_of_birth DATE NOT NULL,
+    gender CHAR(1) NOT NULL,
+    blood_type VARCHAR(5) NOT NULL,
+    emergency_contact_name VARCHAR(100) NOT NULL,
+    emergency_contact_phone VARCHAR(20) NOT NULL,
+    status VARCHAR(20) DEFAULT 'active'
+) <span style="color: #dc3545;">AUTO_INCREMENT</span> = 500001;   -- Start patient IDs from 500001
+
+CREATE TABLE <span style="color: #00ffff;">appointments</span> (
+    <span style="color: #ffd700;">appointment_id</span> INT PRIMARY KEY <span style="color: #dc3545;">AUTO_INCREMENT</span>, -- 📅 Appointment identifier
+    patient_id INT NOT NULL,
+    doctor_id INT NOT NULL,
+    appointment_date DATE NOT NULL,
+    appointment_time TIME NOT NULL,
+    duration_minutes INT DEFAULT 30,
+    reason TEXT,
+    status VARCHAR(20) DEFAULT 'scheduled',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) <span style="color: #dc3545;">AUTO_INCREMENT</span> = 1000001;  -- Start appointment IDs from 1000001</code></pre>
+
+            <h4>📦 Inventory Management System</h4>
+            <pre><code>CREATE TABLE <span style="color: #00ffff;">suppliers</span> (
+    <span style="color: #ffd700;">supplier_id</span> INT PRIMARY KEY <span style="color: #dc3545;">AUTO_INCREMENT</span>,   -- 🏢 Supplier identifier
+    company_name VARCHAR(200) NOT NULL,
+    contact_person VARCHAR(100),
+    email VARCHAR(100),
+    phone VARCHAR(20),
+    address TEXT,
+    status VARCHAR(20) DEFAULT 'active'
+) <span style="color: #dc3545;">AUTO_INCREMENT</span> = 2001;     -- Start supplier IDs from 2001
+
+CREATE TABLE <span style="color: #00ffff;">inventory_items</span> (
+    <span style="color: #ffd700;">item_id</span> INT PRIMARY KEY <span style="color: #dc3545;">AUTO_INCREMENT</span>,       -- 📦 Item identifier
+    item_code VARCHAR(50) UNIQUE NOT NULL,
+    name VARCHAR(200) NOT NULL,
+    description TEXT,
+    category VARCHAR(100),
+    unit_of_measure VARCHAR(20),
+    unit_cost DECIMAL(10,2),
+    supplier_id INT,
+    minimum_stock_level INT DEFAULT 0,
+    current_stock INT DEFAULT 0,
+    status VARCHAR(20) DEFAULT 'active'
+) <span style="color: #dc3545;">AUTO_INCREMENT</span> = 50001;    -- Start item IDs from 50001
+
+CREATE TABLE <span style="color: #00ffff;">stock_movements</span> (
+    <span style="color: #ffd700;">movement_id</span> INT PRIMARY KEY <span style="color: #dc3545;">AUTO_INCREMENT</span>,   -- 📊 Movement identifier
+    item_id INT NOT NULL,
+    movement_type VARCHAR(20) NOT NULL, -- 'IN', 'OUT', 'ADJUSTMENT'
+    quantity INT NOT NULL,
+    unit_cost DECIMAL(10,2),
+    reference_number VARCHAR(50),
+    notes TEXT,
+    movement_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_by INT NOT NULL
+) <span style="color: #dc3545;">AUTO_INCREMENT</span> = 1000001;  -- Start movement IDs from 1000001</code></pre>
+
+            <h3>🔧 Advanced AUTO_INCREMENT Management</h3>
+            
+            <h4>Checking Current AUTO_INCREMENT Value</h4>
+            <pre><code>-- Check current AUTO_INCREMENT value
+SHOW TABLE STATUS LIKE 'orders';
+
+-- Or use INFORMATION_SCHEMA
+SELECT AUTO_INCREMENT 
+FROM INFORMATION_SCHEMA.TABLES 
+WHERE TABLE_SCHEMA = 'your_database' AND TABLE_NAME = 'orders';</code></pre>
+
+            <h4>Resetting AUTO_INCREMENT Value</h4>
+            <pre><code>-- Set AUTO_INCREMENT to specific value
+ALTER TABLE <span style="color: #00ffff;">orders</span> <span style="color: #dc3545;">AUTO_INCREMENT</span> = 5000;
+
+-- Reset to 1 (be careful - only if table is empty or you want to reuse IDs)
+ALTER TABLE <span style="color: #00ffff;">orders</span> <span style="color: #dc3545;">AUTO_INCREMENT</span> = 1;
+
+-- Reset to highest existing ID + 1
+ALTER TABLE <span style="color: #00ffff;">orders</span> <span style="color: #dc3545;">AUTO_INCREMENT</span> = (SELECT MAX(order_id) + 1 FROM orders);</code></pre>
+
+            <h4>Getting Last Inserted ID</h4>
+            <pre><code>-- Get the last AUTO_INCREMENT value inserted in current session
+SELECT LAST_INSERT_ID();
+
+-- In application code (example with PHP)
+-- $lastId = mysqli_insert_id($connection);
+-- $lastId = $pdo->lastInsertId();</code></pre>
+
+            <h4>Removing AUTO_INCREMENT</h4>
+            <pre><code>-- Remove AUTO_INCREMENT from column (keep the data)
+ALTER TABLE <span style="color: #00ffff;">orders</span>
+MODIFY COLUMN <span style="color: #ffd700;">order_id</span> INT NOT NULL;</code></pre>
+
+            <h3>⚠️ AUTO_INCREMENT Best Practices</h3>
+            <div style="background: rgba(40, 167, 69, 0.2); border: 2px solid #28a745; border-radius: 8px; padding: 15px; margin: 15px 0;">
+                <h4 style="color: #28a745; margin-top: 0;">✅ Do's</h4>
+                <ul style="color: #d4edda;">
+                    <li>🎯 <strong>Primary keys</strong> - use AUTO_INCREMENT for surrogate primary keys</li>
+                    <li>🔢 <strong>Starting values</strong> - set meaningful starting values for different entity types</li>
+                    <li>📊 <strong>Monitoring</strong> - monitor AUTO_INCREMENT values to prevent overflow</li>
+                    <li>🛡️ <strong>Data type</strong> - use appropriate integer size (INT, BIGINT)</li>
+                    <li>🎫 <strong>Sequential IDs</strong> - great for order numbers, ticket numbers</li>
+                    <li>📈 <strong>Performance</strong> - faster than UUIDs for joins and indexing</li>
+                </ul>
+            </div>
+
+            <div style="background: rgba(220, 53, 69, 0.2); border: 2px solid #dc3545; border-radius: 8px; padding: 15px; margin: 15px 0;">
+                <h4 style="color: #dc3545; margin-top: 0;">❌ Don'ts</h4>
+                <ul style="color: #f8d7da;">
+                    <li>🚫 <strong>Don't rely on gaps</strong> - AUTO_INCREMENT values may have gaps</li>
+                    <li>🔄 <strong>Don't reuse IDs</strong> - avoid resetting AUTO_INCREMENT in production</li>
+                    <li>📝 <strong>Don't use for business logic</strong> - don't assume consecutive values</li>
+                    <li>🌐 <strong>Don't use across databases</strong> - not suitable for distributed systems</li>
+                    <li>🔒 <strong>Don't expose directly</strong> - consider security implications of sequential IDs</li>
+                    <li>📊 <strong>Don't ignore limits</strong> - INT has a maximum value of ~2.1 billion</li>
+                </ul>
+            </div>
+
+            <h3>🔍 AUTO_INCREMENT vs Other ID Strategies</h3>
+            <div style="background: rgba(26, 32, 44, 0.8); border: 1px solid #4a5568; border-radius: 8px; padding: 15px; margin: 15px 0;">
+                <h4 style="color: #ffd700; margin-top: 0;">Comparison of ID Strategies</h4>
+                <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+                    <thead>
+                        <tr style="background: rgba(45, 55, 72, 0.6);">
+                            <th style="border: 1px solid #4a5568; padding: 8px; color: #ffd700;">Strategy</th>
+                            <th style="border: 1px solid #4a5568; padding: 8px; color: #ffd700;">Pros</th>
+                            <th style="border: 1px solid #4a5568; padding: 8px; color: #ffd700;">Cons</th>
+                            <th style="border: 1px solid #4a5568; padding: 8px; color: #ffd700;">Use Case</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="border: 1px solid #4a5568; padding: 8px; color: #e2e8f0; font-weight: bold;">AUTO_INCREMENT</td>
+                            <td style="border: 1px solid #4a5568; padding: 8px; color: #90ee90;">Fast, Simple, Sequential</td>
+                            <td style="border: 1px solid #4a5568; padding: 8px; color: #f8d7da;">Not distributed, Predictable</td>
+                            <td style="border: 1px solid #4a5568; padding: 8px; color: #a0aec0;">Single database apps</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #4a5568; padding: 8px; color: #e2e8f0; font-weight: bold;">UUID</td>
+                            <td style="border: 1px solid #4a5568; padding: 8px; color: #90ee90;">Globally unique, Distributed</td>
+                            <td style="border: 1px solid #4a5568; padding: 8px; color: #f8d7da;">Larger size, Random order</td>
+                            <td style="border: 1px solid #4a5568; padding: 8px; color: #a0aec0;">Distributed systems</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #4a5568; padding: 8px; color: #e2e8f0; font-weight: bold;">Snowflake ID</td>
+                            <td style="border: 1px solid #4a5568; padding: 8px; color: #90ee90;">Time-ordered, Distributed</td>
+                            <td style="border: 1px solid #4a5568; padding: 8px; color: #f8d7da;">Complex implementation</td>
+                            <td style="border: 1px solid #4a5568; padding: 8px; color: #a0aec0;">Large scale systems</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #4a5568; padding: 8px; color: #e2e8f0; font-weight: bold;">Natural Key</td>
+                            <td style="border: 1px solid #4a5568; padding: 8px; color: #90ee90;">Business meaningful</td>
+                            <td style="border: 1px solid #4a5568; padding: 8px; color: #f8d7da;">Can change, Complex</td>
+                            <td style="border: 1px solid #4a5568; padding: 8px; color: #a0aec0;">Stable business data</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>💡 Helpful Tips</h3>
+            <ul>
+                <li>🔍 Use <code>SHOW CREATE TABLE table_name;</code> to see AUTO_INCREMENT definition</li>
+                <li>⚡ <strong>Performance</strong> - AUTO_INCREMENT is very fast for insertions</li>
+                <li>🛡️ <strong>Concurrency</strong> - MySQL handles concurrent AUTO_INCREMENT safely</li>
+                <li>🎯 <strong>Starting values</strong> - use different ranges for different entity types</li>
+                <li>🔄 <strong>Gaps are normal</strong> - failed transactions can create gaps in sequence</li>
+                <li>📊 <strong>Monitor growth</strong> - track AUTO_INCREMENT values to predict when limits might be reached</li>
+                <li>🚨 <strong>Backup considerations</strong> - AUTO_INCREMENT values are preserved in backups</li>
+            </ul>
+
+            <h3>🧠 Summary</h3>
+            <ul>
+                <li>🔢 <strong>AUTO_INCREMENT</strong> automatically generates unique sequential numbers</li>
+                <li>🎯 <strong>Perfect for primary keys</strong> - simple and efficient identifier generation</li>
+                <li>⚡ <strong>High performance</strong> - fast insertions and efficient indexing</li>
+                <li>🛡️ <strong>Thread safe</strong> - handles concurrent access safely</li>
+                <li>🔧 <strong>Customizable</strong> - can set starting values and manage sequence</li>
+                <li>📊 <strong>Best for single database</strong> - not suitable for distributed systems</li>
+            </ul>
+
+            <h3>🧪 Practice</h3>
+            <p>📚 Create a table called <code>"employees"</code> with an AUTO_INCREMENT employee_id starting from 2024001.</p>
+            <div class="editor-container">
+                <textarea class="code-editor" id="exerciseInput" placeholder="Write your CREATE TABLE statement with AUTO_INCREMENT here..."></textarea>
+                <button class="neon-button" onclick="validateExercise()">Submit</button>
+                <div id="exerciseFeedback" style="margin-top:15px;"></div>
+            </div>
+
+            <h3>🎯 Quiz</h3>
+            <p><strong>What happens to the AUTO_INCREMENT sequence when you manually insert a value larger than the current AUTO_INCREMENT value?</strong></p>
+            <div class="quiz">
+                <button onclick="checkAnswer(this,'A')">A) The sequence continues from the previous AUTO_INCREMENT value</button>
+                <button onclick="checkAnswer(this,'B')">B) The sequence resets to 1</button>
+                <button onclick="checkAnswer(this,'C')">C) The sequence continues from the manually inserted value + 1</button>
+                <button onclick="checkAnswer(this,'D')">D) An error occurs</button>
+                <p class="quiz-feedback"></p>
+                <div id="quizExplanation" class="quiz-explanation" style="display:none;"></div>
+            </div>
+        </section>
+    </div>
+
+    <div id="footer"></div>
+
+    <script>
+        function runAutoIncrementDemo() {
+            const textarea = document.querySelector('.code-editor');
+            const output = document.querySelector('.query-output');
+            const query = textarea.value.trim().toLowerCase();
+            
+            if (query.includes('create table') && query.includes('auto_increment')) {
+                const tableName = query.match(/create table\s+(\w+)/)?.[1] || 'table';
+                const autoIncrementCol = query.match(/(\w+)\s+int.*auto_increment/)?.[1] || 'id';
+                const startValue = query.match(/auto_increment\s*=\s*(\d+)/)?.[1] || '1';
+                const hasPrimaryKey = query.includes('primary key');
+                
+                output.innerHTML = `
+                    <div style='background: rgba(40, 167, 69, 0.2); border: 1px solid #28a745; border-radius: 8px; padding: 15px;'>
+                        <p style='color: #28a745; margin: 0;'>✅ <strong>Table '${tableName}' created with AUTO_INCREMENT!</strong></p>
+                        <p style='color: #d4edda; margin: 8px 0 0 0;'>🔢 <strong>AUTO_INCREMENT Features:</strong></p>
+                        <ul style='color: #d4edda; margin: 5px 0 0 20px;'>
+                            <li>🎯 Column '${autoIncrementCol}' will auto-generate unique values</li>
+                            <li>🔢 Starting value: ${startValue}</li>
+                            <li>⚡ No need to specify ${autoIncrementCol} in INSERT statements</li>
+                            ${hasPrimaryKey ? '<li>🛡️ Primary key ensures uniqueness</li>' : ''}
+                            <li>🚀 Next INSERT will get ID: ${startValue}</li>
+                        </ul>
+                        <p style='color: #a0a0a0; margin: 8px 0 0 0; font-size: 0.8em;'>💡 Your table is ready for automatic ID generation!</p>
+                    </div>
+                `;
+            } else if (query.includes('create table')) {
+                output.innerHTML = `
+                    <div style='background: rgba(255, 193, 7, 0.2); border: 1px solid #ffc107; border-radius: 8px; padding: 15px;'>
+                        <p style='color: #ffc107; margin: 0;'>⚠️ <strong>Table created, but no AUTO_INCREMENT found!</strong></p>
+                        <p style='color: #fff3cd; margin: 5px 0 0 0;'>🔢 Consider adding AUTO_INCREMENT for automatic ID generation.</p>
+                    </div>
+                `;
+            } else {
+                output.innerHTML = `<p style='color: red;'>❌ Invalid query. Try using CREATE TABLE with AUTO_INCREMENT.</p>`;
+            }
+        }
+        
+        function showAutoIncrementManagement() {
+            const output = document.getElementById('autoIncrementManagementOutput');
+            const examples = [
+                {
+                    title: '🔍 Check Current AUTO_INCREMENT Value',
+                    sql: 'SHOW TABLE STATUS LIKE \'orders\';',
+                    description: 'Shows current AUTO_INCREMENT value and other table info',
+                    result: 'Auto_increment: 1005'
+                },
+                {
+                    title: '🔧 Set AUTO_INCREMENT Value',
+                    sql: 'ALTER TABLE orders AUTO_INCREMENT = 5000;',
+                    description: 'Sets the next AUTO_INCREMENT value to 5000',
+                    result: 'Next INSERT will get ID: 5000'
+                },
+                {
+                    title: '🎯 Get Last Inserted ID',
+                    sql: 'SELECT LAST_INSERT_ID();',
+                    description: 'Returns the last AUTO_INCREMENT value from current session',
+                    result: 'Returns: 1004 (example)'
+                },
+                {
+                    title: '📊 Reset to Max + 1',
+                    sql: 'ALTER TABLE orders AUTO_INCREMENT = (SELECT MAX(order_id) + 1 FROM orders);',
+                    description: 'Resets AUTO_INCREMENT to highest existing value + 1',
+                    result: 'Eliminates gaps in sequence'
+                },
+                {
+                    title: '🚫 Remove AUTO_INCREMENT',
+                    sql: 'ALTER TABLE orders MODIFY COLUMN order_id INT NOT NULL;',
+                    description: 'Removes AUTO_INCREMENT while keeping existing data',
+                    result: 'Column becomes regular INT'
+                }
+            ];
+            
+            let html = '<div style="background: rgba(26, 32, 44, 0.8); border: 1px solid #4a5568; border-radius: 8px; padding: 15px; margin-top: 10px;">';
+            html += '<h4 style="color: #dc3545; margin-top: 0;">🔧 AUTO_INCREMENT Management Examples</h4>';
+            
+            examples.forEach((example, index) => {
+                html += `
+                    <div style="margin-bottom: 15px; padding: 10px; background: rgba(45, 55, 72, 0.6); border-radius: 6px;">
+                        <h5 style="color: #ffd700; margin: 0 0 8px 0;">${example.title}</h5>
+                        <pre style="background: rgba(0, 0, 0, 0.4); padding: 8px; border-radius: 4px; margin: 5px 0; overflow-x: auto; white-space: pre-wrap;"><code style="color: #e2e8f0;">${example.sql}</code></pre>
+                        <p style="color: #a0aec0; margin: 5px 0; font-size: 0.9em;">${example.description}</p>
+                        <p style="color: #68d391; margin: 0; font-size: 0.8em; font-weight: bold;">📈 Result: ${example.result}</p>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            output.innerHTML = html;
+        }
+        
+        function validateExercise() {
+            const sql = document.getElementById("exerciseInput").value.trim().toLowerCase();
+            const feedback = document.getElementById("exerciseFeedback");
+            
+            if (sql.includes("create table employees") && sql.includes("auto_increment") && 
+                sql.includes("employee_id") && sql.includes("2024001")) {
+                feedback.style.color = "lightgreen";
+                feedback.textContent = "✅ Perfect! You created employees table with AUTO_INCREMENT employee_id starting from 2024001.";
+            } else if (sql.includes("create table employees") && sql.includes("auto_increment") && sql.includes("employee_id")) {
+                feedback.style.color = "orange";
+                feedback.textContent = "⚠️ Good! Don't forget to set the starting value to 2024001 using AUTO_INCREMENT = 2024001.";
+            } else if (sql.includes("create table employees") && sql.includes("auto_increment")) {
+                feedback.style.color = "orange";
+                feedback.textContent = "⚠️ Good table creation! Make sure to include employee_id with AUTO_INCREMENT starting from 2024001.";
+            } else {
+                feedback.style.color = "red";
+                feedback.textContent = "❌ Try: CREATE TABLE employees with employee_id INT PRIMARY KEY AUTO_INCREMENT and set starting value to 2024001.";
+            }
+        }
+        
+        function checkAnswer(btn, opt) {
+            const fb = btn.parentElement.querySelector('.quiz-feedback');
+            const exp = document.getElementById('quizExplanation');
+            const buttons = btn.parentElement.querySelectorAll('button');
+            
+            // Disable all buttons after selection
+            buttons.forEach(b => b.disabled = true);
+            
+            if (opt === 'C') {
+                fb.style.color = 'lightgreen';
+                fb.textContent = '✅ Correct! The AUTO_INCREMENT sequence continues from the manually inserted value + 1.';
+                btn.style.backgroundColor = '#28a745';
+                exp.innerHTML = `
+                    <p><strong>🎯 Explanation:</strong></p>
+                    <ul>
+                        <li>🔢 When you manually insert a value larger than the current AUTO_INCREMENT value, MySQL updates the sequence.</li>
+                        <li>📈 The next AUTO_INCREMENT value becomes the <strong>manually inserted value + 1</strong>.</li>
+                        <li>🎯 For example: if AUTO_INCREMENT is at 100 and you insert 500, the next auto value will be 501.</li>
+                        <li>⚠️ This can create gaps in your sequence, which is normal behavior.</li>
+                    </ul>
+                `;
+            } else {
+                fb.style.color = 'red';
+                fb.textContent = '❌ Incorrect. The correct answer is C.';
+                btn.style.backgroundColor = '#dc3545';
+                // Highlight correct answer
+                buttons[2].style.backgroundColor = '#28a745';
+                exp.innerHTML = `
+                    <p><strong>❌ Explanation:</strong></p>
+                    <ul>
+                        <li>🚫 AUTO_INCREMENT doesn't ignore manual insertions or reset to 1.</li>
+                        <li>🔢 It adapts to maintain uniqueness by updating the sequence.</li>
+                        <li>📈 The sequence always continues from the <strong>highest existing value + 1</strong>.</li>
+                    </ul>
+                `;
+            }
+            exp.style.display = 'block';
+            exp.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // Bookmark functionality
+        const lessonId = "AUTO_INCREMENT";
+        const bookmarkBtn = document.getElementById("bookmarkBtn");
+        const unbookmarkBtn = document.getElementById("unbookmarkBtn");
+        const statusText = document.getElementById("bookmarkStatus");
+
+        function checkBookmarkStatus(retries = 3) {
+            fetch(`http://localhost:5000/bookmark-status?lessonId=${lessonId}`, {
+                credentials: 'include',
+                headers: { "Content-Type": "application/json" }
+            })
+            .then(res => {
+                if (!res.ok) throw new Error('Network response was not ok');
+                return res.json();
+            })
+            .then(data => {
+                if (data.bookmarked) {
+                    bookmarkBtn.style.display = "none";
+                    unbookmarkBtn.style.display = "inline-block";
+                    statusText.textContent = "📌 Bookmarked";
+                } else {
+                    bookmarkBtn.style.display = "inline-block";
+                    unbookmarkBtn.style.display = "none";
+                    statusText.textContent = "";
+                }
+            })
+            .catch(error => {
+                console.error('Error checking bookmark status:', error);
+                if (retries > 0) {
+                    setTimeout(() => checkBookmarkStatus(retries - 1), 1000);
+                }
+            });
+        }
+
+        bookmarkBtn.addEventListener("click", () => {
+            fetch("http://localhost:5000/bookmark", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({ lessonId: lessonId, bookmarked: true })
+            })
+            .then(res => res.json())
+            .then(() => checkBookmarkStatus());
+        });
+
+        unbookmarkBtn.addEventListener("click", () => {
+            fetch("http://localhost:5000/bookmark", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({ lessonId: lessonId, bookmarked: false })
+            })
+            .then(res => res.json())
+            .then(() => checkBookmarkStatus());
+        });
+
+        checkBookmarkStatus();
+    </script>
+</body>
+</html>

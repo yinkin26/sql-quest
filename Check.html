@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en" class="pixel-art dark-theme">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Quest - CHECK Constraint</title>
+    <link rel="stylesheet" href="stylesheets/style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <script src="javascripts/loadComponents.js" defer></script>
+    <script src="javascripts/script.js" defer></script>
+    <script src="javascripts/lessonTracker.js" defer></script>
+    <script type="module" src="javascripts/mockTables.js"></script>
+</head>
+<body class="pixel-art dark-theme">
+    <div id="header"></div>
+    <div class="lesson-layout">
+        <div id="sidebar"></div>
+
+        <section class="lesson-content">
+            <h2>✅ CHECK Constraint</h2>
+
+            <!-- Bookmark buttons -->
+            <div class="bookmark-container">
+                <button id="bookmarkBtn" style="display: none;">🔖 Bookmark</button>
+                <button id="unbookmarkBtn" style="display: none;">❌ Remove Bookmark</button>
+                <span id="bookmarkStatus"></span>
+            </div>
+
+            <div class="callout-box">
+                <p>✅ The rule enforcer! CHECK constraint validates data against custom business rules before allowing insertion or updates.</p>
+            </div>
+
+            <h3>📌 What is a CHECK Constraint?</h3>
+            <p>A <code class="tooltip" title="Validates data against conditions">CHECK</code> constraint enforces domain integrity by limiting the values that can be placed in a column. It's like having a 🛡️ bouncer at your database door, checking that every piece of data meets your specific business rules before letting it in!</p>
+
+            <h3>🎯 CHECK Constraint Features</h3>
+            <div style="background: rgba(34, 139, 34, 0.1); border: 2px solid #228b22; border-radius: 8px; padding: 15px; margin: 15px 0;">
+                <h4 style="color: #228b22; margin-top: 0;">🔍 Key Features</h4>
+                <ul style="color: #90ee90;">
+                    <li>🎯 <strong>CUSTOM RULES</strong> - Define any logical condition</li>
+                    <li>🔍 <strong>BOOLEAN EXPRESSION</strong> - Must evaluate to TRUE or NULL</li>
+                    <li>📊 <strong>COLUMN OR TABLE LEVEL</strong> - Can reference single or multiple columns</li>
+                    <li>🛡️ <strong>INSERT/UPDATE VALIDATION</strong> - Checks data before modification</li>
+                    <li>⚡ <strong>PERFORMANCE FRIENDLY</strong> - Evaluated only during data changes</li>
+                </ul>
+            </div>
+
+            <h3>🧠 Basic Syntax</h3>
+
+            <h4>Method 1: Column-Level Definition</h4>
+            <pre><code>CREATE TABLE <span style="color: #00ffff;">products</span> (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    <span style="color: #ffd700;">price</span> DECIMAL(10,2) <span style="color: #228b22;">CHECK</span> (<span style="color: #ffd700;">price</span> > 0),
+    <span style="color: #ffd700;">discount</span> INT <span style="color: #228b22;">CHECK</span> (<span style="color: #ffd700;">discount</span> BETWEEN 0 AND 100)
+);</code></pre>
+
+            <h4>Method 2: Table-Level Definition</h4>
+            <pre><code>CREATE TABLE <span style="color: #00ffff;">employees</span> (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    <span style="color: #ffd700;">age</span> INT,
+    <span style="color: #ffd700;">salary</span> DECIMAL(10,2),
+    <span style="color: #ffd700;">department</span> VARCHAR(50),
+    <span style="color: #228b22;">CHECK</span> (<span style="color: #ffd700;">age</span> >= 18),
+    <span style="color: #228b22;">CHECK</span> (<span style="color: #ffd700;">salary</span> > 0),
+    <span style="color: #228b22;">CHECK</span> (<span style="color: #ffd700;">department</span> IN ('HR', 'IT', 'Finance', 'Marketing'))
+);</code></pre>
+
+            <h4>Method 3: Named Constraint</h4>
+            <pre><code>CREATE TABLE <span style="color: #00ffff;">orders</span> (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    <span style="color: #ffd700;">order_date</span> DATE,
+    <span style="color: #ffd700;">ship_date</span> DATE,
+    <span style="color: #ffd700;">quantity</span> INT,
+    <span style="color: #228b22;">CONSTRAINT</span> <span style="color: #98fb98;">chk_positive_quantity</span> <span style="color: #228b22;">CHECK</span> (<span style="color: #ffd700;">quantity</span> > 0),
+    <span style="color: #228b22;">CONSTRAINT</span> <span style="color: #98fb98;">chk_ship_after_order</span> <span style="color: #228b22;">CHECK</span> (<span style="color: #ffd700;">ship_date</span> >= <span style="color: #ffd700;">order_date</span>)
+);</code></pre>
+
+
+
+            <h3>📊 Mock Table Preview</h3>
+            <p>🔍 See how CHECK constraints validate data:</p>
+            <button class="neon-button" onclick="displayMockTable('students')">🎓 View Students Table</button>
+            <div class="query-output" id="mockTableOutput"></div>
+            <div style="background: rgba(220, 53, 69, 0.1); border: 1px solid #dc3545; border-radius: 6px; padding: 10px; margin-top: 10px;">
+                <h5 style="color: #dc3545; margin: 0 0 5px 0;">❌ These would be REJECTED:</h5>
+                <ul style="color: #f8d7da; margin: 5px 0 0 20px; font-size: 0.9em;">
+                    <li>Age: 15 (too young) or 70 (too old)</li>
+                    <li>Grade: 'X' (invalid grade)</li>
+                    <li>GPA: -1.0 (negative) or 5.0 (too high)</li>
+                </ul>
+            </div>
+
+            <h3>🔍 Common CHECK Constraint Patterns</h3>
+            
+            <h4>📊 Range Validation</h4>
+            <pre><code>-- Age must be between 18 and 65
+<span style="color: #ffd700;">age</span> INT <span style="color: #228b22;">CHECK</span> (<span style="color: #ffd700;">age</span> BETWEEN 18 AND 65)
+
+-- Price must be positive
+<span style="color: #ffd700;">price</span> DECIMAL(10,2) <span style="color: #228b22;">CHECK</span> (<span style="color: #ffd700;">price</span> > 0)
+
+-- Discount percentage
+<span style="color: #ffd700;">discount</span> INT <span style="color: #228b22;">CHECK</span> (<span style="color: #ffd700;">discount</span> >= 0 AND <span style="color: #ffd700;">discount</span> <= 100)</code></pre>
+
+            <h4>📝 List Validation</h4>
+            <pre><code>-- Valid status values
+<span style="color: #ffd700;">status</span> VARCHAR(20) <span style="color: #228b22;">CHECK</span> (<span style="color: #ffd700;">status</span> IN ('active', 'inactive', 'pending'))
+
+-- Valid grades
+<span style="color: #ffd700;">grade</span> CHAR(1) <span style="color: #228b22;">CHECK</span> (<span style="color: #ffd700;">grade</span> IN ('A', 'B', 'C', 'D', 'F'))
+
+-- Valid departments
+<span style="color: #ffd700;">department</span> VARCHAR(50) <span style="color: #228b22;">CHECK</span> (<span style="color: #ffd700;">department</span> IN ('HR', 'IT', 'Finance', 'Marketing'))</code></pre>
+
+            <h4>📅 Date Validation</h4>
+            <pre><code>-- Birth date must be in the past
+<span style="color: #ffd700;">birth_date</span> DATE <span style="color: #228b22;">CHECK</span> (<span style="color: #ffd700;">birth_date</span> < CURDATE())
+
+-- End date must be after start date
+<span style="color: #228b22;">CHECK</span> (<span style="color: #ffd700;">end_date</span> > <span style="color: #ffd700;">start_date</span>)
+
+-- Event date must be in the future
+<span style="color: #ffd700;">event_date</span> DATETIME <span style="color: #228b22;">CHECK</span> (<span style="color: #ffd700;">event_date</span> > NOW())</code></pre>
+
+            <h4>📧 Format Validation</h4>
+            <pre><code>-- Email must contain @ symbol
+<span style="color: #ffd700;">email</span> VARCHAR(100) <span style="color: #228b22;">CHECK</span> (<span style="color: #ffd700;">email</span> LIKE '%@%')
+
+-- Phone number format (simple)
+<span style="color: #ffd700;">phone</span> VARCHAR(15) <span style="color: #228b22;">CHECK</span> (<span style="color: #ffd700;">phone</span> REGEXP '^[0-9+\-\s()]+$')
+
+-- Postal code format
+<span style="color: #ffd700;">zip_code</span> VARCHAR(10) <span style="color: #228b22;">CHECK</span> (<span style="color: #ffd700;">zip_code</span> REGEXP '^[0-9]{5}(-[0-9]{4})?$')</code></pre>
+
+            <h3>📋 CHECK Constraint Examples</h3>
+            <button class="neon-button" onclick="showCheckExamples()">Show CHECK Examples</button>
+            <div id="checkExamplesOutput" class="query-output" style="margin-top: 10px;"></div>
+
+            <h3>🔧 Adding CHECK to Existing Table</h3>
+            <pre><code>-- Add CHECK constraint to existing table
+ALTER TABLE <span style="color: #00ffff;">products</span>
+ADD CONSTRAINT <span style="color: #98fb98;">chk_positive_price</span> <span style="color: #228b22;">CHECK</span> (<span style="color: #ffd700;">price</span> > 0);
+
+-- Add multiple column CHECK
+ALTER TABLE <span style="color: #00ffff;">orders</span>
+ADD CONSTRAINT <span style="color: #98fb98;">chk_ship_after_order</span> 
+<span style="color: #228b22;">CHECK</span> (<span style="color: #ffd700;">ship_date</span> >= <span style="color: #ffd700;">order_date</span>);
+
+-- Drop CHECK constraint
+ALTER TABLE <span style="color: #00ffff;">products</span>
+DROP CHECK <span style="color: #98fb98;">chk_positive_price</span>;</code></pre>
+
+            <h3>🌍 Real-World CHECK Examples</h3>
+            
+            <h4>🛒 E-commerce Product</h4>
+            <pre><code>CREATE TABLE <span style="color: #00ffff;">products</span> (
+    product_id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    <span style="color: #ffd700;">price</span> DECIMAL(10,2) <span style="color: #228b22;">CHECK</span> (<span style="color: #ffd700;">price</span> > 0),                    -- 💰 Positive price
+    <span style="color: #ffd700;">discount_percent</span> INT <span style="color: #228b22;">CHECK</span> (<span style="color: #ffd700;">discount_percent</span> BETWEEN 0 AND 90), -- 🏷️ Valid discount
+    <span style="color: #ffd700;">stock_quantity</span> INT <span style="color: #228b22;">CHECK</span> (<span style="color: #ffd700;">stock_quantity</span> >= 0),           -- 📦 Non-negative stock
+    <span style="color: #ffd700;">category</span> VARCHAR(50) <span style="color: #228b22;">CHECK</span> (<span style="color: #ffd700;">category</span> IN ('Electronics', 'Clothing', 'Books', 'Home')),
+    <span style="color: #ffd700;">status</span> VARCHAR(20) <span style="color: #228b22;">CHECK</span> (<span style="color: #ffd700;">status</span> IN ('active', 'discontinued', 'out_of_stock'))
+);</code></pre>
+
+            <h4>👥 Employee Management</h4>
+            <pre><code>CREATE TABLE <span style="color: #00ffff;">employees</span> (
+    employee_id INT PRIMARY KEY AUTO_INCREMENT,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    <span style="color: #ffd700;">email</span> VARCHAR(100) <span style="color: #228b22;">CHECK</span> (<span style="color: #ffd700;">email</span> LIKE '%@%.%'),           -- 📧 Basic email format
+    <span style="color: #ffd700;">age</span> INT <span style="color: #228b22;">CHECK</span> (<span style="color: #ffd700;">age</span> BETWEEN 18 AND 65),                    -- 👤 Working age
+    <span style="color: #ffd700;">salary</span> DECIMAL(10,2) <span style="color: #228b22;">CHECK</span> (<span style="color: #ffd700;">salary</span> > 0),                 -- 💰 Positive salary
+    <span style="color: #ffd700;">department</span> VARCHAR(50) <span style="color: #228b22;">CHECK</span> (<span style="color: #ffd700;">department</span> IN ('HR', 'IT', 'Finance', 'Marketing', 'Sales')),
+    <span style="color: #ffd700;">hire_date</span> DATE <span style="color: #228b22;">CHECK</span> (<span style="color: #ffd700;">hire_date</span> <= CURDATE()),            -- 📅 Not future date
+    <span style="color: #ffd700;">employment_status</span> VARCHAR(20) <span style="color: #228b22;">CHECK</span> (<span style="color: #ffd700;">employment_status</span> IN ('active', 'terminated', 'on_leave'))
+);</code></pre>
+
+            <h4>🏦 Banking Account</h4>
+            <pre><code>CREATE TABLE <span style="color: #00ffff;">accounts</span> (
+    account_id INT PRIMARY KEY AUTO_INCREMENT,
+    account_number VARCHAR(20) UNIQUE NOT NULL,
+    <span style="color: #ffd700;">account_type</span> VARCHAR(20) <span style="color: #228b22;">CHECK</span> (<span style="color: #ffd700;">account_type</span> IN ('checking', 'savings', 'business')),
+    <span style="color: #ffd700;">balance</span> DECIMAL(15,2) <span style="color: #228b22;">CHECK</span> (<span style="color: #ffd700;">balance</span> >= -1000),        -- 💳 Overdraft limit
+    <span style="color: #ffd700;">interest_rate</span> DECIMAL(5,4) <span style="color: #228b22;">CHECK</span> (<span style="color: #ffd700;">interest_rate</span> BETWEEN 0 AND 0.15), -- 📈 Reasonable rate
+    <span style="color: #ffd700;">status</span> VARCHAR(20) <span style="color: #228b22;">CHECK</span> (<span style="color: #ffd700;">status</span> IN ('active', 'frozen', 'closed')),
+    created_date DATE <span style="color: #228b22;">CHECK</span> (created_date <= CURDATE())
+);</code></pre>
+
+            <h4>🎓 Student Grades</h4>
+            <pre><code>CREATE TABLE <span style="color: #00ffff;">student_grades</span> (
+    grade_id INT PRIMARY KEY AUTO_INCREMENT,
+    student_id INT,
+    course_id INT,
+    <span style="color: #ffd700;">letter_grade</span> CHAR(2) <span style="color: #228b22;">CHECK</span> (<span style="color: #ffd700;">letter_grade</span> IN ('A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D', 'F')),
+    <span style="color: #ffd700;">numeric_grade</span> DECIMAL(5,2) <span style="color: #228b22;">CHECK</span> (<span style="color: #ffd700;">numeric_grade</span> BETWEEN 0 AND 100),
+    <span style="color: #ffd700;">credit_hours</span> INT <span style="color: #228b22;">CHECK</span> (<span style="color: #ffd700;">credit_hours</span> BETWEEN 1 AND 6),
+    <span style="color: #ffd700;">semester</span> VARCHAR(20) <span style="color: #228b22;">CHECK</span> (<span style="color: #ffd700;">semester</span> IN ('Fall', 'Spring', 'Summer')),
+    <span style="color: #ffd700;">year</span> INT <span style="color: #228b22;">CHECK</span> (<span style="color: #ffd700;">year</span> BETWEEN 2000 AND 2030),
+    grade_date DATE <span style="color: #228b22;">CHECK</span> (grade_date <= CURDATE())
+);</code></pre>
+
+            <h3>🔗 Multi-Column CHECK Constraints</h3>
+            <pre><code>CREATE TABLE <span style="color: #00ffff;">events</span> (
+    event_id INT PRIMARY KEY AUTO_INCREMENT,
+    event_name VARCHAR(100),
+    <span style="color: #ffd700;">start_date</span> DATE,
+    <span style="color: #ffd700;">end_date</span> DATE,
+    <span style="color: #ffd700;">min_participants</span> INT,
+    <span style="color: #ffd700;">max_participants</span> INT,
+    <span style="color: #ffd700;">registration_fee</span> DECIMAL(8,2),
+    <span style="color: #ffd700;">early_bird_fee</span> DECIMAL(8,2),
+    
+    -- Multi-column constraints
+    <span style="color: #228b22;">CHECK</span> (<span style="color: #ffd700;">end_date</span> >= <span style="color: #ffd700;">start_date</span>),                    -- 📅 End after start
+    <span style="color: #228b22;">CHECK</span> (<span style="color: #ffd700;">max_participants</span> >= <span style="color: #ffd700;">min_participants</span>),    -- 👥 Max >= Min
+    <span style="color: #228b22;">CHECK</span> (<span style="color: #ffd700;">early_bird_fee</span> <= <span style="color: #ffd700;">registration_fee</span>)     -- 🏷️ Early bird discount
+);</code></pre>
+
+            <h3>⚠️ CHECK Constraint Best Practices</h3>
+            <div style="background: rgba(40, 167, 69, 0.2); border: 2px solid #28a745; border-radius: 8px; padding: 15px; margin: 15px 0;">
+                <h4 style="color: #28a745; margin-top: 0;">✅ Do's</h4>
+                <ul style="color: #d4edda;">
+                    <li>📝 <strong>Name constraints</strong> - use descriptive names like 'chk_positive_price'</li>
+                    <li>🎯 <strong>Business rules</strong> - enforce real business logic</li>
+                    <li>🔍 <strong>Simple conditions</strong> - keep expressions readable</li>
+                    <li>📊 <strong>Document constraints</strong> - explain business reasoning</li>
+                    <li>🧪 <strong>Test thoroughly</strong> - verify edge cases</li>
+                </ul>
+            </div>
+
+            <div style="background: rgba(220, 53, 69, 0.2); border: 2px solid #dc3545; border-radius: 8px; padding: 15px; margin: 15px 0;">
+                <h4 style="color: #dc3545; margin-top: 0;">❌ Don'ts</h4>
+                <ul style="color: #f8d7da;">
+                    <li>🚫 <strong>Don't use subqueries</strong> - not supported in CHECK constraints</li>
+                    <li>⚡ <strong>Don't make complex expressions</strong> - impacts performance</li>
+                    <li>🔄 <strong>Don't reference other tables</strong> - use triggers instead</li>
+                    <li>📅 <strong>Don't use non-deterministic functions</strong> - like RAND() or NOW()</li>
+                    <li>🎯 <strong>Don't over-constrain</strong> - balance validation with flexibility</li>
+                </ul>
+            </div>
+
+            <h3>💡 Helpful Tips</h3>
+            <ul>
+                <li>🔍 Use <code>SHOW CREATE TABLE table_name;</code> to see CHECK constraints</li>
+                <li>⚡ <strong>Performance</strong> - CHECK constraints are evaluated only during INSERT/UPDATE</li>
+                <li>🛡️ <strong>Data integrity</strong> - prevents invalid data at database level</li>
+                <li>🎯 <strong>Business rules</strong> - encode domain knowledge in the database</li>
+                <li>🔄 <strong>NULL handling</strong> - CHECK constraints allow NULL values (unless combined with NOT NULL)</li>
+                <li>📊 <strong>Error messages</strong> - provide clear constraint names for better debugging</li>
+            </ul>
+
+            <h3>🧠 Summary</h3>
+            <ul>
+                <li>✅ <strong>CHECK</strong> enforces custom business rules and data validation</li>
+                <li>🎯 <strong>Boolean expressions</strong> - must evaluate to TRUE or NULL</li>
+                <li>🔍 <strong>Column or table level</strong> - can reference single or multiple columns</li>
+                <li>🛡️ <strong>Data integrity</strong> - prevents invalid data at insertion/update time</li>
+                <li>⚡ <strong>Performance friendly</strong> - only evaluated during data modifications</li>
+                <li>📊 <strong>Business logic</strong> - encodes domain rules directly in database schema</li>
+            </ul>
+
+            <h3>🧪 Practice</h3>
+            <p>📚 Create a table called <code>"bank_accounts"</code> with CHECK constraints for positive balance and valid account types.</p>
+            <div class="editor-container">
+                <textarea class="code-editor" id="exerciseInput" placeholder="Write your CREATE TABLE statement with CHECK constraints here..."></textarea>
+                <button class="neon-button" onclick="validateExercise()">Submit</button>
+                <div id="exerciseFeedback" style="margin-top:15px;"></div>
+            </div>
+
+            <h3>🎯 Quiz</h3>
+            <p><strong>What happens when a CHECK constraint evaluates to FALSE during an INSERT?</strong></p>
+            <div class="quiz">
+                <button onclick="checkAnswer(this, false)">A) The value is set to NULL</button>
+                <button onclick="checkAnswer(this, true)">B) The INSERT is rejected with an error</button>
+                <button onclick="checkAnswer(this, false)">C) The constraint is ignored</button>
+                <button onclick="checkAnswer(this, false)">D) A default value is used instead</button>
+                <p class="quiz-feedback"></p>
+                <div id="quizExplanation" class="quiz-explanation" style="display:none;"></div>
+            </div>
+        </section>
+    </div>
+
+    <div id="footer"></div>
+
+    <script>
+        function runCheckDemo() {
+            const textarea = document.querySelector('.code-editor');
+            const output = document.querySelector('.query-output');
+            const query = textarea.value.trim().toLowerCase();
+            
+            if (query.includes('create table') && query.includes('check')) {
+                const tableName = query.match(/create table\s+(\w+)/)?.[1] || 'table';
+                const checkCount = (query.match(/check/g) || []).length;
+                const hasRange = query.includes('between') || query.includes('>=') || query.includes('<=');
+                const hasList = query.includes(' in (');
+                
+                output.innerHTML = `
+                    <div style='background: rgba(40, 167, 69, 0.2); border: 1px solid #28a745; border-radius: 8px; padding: 15px;'>
+                        <p style='color: #28a745; margin: 0;'>✅ <strong>Table '${tableName}' created with CHECK constraints!</strong></p>
+                        <p style='color: #d4edda; margin: 8px 0 0 0;'>🛡️ <strong>Validation Features:</strong></p>
+                        <ul style='color: #d4edda; margin: 5px 0 0 20px;'>
+                            <li>🔍 Data validation enforced</li>
+                            <li>🎯 Business rules implemented</li>
+                            <li>🚫 Invalid data rejected automatically</li>
+                            <li>🔢 ${checkCount} CHECK constraint${checkCount > 1 ? 's' : ''} defined</li>
+                            ${hasRange ? '<li>📊 Range validation included</li>' : ''}
+                            ${hasList ? '<li>📝 List validation included</li>' : ''}
+                        </ul>
+                        <p style='color: #a0a0a0; margin: 8px 0 0 0; font-size: 0.8em;'>💡 Your data integrity is now protected by business rules!</p>
+                    </div>
+                `;
+            } else if (query.includes('create table')) {
+                output.innerHTML = `
+                    <div style='background: rgba(255, 193, 7, 0.2); border: 1px solid #ffc107; border-radius: 8px; padding: 15px;'>
+                        <p style='color: #ffc107; margin: 0;'>⚠️ <strong>Table created, but no CHECK constraints found!</strong></p>
+                        <p style='color: #fff3cd; margin: 5px 0 0 0;'>✅ Consider adding CHECK constraints for data validation.</p>
+                    </div>
+                `;
+            } else {
+                output.innerHTML = `<p style='color: red;'>❌ Invalid query. Try using CREATE TABLE with CHECK constraints.</p>`;
+            }
+        }
+        
+        function showCheckExamples() {
+            const output = document.getElementById('checkExamplesOutput');
+            const examples = [
+                {
+                    title: '📊 Range Validation',
+                    sql: 'age INT CHECK (age BETWEEN 18 AND 65)',
+                    description: 'Ensures age is within working range',
+                    businessRule: '🎯 Business Rule: Only working-age employees'
+                },
+                {
+                    title: '📝 List Validation',
+                    sql: 'status VARCHAR(20) CHECK (status IN (\'active\', \'inactive\', \'pending\'))',
+                    description: 'Restricts status to predefined values',
+                    businessRule: '🎯 Business Rule: Only valid status values allowed'
+                },
+                {
+                    title: '💰 Positive Values',
+                    sql: 'price DECIMAL(10,2) CHECK (price > 0)',
+                    description: 'Ensures prices are always positive',
+                    businessRule: '🎯 Business Rule: No free or negative-priced items'
+                },
+                {
+                    title: '📅 Date Logic',
+                    sql: 'CHECK (end_date >= start_date)',
+                    description: 'End date must be after or equal to start date',
+                    businessRule: '🎯 Business Rule: Events cannot end before they start'
+                },
+                {
+                    title: '📧 Format Validation',
+                    sql: 'email VARCHAR(100) CHECK (email LIKE \'%@%\')',
+                    description: 'Basic email format validation',
+                    businessRule: '🎯 Business Rule: Email must contain @ symbol'
+                }
+            ];
+            
+            let html = '<div style="background: rgba(26, 32, 44, 0.8); border: 1px solid #4a5568; border-radius: 8px; padding: 15px; margin-top: 10px;">';
+            html += '<h4 style="color: #228b22; margin-top: 0;">✅ CHECK Constraint Examples</h4>';
+            
+            examples.forEach((example, index) => {
+                html += `
+                    <div style="margin-bottom: 15px; padding: 10px; background: rgba(45, 55, 72, 0.6); border-radius: 6px;">
+                        <h5 style="color: #ffd700; margin: 0 0 8px 0;">${example.title}</h5>
+                        <pre style="background: rgba(0, 0, 0, 0.4); padding: 8px; border-radius: 4px; margin: 5px 0; overflow-x: auto; white-space: pre-wrap;"><code style="color: #e2e8f0;">${example.sql}</code></pre>
+                        <p style="color: #a0aec0; margin: 5px 0; font-size: 0.9em;">${example.description}</p>
+                        <p style="color: #68d391; margin: 0; font-size: 0.8em; font-weight: bold;">${example.businessRule}</p>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            output.innerHTML = html;
+        }
+        
+        function validateExercise() {
+            const sql = document.getElementById("exerciseInput").value.trim().toLowerCase();
+            const feedback = document.getElementById("exerciseFeedback");
+            
+            if (sql.includes("create table bank_accounts") && sql.includes("check") && 
+                (sql.includes("balance") && (sql.includes("> 0") || sql.includes(">= 0"))) &&
+                (sql.includes("account_type") && sql.includes(" in ("))) {
+                feedback.style.color = "lightgreen";
+                feedback.textContent = "✅ Excellent! You created bank_accounts with CHECK constraints for balance and account type validation.";
+            } else if (sql.includes("create table bank_accounts") && sql.includes("check") && sql.includes("balance")) {
+                feedback.style.color = "orange";
+                feedback.textContent = "⚠️ Good! Don't forget to add CHECK constraint for valid account types.";
+            } else if (sql.includes("create table bank_accounts") && sql.includes("check")) {
+                feedback.style.color = "orange";
+                feedback.textContent = "⚠️ Good table creation! Make sure to include balance and account type validation.";
+            } else {
+                feedback.style.color = "red";
+                feedback.textContent = "❌ Try: CREATE TABLE bank_accounts with CHECK constraints for positive balance and valid account types.";
+            }
+        }
+        
+        let quizCompleted = false;
+        
+        function checkAnswer(button, isCorrect) {
+            // If quiz is already completed, don't allow further clicks
+            if (quizCompleted) {
+                return;
+            }
+
+            const feedback = button.parentElement.querySelector(".quiz-feedback");
+            const explanationBox = document.getElementById("quizExplanation");
+            const quizContainer = button.parentElement;
+            
+            feedback.innerHTML = "";
+            explanationBox.style.display = "block";
+
+            if (isCorrect) {
+                // Correct answer - disable all buttons and mark as completed
+                quizCompleted = true;
+                const buttons = quizContainer.querySelectorAll("button");
+                buttons.forEach(btn => {
+                    btn.disabled = true;
+                    btn.style.opacity = "0.6";
+                });
+                
+                button.style.backgroundColor = "#28a745";
+                button.style.opacity = "1";
+                feedback.style.color = "lightgreen";
+                feedback.innerHTML = "✅ Correct! The INSERT is rejected with a constraint violation error.";
+                
+                explanationBox.innerHTML = `
+                    <p><strong>🎯 Explanation:</strong></p>
+                    <ul>
+                        <li>🛡️ <strong>Data integrity</strong> - CHECK constraints enforce business rules.</li>
+                        <li>🚫 When a CHECK constraint evaluates to <strong>FALSE</strong>, the operation is rejected.</li>
+                        <li>💥 The database throws a <strong>constraint violation error</strong>.</li>
+                        <li>✅ Only data that satisfies all CHECK constraints is allowed.</li>
+                    </ul>
+                `;
+            } else {
+                // Incorrect answer - disable only this button and show retry message
+                button.disabled = true;
+                button.style.backgroundColor = "#dc3545";
+                button.style.opacity = "0.6";
+                
+                feedback.style.color = "red";
+                feedback.innerHTML = "❌ Incorrect. Try another answer!";
+                
+                // Add retry message if not already present
+                let retryMsg = quizContainer.querySelector('.retry-message');
+                if (!retryMsg) {
+                    retryMsg = document.createElement('p');
+                    retryMsg.className = 'retry-message';
+                    retryMsg.style.color = '#ffd700';
+                    retryMsg.style.fontWeight = 'bold';
+                    retryMsg.style.marginTop = '10px';
+                    retryMsg.innerHTML = '💡 Try again! Choose another answer.';
+                    quizContainer.appendChild(retryMsg);
+                }
+                
+                explanationBox.innerHTML = `
+                    <p><strong>❌ Explanation:</strong></p>
+                    <ul>
+                        <li>🚫 CHECK constraints don't set values to NULL or use defaults.</li>
+                        <li>🛡️ They don't ignore violations - they enforce business rules strictly.</li>
+                        <li>💥 Failed CHECK constraints always result in operation rejection.</li>
+                    </ul>
+                `;
+            }
+            
+            explanationBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // Bookmark functionality
+        const lessonId = "CHECK";
+        const bookmarkBtn = document.getElementById("bookmarkBtn");
+        const unbookmarkBtn = document.getElementById("unbookmarkBtn");
+        const statusText = document.getElementById("bookmarkStatus");
+
+        function checkBookmarkStatus(retries = 3) {
+            fetch(`http://localhost:5000/bookmark-status?lessonId=${lessonId}`, {
+                credentials: 'include',
+                headers: { "Content-Type": "application/json" }
+            })
+            .then(res => {
+                if (!res.ok) throw new Error('Network response was not ok');
+                return res.json();
+            })
+            .then(data => {
+                if (data.bookmarked) {
+                    bookmarkBtn.style.display = "none";
+                    unbookmarkBtn.style.display = "inline-block";
+                    statusText.textContent = "📌 Bookmarked";
+                } else {
+                    bookmarkBtn.style.display = "inline-block";
+                    unbookmarkBtn.style.display = "none";
+                    statusText.textContent = "";
+                }
+            })
+            .catch(error => {
+                console.error('Error checking bookmark status:', error);
+                if (retries > 0) {
+                    setTimeout(() => checkBookmarkStatus(retries - 1), 1000);
+                }
+            });
+        }
+
+        bookmarkBtn.addEventListener("click", () => {
+            fetch("http://localhost:5000/bookmark", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({ lessonId: lessonId, bookmarked: true })
+            })
+            .then(res => res.json())
+            .then(() => checkBookmarkStatus());
+        });
+
+        unbookmarkBtn.addEventListener("click", () => {
+            fetch("http://localhost:5000/bookmark", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({ lessonId: lessonId, bookmarked: false })
+            })
+            .then(res => res.json())
+            .then(() => checkBookmarkStatus());
+        });
+
+        checkBookmarkStatus();
+    </script>
+</body>
+</html>

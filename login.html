@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" class="pixel-art dark-theme">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - SQL Quest</title>
+    <link rel="stylesheet" href="stylesheets/style.css" />
+    <link rel="stylesheet" href="stylesheets/login.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <script src="javascripts/loadComponents.js" defer></script>
+    <script src="javascripts/script.js" defer></script>
+</head>
+<body class="pixel-art dark-theme">
+    <div id="header"></div>
+
+    <div class="login-container">
+        <h2>Login to SQL Quest</h2>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" required>
+            </div>
+
+            <button type="submit">Login</button>
+        </form>
+
+        <script>
+            document.getElementById('loginForm').addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+
+                fetch('http://localhost:5000/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'include', // ✅ critical to enable session cookie
+                    body: JSON.stringify({ email, password })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.message === 'Login successful') {
+                            localStorage.setItem('username', data.user.username); // optional
+                            window.location.href = 'index.html';
+                        } else {
+                            alert(data.error);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Login Error:', error);
+                    });
+
+            });
+        </script>
+    </div>
+</body>
+</html>

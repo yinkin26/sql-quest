@@ -1,0 +1,209 @@
+/* Light Theme Styles for SQL Learning Platform */
+/* Global light theme overrides */
+
+:root {
+  /* Light Theme Color Variables */
+  --light-bg-primary: #ffffff;
+  --light-bg-secondary: #f8f9fa;
+  --light-bg-tertiary: #e9ecef;
+  --light-text-primary: #2c3e50;
+  --light-text-secondary: #6c757d;
+  --light-accent-primary: #667eea;
+  --light-accent-secondary: #764ba2;
+  --light-border: #dee2e6;
+  --light-shadow: rgba(0, 0, 0, 0.1);
+}
+
+/* Body and background overrides */
+body.light-theme {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%) !important;
+  color: var(--light-text-primary) !important;
+}
+
+/* Navigation overrides */
+body.light-theme .nav-bar {
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--light-border);
+  box-shadow: 0 2px 10px var(--light-shadow);
+}
+
+body.light-theme .logo-text {
+  background: linear-gradient(135deg, var(--light-accent-primary) 0%, var(--light-accent-secondary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+body.light-theme .menu {
+  background: rgba(255, 255, 255, 0.98) !important;
+  border: 1px solid var(--light-border);
+  box-shadow: 0 4px 20px var(--light-shadow);
+}
+
+body.light-theme .menu ul li a {
+  color: var(--light-text-primary) !important;
+  transition: all 0.3s ease;
+}
+
+body.light-theme .menu ul li a:hover {
+  background: linear-gradient(135deg, var(--light-accent-primary), var(--light-accent-secondary));
+  color: white !important;
+  transform: translateX(5px);
+}
+
+/* Button overrides */
+body.light-theme .neon-button {
+  background: linear-gradient(135deg, var(--light-accent-primary) 0%, var(--light-accent-secondary) 100%) !important;
+  color: white !important;
+  border: none !important;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3) !important;
+}
+
+body.light-theme .neon-button:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4) !important;
+}
+
+/* Card and container overrides */
+body.light-theme .profile-card,
+body.light-theme .card,
+body.light-theme .container-box {
+  background: var(--light-bg-primary) !important;
+  border: 1px solid var(--light-border) !important;
+  box-shadow: 0 4px 20px var(--light-shadow) !important;
+  color: var(--light-text-primary) !important;
+}
+
+/* Progress bar overrides */
+body.light-theme .progress-bar {
+  background: var(--light-bg-tertiary) !important;
+}
+
+body.light-theme .progress-bar-fill {
+  background: linear-gradient(90deg, var(--light-accent-primary), var(--light-accent-secondary)) !important;
+}
+
+/* Text and heading overrides */
+body.light-theme h1,
+body.light-theme h2,
+body.light-theme h3,
+body.light-theme h4,
+body.light-theme h5,
+body.light-theme h6 {
+  color: var(--light-text-primary) !important;
+}
+
+body.light-theme p,
+body.light-theme span,
+body.light-theme div {
+  color: var(--light-text-primary);
+}
+
+/* Form elements */
+body.light-theme input,
+body.light-theme textarea,
+body.light-theme select {
+  background: var(--light-bg-primary) !important;
+  border: 2px solid var(--light-border) !important;
+  color: var(--light-text-primary) !important;
+}
+
+body.light-theme input:focus,
+body.light-theme textarea:focus,
+body.light-theme select:focus {
+  border-color: var(--light-accent-primary) !important;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15) !important;
+}
+
+/* Table overrides */
+body.light-theme table {
+  background: var(--light-bg-primary) !important;
+  border: 1px solid var(--light-border) !important;
+}
+
+body.light-theme th {
+  background: var(--light-bg-secondary) !important;
+  color: var(--light-text-primary) !important;
+  border-bottom: 2px solid var(--light-border) !important;
+}
+
+body.light-theme td {
+  color: var(--light-text-primary) !important;
+  border-bottom: 1px solid var(--light-border) !important;
+}
+
+body.light-theme tr:hover {
+  background: var(--light-bg-secondary) !important;
+}
+
+/* Scrollbar overrides */
+body.light-theme ::-webkit-scrollbar {
+  width: 8px;
+}
+
+body.light-theme ::-webkit-scrollbar-track {
+  background: var(--light-bg-tertiary);
+}
+
+body.light-theme ::-webkit-scrollbar-thumb {
+  background: var(--light-accent-primary);
+  border-radius: 4px;
+}
+
+body.light-theme ::-webkit-scrollbar-thumb:hover {
+  background: var(--light-accent-secondary);
+}
+
+/* Particle effects - hide in light theme */
+body.light-theme .pixel-particles {
+  opacity: 0.1;
+}
+
+/* Badge and status overrides */
+body.light-theme .badge,
+body.light-theme .status {
+  background: linear-gradient(135deg, var(--light-accent-primary), var(--light-accent-secondary)) !important;
+  color: white !important;
+}
+
+/* Modal and overlay overrides */
+body.light-theme .modal,
+body.light-theme .overlay {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border: 1px solid var(--light-border) !important;
+  box-shadow: 0 10px 40px var(--light-shadow) !important;
+}
+
+/* Code and pre elements */
+body.light-theme code,
+body.light-theme pre {
+  background: var(--light-bg-secondary) !important;
+  border: 1px solid var(--light-border) !important;
+  color: var(--light-text-primary) !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  body.light-theme .nav-bar {
+    padding: 10px 15px;
+  }
+  
+  body.light-theme .theme-toggle-global {
+    font-size: 10px;
+    padding: 6px 12px;
+  }
+}
+
+/* Animation overrides for light theme */
+body.light-theme .glow,
+body.light-theme .neon-border {
+  animation: none !important;
+  border-color: var(--light-accent-primary) !important;
+  box-shadow: 0 2px 10px var(--light-shadow) !important;
+}
+
+body.light-theme .neon-text {
+  text-shadow: none !important;
+  color: var(--light-text-primary) !important;
+}

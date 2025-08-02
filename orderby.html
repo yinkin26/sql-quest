@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en" class="pixel-art dark-theme">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SQL Quest - SQL ORDER BY</title>
+    <link rel="stylesheet" href="stylesheets/style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <script src="javascripts/loadComponents.js" defer></script>
+    <script src="javascripts/script.js" defer></script>
+    <script src="javascripts/lessonTracker.js" defer></script>
+
+</head>
+<body class="pixel-art dark-theme">
+    <div id="header"></div>
+    <div class="lesson-layout">
+        <div id="sidebar"></div>
+
+        <section class="lesson-content">
+            <!-- Intro Section -->
+            <h2>🔄 SQL ORDER BY</h2>
+
+            <!-- Add bookmark buttons -->
+            <div class="bookmark-container">
+                <button id="bookmarkBtn" style="display: none;">🔖 Bookmark</button>
+                <button id="unbookmarkBtn" style="display: none;">❌ Remove Bookmark</button>
+                <span id="bookmarkStatus"></span>
+            </div>
+
+            <h3>📌 What is ORDER BY?</h3>
+            <p>The <code class="tooltip" title="Used to sort the result set of a query based on one or more columns">ORDER BY</code> clause is used to sort the result set in either ascending or descending order.</p>
+
+            <!-- Syntax Section -->
+            <h3>🧠 Basic Syntax</h3>
+            <pre><code>SELECT column1, column2 FROM table_name
+ORDER BY column1 [ASC|DESC];</code></pre>
+            <p><strong>Note:</strong> If you don't specify <code>ASC</code> or <code>DESC</code>, the default is <code>ASC</code> (ascending order).</p>
+
+            <!-- Example Section -->
+            <h3>💡 Example: Sorting in Ascending Order</h3>
+            <div class="code-block">
+                <textarea class="code-editor">SELECT name, age FROM customers ORDER BY age;</textarea>
+
+
+            </div>
+
+            <h3>💡 Example: Sorting in Descending Order</h3>
+            <div class="code-block">
+                <textarea class="code-editor">SELECT name, age FROM customers ORDER BY age DESC;</textarea>
+
+
+            </div>
+
+            <h3>📊 Sorting by Multiple Columns</h3>
+            <pre><code>SELECT name, city, age FROM customers ORDER BY city ASC, age DESC;</code></pre>
+            <p>If multiple customers are from the same city, the second column (age) determines their order within that group.</p>
+
+            <!-- Try It Yourself Section -->
+            <h3>🧪 Try It Yourself</h3>
+            <div class="code-block">
+                <textarea class="code-editor">SELECT name, city, age FROM customers ORDER BY city, age DESC;</textarea>
+                <button class="neon-button run-btn">Run</button>
+                <div class="query-output"></div>
+            </div>
+
+            <!-- Real-World Use Case Section -->
+            <h3>🌍 Real-World Use Case</h3>
+            <p>Imagine you are analyzing customer data for a company and want to display the list of customers sorted by their age. To quickly analyze the youngest and oldest customers, use:</p>
+            <pre><code>SELECT name, age FROM customers ORDER BY age DESC;</code></pre>
+            <p>This allows you to instantly view the oldest customers at the top of the list, which can be useful for targeted promotions or research.</p>
+
+            <!-- Helpful Tips Section -->
+            <h3>💡 Helpful Tips</h3>
+            <ul>
+                <li><code>ORDER BY</code> is used to sort results by one or more columns.</li>
+                <li>If you don't specify <code>ASC</code> or <code>DESC</code>, <code>ASC</code> (ascending) is the default.</li>
+                <li><code>DESC</code> is used for descending order (from highest to lowest).</li>
+                <li>You can sort by multiple columns, with different sort directions for each column.</li>
+            </ul>
+
+            <!-- 🧠 Summary -->
+            <h3>🧠 Summary</h3>
+            <ul>
+                <li><code>ORDER BY</code> is used to sort results by one or more columns.</li>
+                <li><code>ASC</code> is the default sort direction (from lowest to highest).</li>
+                <li><code>DESC</code> is used for descending order (from highest to lowest).</li>
+                <li>You can sort by multiple columns, with different sort directions.</li>
+            </ul>
+
+
+
+            <!-- Practice Section -->
+            <h3>🧪 Practice: Sort Customers by Age</h3>
+            <p>Write a <code>SELECT</code> statement to select the <code>name</code>, <code>city</code>, and <code>age</code> from the <code>customers</code> table, and sort them by <code>age</code> in descending order.</p>
+
+            <div class="editor-container">
+                <textarea class="code-editor" id="practiceInput" placeholder="Write your SELECT query here..."></textarea>
+                <button class="neon-button" onclick="validatePracticeQuery()">Submit</button>
+                <div id="practiceFeedback" style="margin-top: 15px;"></div>
+            </div>
+
+            <!-- Mock Table for Practice -->
+            <div class="mock-table" id="mockTable" style="display: none;">
+                <h4>Preview: What the table would look like when queried:</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>name</th>
+                            <th>city</th>
+                            <th>age</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Customer1</td>
+                            <td>Tokyo</td>
+                            <td>63</td>
+                        </tr>
+                        <tr>
+                            <td>Customer2</td>
+                            <td>Tokyo</td>
+                            <td>63</td>
+                        </tr>
+                        <tr>
+                            <td>Customer3</td>
+                            <td>Paris</td>
+                            <td>58</td>
+                        </tr>
+                        <tr>
+                            <td>Customer4</td>
+                            <td>New York</td>
+                            <td>27</td>
+                        </tr>
+                        <tr>
+                            <td>Customer5</td>
+                            <td>New York</td>
+                            <td>19</td>
+                        </tr>
+                        <tr>
+                            <td>Customer6</td>
+                            <td>New York</td>
+                            <td>31</td>
+                        </tr>
+                        <tr>
+                            <td>Customer7</td>
+                            <td>Paris</td>
+                            <td>19</td>
+                        </tr>
+                        <tr>
+                            <td>Customer8</td>
+                            <td>Osaka</td>
+                            <td>27</td>
+                        </tr>
+                        <tr>
+                            <td>Customer9</td>
+                            <td>Paris</td>
+                            <td>36</td>
+                        </tr>
+                        <tr>
+                            <td>Customer10</td>
+                            <td>Paris</td>
+                            <td>58</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Quiz Section -->
+            <h3>🎯 Quiz</h3>
+            <p><strong>Which query orders customers by age in descending order?</strong></p>
+            <div class="quiz">
+                <button onclick="checkAnswer(this, false)">A) SELECT * FROM customers ORDER BY age;</button>
+                <button onclick="checkAnswer(this, true)">B) SELECT * FROM customers ORDER BY age DESC;</button>
+                <button onclick="checkAnswer(this, false)">C) SELECT * FROM customers ORDER BY age ASC;</button>
+                <button onclick="checkAnswer(this, false)">D) SELECT * FROM customers ORDER BY age;</button>
+                <p class="quiz-feedback"></p>
+                <div id="quizExplanation" class="quiz-explanation" style="display: none;"></div>
+            </div>
+
+
+        </section>
+    </div>
+
+    <div id="footer"></div>
+
+ >
+    <script>
+        function validatePracticeQuery() {
+            const userSQL = document.getElementById("practiceInput").value.trim().toLowerCase().replace(/\s+/g, " ");
+            const feedback = document.getElementById("practiceFeedback");
+
+            const expected = "select name, city, age from customers order by age desc;";
+
+            if (userSQL === expected) {
+                feedback.style.color = "lightgreen";
+                feedback.innerHTML = "✅ Perfect! Your SELECT DISTINCT query is correct.";
+
+                // Show the mock table after a correct submission
+                document.getElementById("mockTable").style.display = "block";
+                // Scroll the mock table into view
+                document.getElementById("mockTable").scrollIntoView({ behavior: "smooth" });
+            } else if (userSQL.includes("select") && userSQL.includes("distinct") && userSQL.includes("from products")) {
+                feedback.style.color = "orange";
+                feedback.innerHTML = "⚠️ You're close! Double-check the column names and syntax.";
+            } else {
+                feedback.style.color = "red";
+                feedback.innerHTML = "❌ That's not quite right. Make sure you're selecting the correct columns from the `products` table.";
+            }
+        }
+
+        let quizCompleted = false;
+        function checkAnswer(button, isCorrect) {
+            if (quizCompleted) return;
+            
+            const feedback = button.parentElement.querySelector(".quiz-feedback");
+            const explanationBox = document.getElementById("quizExplanation");
+            const quizContainer = button.parentElement;
+
+            if (isCorrect) {
+                // Correct answer - disable all buttons and mark as completed
+                quizCompleted = true;
+                const allButtons = quizContainer.querySelectorAll('button');
+                allButtons.forEach(btn => {
+                    btn.disabled = true;
+                    if (btn === button) {
+                        btn.style.backgroundColor = '#44ff44';
+                        btn.style.boxShadow = '0 0 15px rgba(68, 255, 68, 0.5)';
+                    }
+                });
+                
+                feedback.style.color = "lightgreen";
+                feedback.innerHTML = "✅ Correct! Quiz completed!";
+                explanationBox.innerHTML = `
+                        <p><strong>Explanation:</strong></p>
+                        <ul>
+                            <li><code>ORDER BY age DESC</code> correctly sorts the data in descending order.</li>
+                        </ul>`;
+            } else {
+                // Incorrect answer - disable this button only
+                button.disabled = true;
+                button.style.backgroundColor = '#ff4444';
+                button.style.opacity = '0.6';
+                button.style.cursor = 'not-allowed';
+                
+                feedback.style.color = "red";
+                feedback.innerHTML = "❌ Incorrect. Try another answer!";
+                
+                // Add retry message if not already present
+                let retryMsg = quizContainer.querySelector('.retry-message');
+                if (!retryMsg) {
+                    retryMsg = document.createElement('p');
+                    retryMsg.className = 'retry-message';
+                    retryMsg.style.color = '#ffd700';
+                    retryMsg.style.fontWeight = 'bold';
+                    retryMsg.style.marginTop = '10px';
+                    retryMsg.innerHTML = '💡 Keep trying! Choose another answer.';
+                    feedback.parentNode.insertBefore(retryMsg, feedback.nextSibling);
+                }
+                
+                const buttonText = button.textContent;
+                if (buttonText.includes('ORDER BY age;') || buttonText.includes('ORDER BY age')) {
+                    explanationBox.innerHTML = `
+                            <p><strong>Explanation:</strong></p>
+                            <ul>
+                                <li><code>ORDER BY age</code> without specifying <code>DESC</code> will sort the data in ascending order by default.</li>
+                            </ul>`;
+                } else if (buttonText.includes('ORDER BY age ASC')) {
+                    explanationBox.innerHTML = `
+                            <p><strong>Explanation:</strong></p>
+                            <ul>
+                                <li><code>ORDER BY age ASC</code> would sort the data in ascending order. We need descending order in this case.</li>
+                            </ul>`;
+                }
+            }
+
+            explanationBox.style.display = "block";
+            explanationBox.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+
+        // Bookmark functionality
+        const lessonId = "OrderBy";
+        const bookmarkBtn = document.getElementById("bookmarkBtn");
+        const unbookmarkBtn = document.getElementById("unbookmarkBtn");
+        const statusText = document.getElementById("bookmarkStatus");
+
+        // Function to check bookmark status with retry
+        function checkBookmarkStatus(retries = 3) {
+            fetch(`http://localhost:5000/bookmark-status?lessonId=${lessonId}`, {
+                credentials: 'include',
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+                .then(res => {
+                    if (!res.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return res.json();
+                })
+                .then(data => {
+                    if (data.bookmarked) {
+                        bookmarkBtn.style.display = "none";
+                        unbookmarkBtn.style.display = "inline-block";
+                        statusText.textContent = "📌 Bookmarked";
+                    } else {
+                        bookmarkBtn.style.display = "inline-block";
+                        unbookmarkBtn.style.display = "none";
+                        statusText.textContent = "";
+                    }
+                })
+                .catch(error => {
+                    console.error('Error checking bookmark status:', error);
+                    if (retries > 0) {
+                        setTimeout(() => checkBookmarkStatus(retries - 1), 1000);
+                    }
+                });
+        }
+
+        // Add bookmark
+        bookmarkBtn.addEventListener("click", () => {
+            fetch("http://localhost:5000/bookmark", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                    lessonId: lessonId,
+                    bookmarked: true
+                })
+            })
+                .then(res => res.json())
+                .then(() => {
+                    checkBookmarkStatus();
+                });
+        });
+
+        // Remove bookmark
+        unbookmarkBtn.addEventListener("click", () => {
+            fetch("http://localhost:5000/bookmark", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                    lessonId: lessonId,
+                    bookmarked: false
+                })
+            })
+                .then(res => res.json())
+                .then(() => {
+                    checkBookmarkStatus();
+                });
+        });
+
+        // Check initial status when page loads
+        checkBookmarkStatus();
+    </script>
+</body>
+</html>
+

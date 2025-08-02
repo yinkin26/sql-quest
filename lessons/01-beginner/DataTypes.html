@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en" class="pixel-art dark-theme">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SQL Quest - Chapter 3: SQL Data Types</title>
+    <link rel="stylesheet" href="../../stylesheets/style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <script src="../../javascripts/loadComponents.js" defer></script>
+    <script src="../../javascripts/script.js" defer></script>
+    <script src="../../javascripts/lessonTracker.js" defer></script>
+    <script type="module" src="../../javascripts/mockTables.js"></script>
+</head>
+<body class="pixel-art dark-theme">
+    <div id="header"></div>
+    <div class="lesson-layout">
+        <div id="sidebar"></div>
+
+        <section class="lesson-content">
+            <h2>📊 SQL Data Types</h2>
+
+            <!-- Add bookmark buttons -->
+            <div class="bookmark-container">
+                <button id="bookmarkBtn" style="display: none;">🔖 Bookmark</button>
+                <button id="unbookmarkBtn" style="display: none;">❌ Remove Bookmark</button>
+                <span id="bookmarkStatus"></span>
+            </div>
+
+            <h3>📌 What are SQL Data Types?</h3>
+            <p>SQL data types define the type of data that can be stored in each column of a table. They help the database understand how to store, search, and manipulate the data effectively. Choosing the correct data type for each column is essential for efficiency, accuracy, and data integrity.</p>
+            <p>There are many types of data in SQL, but we’ll cover the most commonly used ones.</p>
+
+            <h3>🧠 Common SQL Data Types</h3>
+
+            <h4>1. Numeric Data Types</h4>
+            <p>SQL provides several data types to store numbers, both integers (whole numbers) and decimals, like <code class="tooltip" title="Used to store whole numbers like 42 or -5">INT</code>, <code class="tooltip" title="Used for precise decimals like 15.99">DECIMAL</code>, and <code class="tooltip" title="Used for approximate floating-point numbers like 3.14">FLOAT</code>.</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Data Type</th>
+                        <th>Description</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>INT or INTEGER</td>
+                        <td>Used to store whole numbers without any decimals.</td>
+                        <td>42, -5</td>
+                    </tr>
+                    <tr>
+                        <td>DECIMAL or NUMERIC</td>
+                        <td>Used to store precise decimal numbers. Useful for currency and other calculations that require precision.</td>
+                        <td>15.99, -500.5</td>
+                    </tr>
+                    <tr>
+                        <td>FLOAT</td>
+                        <td>Stores approximate floating-point numbers with decimal points. Precision may vary based on system.</td>
+                        <td>3.1415, 2.71</td>
+                    </tr>
+                    <tr>
+                        <td>DOUBLE</td>
+                        <td>Stores double-precision floating-point numbers. Used for very large or very precise numbers.</td>
+                        <td>3.14159265358979</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p><strong>Tip:</strong> Use <code class="tooltip" title="Stores whole numbers like 42 or -5">INT</code> for whole numbers and <code class="tooltip" title="Stores precise decimal numbers like 15.99">DECIMAL/NUMERIC</code> for precise decimal values like prices or measurements.</p>
+
+            <h4>2. Textual Data Types</h4>
+            <p>Text-based data types are used to store strings of characters like names, descriptions, or comments, such as <code class="tooltip" title="Stores variable-length strings like 'John Doe'">VARCHAR</code> and <code class="tooltip" title="Stores fixed-length strings like 'John' (with length 5)">CHAR</code>.</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Data Type</th>
+                        <th>Description</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>VARCHAR(n)</td>
+                        <td>Stores variable-length strings. The n specifies the maximum length of the string.</td>
+                        <td>'John Doe', 'apple'</td>
+                    </tr>
+                    <tr>
+                        <td>CHAR(n)</td>
+                        <td>Stores fixed-length strings. The n specifies the length. If the string is shorter than n, it will be padded with spaces.</td>
+                        <td>'John' (with length 5)</td>
+                    </tr>
+                    <tr>
+                        <td>TEXT</td>
+                        <td>Stores long text without a specified length limit. Used for large texts like descriptions or comments.</td>
+                        <td>'This is a long paragraph...'</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p><strong>Tip:</strong> Use <code class="tooltip" title="Stores variable-length strings like 'John Doe'">VARCHAR</code> for varying string lengths and <code class="tooltip" title="Stores fixed-length strings like 'John' (with length 5)">CHAR</code> when the length is fixed.</p>
+
+            <h4>3. Date and Time Data Types</h4>
+            <p>Use <code class="tooltip" title="For storing just dates">DATE</code> for dates, <code class="tooltip" title="For storing time">TIME</code>, and <code class="tooltip" title="For storing both date and time">DATETIME</code> or <code class="tooltip" title="Automatically records when a record was created or updated">TIMESTAMP</code>.</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Data Type</th>
+                        <th>Description</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>DATE</td>
+                        <td>Stores a date in the format YYYY-MM-DD.</td>
+                        <td>'2025-04-02'</td>
+                    </tr>
+                    <tr>
+                        <td>TIME</td>
+                        <td>Stores a time in the format HH:MM:SS.</td>
+                        <td>'14:30:00'</td>
+                    </tr>
+                    <tr>
+                        <td>DATETIME</td>
+                        <td>Stores both date and time in the format YYYY-MM-DD HH:MM:SS.</td>
+                        <td>'2025-04-02 14:30:00'</td>
+                    </tr>
+                    <tr>
+                        <td>TIMESTAMP</td>
+                        <td>Similar to DATETIME but often used for automatically recording when a record was created or updated.</td>
+                        <td>'2025-04-02 14:30:00'</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p><strong>Tip:</strong> Use <code class="tooltip" title="For storing just dates">DATE</code> for storing just dates (e.g., birthdates), <code class="tooltip" title="For storing time">TIME</code> for times (e.g., working hours), and <code class="tooltip" title="For storing both date and time">DATETIME</code> or <code class="tooltip" title="For automatic date/time tracking">TIMESTAMP</code> for both.</p>
+
+            <h4>4. Boolean Data Type</h4>
+            <p>The <code class="tooltip" title="Used to store true/false values like TRUE and FALSE">BOOLEAN</code> data type is used to store true/false values.</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Data Type</th>
+                        <th>Description</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>BOOLEAN</td>
+                        <td>Stores a boolean value, typically TRUE or FALSE.</td>
+                        <td>TRUE, FALSE</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p><strong>Tip:</strong> In SQL, TRUE and FALSE are often stored as 1 (TRUE) and 0 (FALSE).</p>
+
+            <h4>5. Binary Data Types</h4>
+            <p>Binary data types are used to store binary data (like images or files), such as <code class="tooltip" title="Used to store large binary files like images or audio">BLOB</code> and <code class="tooltip" title="Used for fixed-size binary data like flags">BINARY</code>.</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Data Type</th>
+                        <th>Description</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>BLOB</td>
+                        <td>Stores binary large objects, like images, audio, or other files.</td>
+                        <td>image.jpg, audio.mp3</td>
+                    </tr>
+                    <tr>
+                        <td>BINARY(n)</td>
+                        <td>Stores fixed-length binary data (n specifies length).</td>
+                        <td>01010101 (8-bit binary)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p><strong>Tip:</strong> Use <code class="tooltip" title="For storing large binary files like images or audio">BLOB</code> for large binary files and <code class="tooltip" title="For fixed-size binary data like flags">BINARY</code> for fixed-size binary data like flags.</p>
+
+            <h3>🔄 Working with Data Types: Practical Examples</h3>
+
+            <h4>Example 1: Creating a Table</h4>
+            <pre><code>CREATE TABLE employees (
+  id INT PRIMARY KEY,
+  name VARCHAR(100),
+  salary DECIMAL(10, 2),
+  hire_date DATE,
+  is_active BOOLEAN
+);</code></pre>
+
+            <h4>Example 2: Insert Data (Read Only)</h4>
+            <pre><code>INSERT INTO employees (id, name, salary, hire_date, is_active)
+VALUES (1, 'Alice', 50000.00, '2021-06-15', TRUE);</code></pre>
+
+            <h3>📊 Mock Table Display</h3>
+            <p>👀 Here's a mock-up of the data showing different SQL data types in action:</p>
+            <div class="mock-table">
+                <button class="neon-button" onclick="displayMockTable('employees')">👥 View Employees Table</button>
+                <button class="neon-button" onclick="displayMockTable('products')">📦 View Products Table</button>
+                <div class="query-output" id="mockTableOutput"></div>
+            </div>
+
+            <h3>📚 Recap</h3>
+            <ul>
+                <li>SQL data types define what kind of data can be stored in a table.</li>
+                <li><strong>Numeric types:</strong> Store numbers (integers or decimals).</li>
+                <li><strong>Text types:</strong> Store strings of text.</li>
+                <li><strong>Date and time types:</strong> Store dates and timestamps.</li>
+                <li><strong>Boolean:</strong> Store true or false values.</li>
+                <li><strong>Binary:</strong> Store files like images or audio.</li>
+            </ul>
+            <p>Make sure to choose the correct data type for your table columns based on the type of data you need to store!</p>
+
+            <h3>🎯 Quiz: Test Your Knowledge!</h3>
+            <p><strong>Which data type would you use for storing a person's name?</strong></p>
+            <div class="quiz">
+                <button onclick="checkAnswer(this, false)">A) INT</button>
+                <button onclick="checkAnswer(this, true)">B) VARCHAR</button>
+                <button onclick="checkAnswer(this, false)">C) DATE</button>
+                <button onclick="checkAnswer(this, false)">D) BOOLEAN</button>
+                <p class="quiz-feedback"></p>
+            </div>
+
+
+</div>
+
+    <div id="footer"></div>
+
+    <script src="../../javascripts/loadComponents.js"></script>
+    <script src="../../javascripts/script.js"></script>
+    <script>
+        let quizCompleted = false;
+        
+        function checkAnswer(button, isCorrect) {
+            // If quiz is already completed, don't allow further clicks
+            if (quizCompleted) {
+                return;
+            }
+
+            const feedback = button.parentElement.querySelector(".quiz-feedback");
+            const quizContainer = button.parentElement;
+
+            let explanationBox = document.getElementById("quizExplanation");
+            if (!explanationBox) {
+                explanationBox = document.createElement("div");
+                explanationBox.id = "quizExplanation";
+                explanationBox.className = "quiz-explanation";
+                const lessonSection = button.closest(".lesson-content");
+                lessonSection.appendChild(explanationBox);
+            }
+
+            feedback.innerHTML = "";
+            explanationBox.style.display = "block";
+
+            if (isCorrect) {
+                // Correct answer - disable all buttons and mark as completed
+                quizCompleted = true;
+                const allButtons = quizContainer.querySelectorAll('button');
+                allButtons.forEach(btn => {
+                    btn.disabled = true;
+                    if (btn === button) {
+                        btn.style.backgroundColor = '#44ff44';
+                        btn.style.boxShadow = '0 0 15px rgba(68, 255, 68, 0.5)';
+                    }
+                });
+                
+                feedback.style.color = "lightgreen";
+                feedback.innerHTML = "✅ Correct! Quiz completed!";
+                explanationBox.innerHTML = `
+                        <p><strong>Explanation:</strong></p>
+                        <ul>
+                            <li><code>VARCHAR</code> is used for variable-length text like names, emails, or titles.</li>
+                            <li>It's flexible and efficient for text data where length varies.</li>
+                        </ul>
+                    `;
+            } else {
+                // Incorrect answer - disable this button only
+                button.disabled = true;
+                button.style.backgroundColor = '#ff4444';
+                button.style.opacity = '0.6';
+                button.style.cursor = 'not-allowed';
+                
+                feedback.style.color = "red";
+                feedback.innerHTML = "❌ Incorrect. Try another answer!";
+                
+                // Add retry message if not already present
+                let retryMsg = quizContainer.querySelector('.retry-message');
+                if (!retryMsg) {
+                    retryMsg = document.createElement('p');
+                    retryMsg.className = 'retry-message';
+                    retryMsg.style.color = '#ffd700';
+                    retryMsg.style.fontWeight = 'bold';
+                    retryMsg.style.marginTop = '10px';
+                    retryMsg.innerHTML = '💡 Keep trying! Choose another answer.';
+                    feedback.parentNode.insertBefore(retryMsg, feedback.nextSibling);
+                }
+                
+                let explanation = "";
+                switch (button.innerText.trim().charAt(0)) {
+                    case "A":
+                        explanation = `
+                                <p><strong>Explanation:</strong></p>
+                                <ul>
+                                    <li><code>INT</code> is used for whole numbers — not suitable for storing text like names.</li>
+                                </ul>
+                            `;
+                        break;
+                    case "C":
+                        explanation = `
+                                <p><strong>Explanation:</strong></p>
+                                <ul>
+                                    <li><code>DATE</code> is for calendar dates — names are not a date value.</li>
+                                </ul>
+                            `;
+                        break;
+                    case "D":
+                        explanation = `
+                                <p><strong>Explanation:</strong></p>
+                                <ul>
+                                    <li><code>BOOLEAN</code> only holds TRUE or FALSE — not string/text data like names.</li>
+                                </ul>
+                            `;
+                        break;
+                }
+                explanationBox.innerHTML = explanation;
+            }
+        }
+    </script>
+</body>
+</html>

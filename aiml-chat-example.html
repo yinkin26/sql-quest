@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIML API Chat Example - GPT-4o Mini</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+         body {
+             font-family: 'Press Start 2P', cursive;
+             max-width: 900px;
+             margin: 0 auto;
+             padding: 24px;
+             background: linear-gradient(135deg, #1a0033, #0d001a);
+             min-height: 100vh;
+             color: #ffffff;
+             line-height: 1.8;
+             text-align: center;
+             image-rendering: pixelated;
+         }
+         
+         .container {
+             background: rgba(26, 0, 51, 0.95);
+             backdrop-filter: blur(10px);
+             border: 2px solid #00ffff;
+             border-radius: 20px;
+             padding: 40px;
+             box-shadow: 0 20px 40px rgba(0, 255, 255, 0.3);
+         }
+        
+        h1 {
+             color: #ffffff;
+             font-family: 'Press Start 2P', cursive;
+             font-size: 18px;
+             margin-bottom: 20px;
+             text-align: center;
+             text-shadow: 0 0 10px #00ffff;
+             letter-spacing: 2px;
+         }
+         
+         .subtitle {
+             color: #00ffff;
+             font-size: 12px;
+             text-align: center;
+             margin-bottom: 30px;
+             font-family: 'Press Start 2P', cursive;
+             opacity: 0.8;
+         }
+         
+         .chat-container {
+             background: rgba(13, 0, 26, 0.8);
+             backdrop-filter: blur(5px);
+             border: 2px solid rgba(0, 255, 255, 0.5);
+             border-radius: 12px;
+             padding: 20px;
+             margin-bottom: 20px;
+             height: 450px;
+             overflow-y: auto;
+             box-shadow: 0 8px 32px rgba(0, 255, 255, 0.2);
+         }
+        
+        .message {
+             margin-bottom: 15px;
+             padding: 15px;
+             max-width: 80%;
+             word-wrap: break-word;
+             font-family: 'Press Start 2P', cursive;
+             font-size: 10px;
+             line-height: 1.6;
+             border-radius: 8px;
+             backdrop-filter: blur(5px);
+         }
+         
+         .user-message {
+             background: linear-gradient(135deg, rgba(0, 255, 255, 0.3), rgba(0, 255, 255, 0.2));
+             color: #ffffff;
+             margin-left: auto;
+             text-align: right;
+             border: 1px solid rgba(0, 255, 255, 0.6);
+             box-shadow: 0 4px 15px rgba(0, 255, 255, 0.2);
+         }
+         
+         .ai-message {
+             background: rgba(26, 0, 51, 0.8);
+             color: #00ffff;
+             border: 1px solid rgba(0, 255, 255, 0.4);
+             box-shadow: 0 4px 15px rgba(0, 255, 255, 0.1);
+         }
+         
+         .system-message {
+             background: rgba(13, 0, 26, 0.6);
+             color: #ffaa00;
+             border: 1px solid rgba(255, 170, 0, 0.4);
+             text-align: center;
+             font-style: italic;
+             box-shadow: 0 4px 15px rgba(255, 170, 0, 0.1);
+             margin: 0 auto;
+             font-size: 9px;
+         }
+        
+        .input-container {
+             display: flex;
+             gap: 15px;
+             margin-bottom: 20px;
+         }
+         
+         #messageInput {
+             flex: 1;
+             padding: 15px;
+             border: 2px solid rgba(0, 255, 255, 0.5);
+             border-radius: 8px;
+             font-size: 10px;
+             background: rgba(13, 0, 26, 0.8);
+             color: #ffffff;
+             font-family: 'Press Start 2P', cursive;
+             transition: all 0.3s ease;
+             backdrop-filter: blur(5px);
+         }
+         
+         #messageInput:focus {
+             outline: none;
+             border-color: #00ffff;
+             box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
+             background: rgba(13, 0, 26, 0.9);
+         }
+         
+         #sendButton {
+             padding: 15px 25px;
+             background: linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(0, 255, 255, 0.1));
+             color: #00ffff;
+             border: 2px solid #00ffff;
+             border-radius: 8px;
+             cursor: pointer;
+             font-family: 'Press Start 2P', cursive;
+             font-size: 10px;
+             transition: all 0.3s ease;
+             box-shadow: 0 4px 15px rgba(0, 255, 255, 0.2);
+             backdrop-filter: blur(5px);
+         }
+         
+         #sendButton:hover {
+             background: linear-gradient(135deg, rgba(0, 255, 255, 0.3), rgba(0, 255, 255, 0.2));
+             color: #ffffff;
+             border-color: #ffffff;
+             box-shadow: 0 6px 20px rgba(0, 255, 255, 0.4);
+             transform: translateY(-2px);
+         }
+         
+         #sendButton:disabled {
+             opacity: 0.5;
+             cursor: not-allowed;
+             transform: none;
+         }
+        
+        .info-panel {
+            background: rgba(13, 0, 26, 0.6);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 170, 0, 0.4);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 24px;
+            box-shadow: 0 4px 15px rgba(255, 170, 0, 0.1);
+        }
+        
+        .info-panel h3 {
+            margin-top: 0;
+            margin-bottom: 16px;
+            color: #ffaa00;
+            font-weight: 600;
+            font-size: 12px;
+            font-family: 'Press Start 2P', cursive;
+        }
+        
+        .info-panel p {
+            margin: 8px 0;
+            font-size: 8px;
+            line-height: 1.6;
+            color: #ffaa00;
+            font-family: 'Press Start 2P', cursive;
+        }
+        
+        .status {
+            padding: 10px 15px;
+            margin-bottom: 15px;
+            font-size: 10px;
+            font-family: 'Press Start 2P', cursive;
+            border: 1px solid;
+            border-radius: 6px;
+            backdrop-filter: blur(5px);
+        }
+        
+        .status.success {
+            background: rgba(0, 255, 0, 0.2);
+            color: #00ff88;
+            border-color: rgba(0, 255, 136, 0.6);
+            box-shadow: 0 4px 15px rgba(0, 255, 136, 0.2);
+        }
+        
+        .status.error {
+            background: rgba(255, 0, 0, 0.2);
+            color: #ff6666;
+            border-color: rgba(255, 102, 102, 0.6);
+            box-shadow: 0 4px 15px rgba(255, 102, 102, 0.2);
+        }
+        
+        .status.loading {
+            background: rgba(255, 255, 0, 0.2);
+            color: #ffff88;
+            border-color: rgba(255, 255, 136, 0.6);
+            box-shadow: 0 4px 15px rgba(255, 255, 136, 0.2);
+        }
+        
+        .example-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .example-btn {
+            padding: 10px 15px;
+            background: rgba(26, 0, 51, 0.6);
+            border: 1px solid rgba(0, 255, 255, 0.4);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 8px;
+            font-family: 'Press Start 2P', cursive;
+            color: #00ffff;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+        }
+        
+        .example-btn:hover {
+            background: rgba(0, 255, 255, 0.2);
+            color: #ffffff;
+            border-color: #ffffff;
+            box-shadow: 0 6px 20px rgba(0, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🤖 AIML API Chat Example</h1>
+        <p class="subtitle">Test the new AIML API integration with GPT-4o Mini model</p>
+        
+        <div id="status" class="status loading">Initializing...</div>
+        
+        <div class="example-buttons">
+            <button class="example-btn" onclick="sendExample('What is SQL?')">What is SQL?</button>
+            <button class="example-btn" onclick="sendExample('Explain INNER JOIN vs LEFT JOIN')">JOIN Types</button>
+            <button class="example-btn" onclick="sendExample('How to create a table in SQL?')">Create Table</button>
+            <button class="example-btn" onclick="sendExample('What are SQL indexes?')">SQL Indexes</button>
+        </div>
+        
+        <div id="chatContainer" class="chat-container"></div>
+        
+        <div class="input-container">
+            <input type="text" id="messageInput" placeholder="Ask a SQL question..." onkeypress="handleKeyPress(event)">
+            <button id="sendButton" onclick="sendMessage()">Send</button>
+        </div>
+        
+        <div class="info-panel">
+            <h3>📊 API Information</h3>
+            <p><strong>Endpoint:</strong> /api/aiml-chat</p>
+            <p><strong>Model:</strong> gpt-4o-mini</p>
+            <p><strong>Provider:</strong> AIML API</p>
+            <p><strong>Features:</strong> Fast responses, SQL-focused, Educational content</p>
+        </div>
+    </div>
+
+    <script>
+        let messages = [];
+        let isLoading = false;
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateStatus('Ready to chat! 🚀', 'success');
+            addSystemMessage('Welcome! I\'m powered by AIML API using Mistral-7B-Instruct. Ask me anything about SQL!');
+        });
+        
+        function updateStatus(message, type) {
+            const statusEl = document.getElementById('status');
+            statusEl.textContent = message;
+            statusEl.className = `status ${type}`;
+        }
+        
+        function addMessage(content, type, sender = '') {
+            const chatContainer = document.getElementById('chatContainer');
+            const messageEl = document.createElement('div');
+            messageEl.className = `message ${type}-message`;
+            
+            if (sender) {
+                messageEl.innerHTML = `<strong>${sender}:</strong> ${content}`;
+            } else {
+                messageEl.textContent = content;
+            }
+            
+            chatContainer.appendChild(messageEl);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+        
+        function addSystemMessage(content) {
+            addMessage(content, 'system');
+        }
+        
+        function addUserMessage(content) {
+            addMessage(content, 'user', 'You');
+        }
+        
+        function addAIMessage(content, provider = 'AIML API') {
+            addMessage(content, 'ai', `AI (${provider})`);
+        }
+        
+        function handleKeyPress(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        }
+        
+        function sendExample(text) {
+            document.getElementById('messageInput').value = text;
+            sendMessage();
+        }
+        
+        async function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const sendButton = document.getElementById('sendButton');
+            const message = input.value.trim();
+            
+            if (!message || isLoading) return;
+            
+            // Update UI
+            isLoading = true;
+            input.value = '';
+            sendButton.disabled = true;
+            updateStatus('Sending message...', 'loading');
+            
+            // Add user message
+            addUserMessage(message);
+            
+            // Add to conversation history
+            messages.push({ role: 'user', content: message });
+            
+            try {
+                // Send to AIML API
+                const response = await fetch('/api/aiml-chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ 
+                        messages: [
+                            { role: 'system', content: 'You are a helpful SQL learning assistant. Provide clear, educational responses with practical examples.' },
+                            ...messages.slice(-5) // Keep last 5 messages for context
+                        ]
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                
+                // Add AI response
+                addAIMessage(data.response, data.provider);
+                messages.push({ role: 'assistant', content: data.response });
+                
+                updateStatus(`Response received from ${data.model} ✅`, 'success');
+                
+            } catch (error) {
+                console.error('Error:', error);
+                addSystemMessage(`❌ Error: ${error.message}`);
+                updateStatus('Error occurred', 'error');
+                
+                // Remove the user message from history if there was an error
+                messages.pop();
+            } finally {
+                isLoading = false;
+                sendButton.disabled = false;
+                updateStatus('Ready to chat! 🚀', 'success');
+            }
+        }
+        
+        // Test connection on load
+        async function testConnection() {
+            try {
+                const response = await fetch('/api/aiml-chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ 
+                        messages: [{ role: 'user', content: 'Hello' }]
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
+                updateStatus('AIML API connection verified ✅', 'success');
+            } catch (error) {
+                updateStatus(`Connection issue: ${error.message}`, 'error');
+                addSystemMessage('⚠️ AIML API connection issue. Please check the server logs and API configuration.');
+            }
+        }
+        
+        // Test connection after a short delay
+        setTimeout(testConnection, 1000);
+    </script>
+</body>
+</html>

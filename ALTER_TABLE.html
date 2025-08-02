@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en" class="pixel-art dark-theme">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Quest - ALTER TABLE</title>
+    <link rel="stylesheet" href="stylesheets/style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <script type="module" src="javascripts/mockTables.js"></script>
+    <script src="javascripts/loadComponents.js" defer></script>
+    <script src="javascripts/script.js" defer></script>
+    <script src="javascripts/lessonTracker.js" defer></script>
+</head>
+<body class="pixel-art dark-theme">
+    <div id="header"></div>
+    <div class="lesson-layout">
+        <div id="sidebar"></div>
+
+        <section class="lesson-content">
+            <h2>🔧 ALTER TABLE</h2>
+
+            <!-- Bookmark buttons -->
+            <div class="bookmark-container">
+                <button id="bookmarkBtn" style="display: none;">🔖 Bookmark</button>
+                <button id="unbookmarkBtn" style="display: none;">❌ Remove Bookmark</button>
+                <span id="bookmarkStatus"></span>
+            </div>
+
+            <div class="callout-box">
+                <p>🔧 Ready to modify your tables? ALTER TABLE is your Swiss Army knife for database changes!</p>
+            </div>
+
+            <h3>📌 What is ALTER TABLE?</h3>
+            <p>The <code class="tooltip" title="Modifies the structure of an existing table">ALTER TABLE</code> statement is used to modify the structure of an existing table. You can add columns, drop columns, modify column data types, add constraints, and much more. Think of it as 🏗️ renovating a house - you can add rooms, remove walls, or change the plumbing without tearing down the whole building!</p>
+
+            <h3>🧠 Basic Syntax</h3>
+            <pre><code>ALTER TABLE <span style="color: #00ffff;">table_name</span>
+<span style="color: #98fb98;">action</span> <span style="color: #ffd700;">column_specification</span>;</code></pre>
+
+            <h3>🛠️ Common ALTER TABLE Operations</h3>
+
+            <h4>1. 📝 Add a New Column</h4>
+            <pre><code>ALTER TABLE <span style="color: #00ffff;">employees</span>
+ADD COLUMN <span style="color: #ffd700;">phone_number</span> VARCHAR(15);</code></pre>
+
+            <h4>2. 🗑️ Drop a Column</h4>
+            <pre><code>ALTER TABLE <span style="color: #00ffff;">employees</span>
+DROP COLUMN <span style="color: #ff6b6b;">old_field</span>;</code></pre>
+
+            <h4>3. 🔄 Modify Column Data Type</h4>
+            <pre><code>ALTER TABLE <span style="color: #00ffff;">employees</span>
+MODIFY COLUMN <span style="color: #ffd700;">salary</span> DECIMAL(10,2);</code></pre>
+
+            <h4>4. 🏷️ Rename a Column</h4>
+            <pre><code>ALTER TABLE <span style="color: #00ffff;">employees</span>
+RENAME COLUMN <span style="color: #ffd700;">old_name</span> TO <span style="color: #98fb98;">new_name</span>;</code></pre>
+
+
+
+            <h3>📊 Mock Table: employees (Before/After Changes)</h3>
+            <div class="mock-table">
+                <p>🎯 View the table structure before and after ALTER TABLE operations:</p>
+                <button class="neon-button" onclick="displayMockTable('employees_before')">📋 View Before Changes</button>
+                <button class="neon-button" onclick="displayMockTable('employees_after')">🔧 View After Changes</button>
+                <div class="query-output" id="mockTableOutput"></div>
+            </div>
+
+            <h3>🎯 Advanced ALTER TABLE Operations</h3>
+
+            <h4>5. 🔗 Add Constraints</h4>
+            <pre><code>-- Add a foreign key constraint
+ALTER TABLE <span style="color: #00ffff;">employees</span>
+ADD CONSTRAINT <span style="color: #98fb98;">fk_department</span>
+FOREIGN KEY (<span style="color: #ffd700;">department_id</span>) REFERENCES <span style="color: #00ffff;">departments</span>(<span style="color: #ffd700;">id</span>);
+
+-- Add a check constraint
+ALTER TABLE <span style="color: #00ffff;">employees</span>
+ADD CONSTRAINT <span style="color: #98fb98;">chk_salary</span>
+CHECK (<span style="color: #ffd700;">salary</span> > 0);</code></pre>
+
+            <h4>6. 🗑️ Drop Constraints</h4>
+            <pre><code>ALTER TABLE <span style="color: #00ffff;">employees</span>
+DROP CONSTRAINT <span style="color: #ff6b6b;">chk_salary</span>;</code></pre>
+
+            <h4>7. 🏷️ Rename Table</h4>
+            <pre><code>ALTER TABLE <span style="color: #00ffff;">employees</span>
+RENAME TO <span style="color: #98fb98;">staff_members</span>;</code></pre>
+
+            <h3>📋 ALTER TABLE Examples Showcase</h3>
+            <button class="neon-button" onclick="showAlterExamples()">Show ALTER Examples</button>
+            <div id="alterExamplesOutput" class="query-output" style="margin-top: 10px;"></div>
+
+            <h3>🌍 Real-World Scenarios</h3>
+            <p>When would you use ALTER TABLE in real applications?</p>
+            <ul>
+                <li>📱 <strong>App Updates</strong> - Adding new features requires new columns (e.g., adding 'profile_picture' to users table)</li>
+                <li>🔧 <strong>Bug Fixes</strong> - Changing data types when you discover size limitations (VARCHAR(50) → VARCHAR(100))</li>
+                <li>📊 <strong>Business Changes</strong> - Adding columns for new business requirements (e.g., 'loyalty_points' for customers)</li>
+                <li>🔒 <strong>Security Updates</strong> - Adding constraints to enforce data integrity and security rules</li>
+                <li>🗂️ <strong>Database Optimization</strong> - Adding indexes or modifying column types for better performance</li>
+            </ul>
+
+            <h3>⚠️ Important Considerations</h3>
+            <div style="background: rgba(255, 193, 7, 0.2); border: 2px solid #ffc107; border-radius: 8px; padding: 15px; margin: 15px 0;">
+                <h4 style="color: #ffc107; margin-top: 0;">🚨 Before ALTER TABLE</h4>
+                <ul style="color: #fff3cd;">
+                    <li>💾 <strong>Backup your data</strong> - some operations can't be undone</li>
+                    <li>🔒 <strong>Check dependencies</strong> - other tables or applications might be affected</li>
+                    <li>⏰ <strong>Consider timing</strong> - large tables may take time to alter</li>
+                    <li>🧪 <strong>Test first</strong> - try changes on a copy of your data</li>
+                    <li>👥 <strong>Coordinate with team</strong> - ensure no one else is using the table</li>
+                </ul>
+            </div>
+
+            <h3>💡 Helpful Tips</h3>
+            <ul>
+                <li>🔍 Use <code>DESCRIBE table_name;</code> to see current table structure before altering</li>
+                <li>📝 <strong>Plan your changes</strong> - write out all ALTER statements before executing</li>
+                <li>🔄 Some operations can be combined in a single ALTER TABLE statement</li>
+                <li>⚡ <strong>Performance impact</strong> - altering large tables can be slow and resource-intensive</li>
+                <li>🔒 <strong>Permissions</strong> - you need ALTER privileges on the table</li>
+                <li>📚 Different databases have slightly different ALTER TABLE syntax</li>
+            </ul>
+
+            <h3>🧠 Summary</h3>
+            <ul>
+                <li>🔧 <code>ALTER TABLE</code> modifies existing table structure without losing data</li>
+                <li>📝 Can add/drop columns, modify data types, and manage constraints</li>
+                <li>🛡️ Always backup data before making structural changes</li>
+                <li>🎯 Essential for database evolution and maintenance</li>
+                <li>⚡ Consider performance impact on large tables</li>
+            </ul>
+
+            <h3>🧪 Practice</h3>
+            <p>📚 Write an ALTER TABLE statement to add a column called <code>"salary"</code> with data type <code>DECIMAL(10,2)</code> to the employees table.</p>
+            <div class="editor-container">
+                <textarea class="code-editor" id="exerciseInput" placeholder="Write your ALTER TABLE statement here..."></textarea>
+                <button class="neon-button" onclick="validateExercise()">Submit</button>
+                <div id="exerciseFeedback" style="margin-top:15px;"></div>
+            </div>
+
+            <h3>🎯 Quiz</h3>
+            <p><strong>Which ALTER TABLE operation would you use to remove a column from a table?</strong></p>
+            <div class="quiz">
+                <button onclick="checkAnswer(this,'A')">A) ALTER TABLE table_name REMOVE COLUMN column_name;</button>
+                <button onclick="checkAnswer(this,'B')">B) ALTER TABLE table_name DROP COLUMN column_name;</button>
+                <button onclick="checkAnswer(this,'C')">C) ALTER TABLE table_name DELETE COLUMN column_name;</button>
+                <button onclick="checkAnswer(this,'D')">D) ALTER TABLE table_name ERASE COLUMN column_name;</button>
+                <p class="quiz-feedback"></p>
+                <div id="quizExplanation" class="quiz-explanation" style="display:none;"></div>
+            </div>
+        </section>
+    </div>
+
+    <div id="footer"></div>
+
+    <script>
+        function runAlterQuery() {
+            const textarea = document.querySelector('.code-editor');
+            const output = document.querySelector('.query-output');
+            const query = textarea.value.trim().toLowerCase();
+            
+            if (query.includes('alter table')) {
+                let operation = 'unknown';
+                let details = '';
+                
+                if (query.includes('add column')) {
+                    operation = 'ADD COLUMN';
+                    const match = query.match(/add column\s+(\w+)\s+(\w+(?:\([^)]+\))?)/i);
+                    if (match) {
+                        details = `Added column '${match[1]}' with type '${match[2].toUpperCase()}'`;
+                    }
+                } else if (query.includes('drop column')) {
+                    operation = 'DROP COLUMN';
+                    const match = query.match(/drop column\s+(\w+)/i);
+                    if (match) {
+                        details = `Removed column '${match[1]}'`;
+                    }
+                } else if (query.includes('modify column')) {
+                    operation = 'MODIFY COLUMN';
+                    details = 'Modified column data type';
+                } else if (query.includes('rename column')) {
+                    operation = 'RENAME COLUMN';
+                    details = 'Renamed column';
+                } else if (query.includes('add constraint')) {
+                    operation = 'ADD CONSTRAINT';
+                    details = 'Added table constraint';
+                }
+                
+                output.innerHTML = `
+                    <div style='background: rgba(40, 167, 69, 0.2); border: 1px solid #28a745; border-radius: 8px; padding: 15px;'>
+                        <p style='color: #28a745; margin: 0;'>✅ <strong>ALTER TABLE executed successfully!</strong></p>
+                        <p style='color: #d4edda; margin: 5px 0 0 0;'>🔧 Operation: ${operation}</p>
+                        ${details ? `<p style='color: #d4edda; margin: 5px 0 0 0;'>📝 ${details}</p>` : ''}
+                        <p style='color: #a0a0a0; margin: 5px 0 0 0; font-size: 0.8em;'>💡 Table structure has been modified!</p>
+                    </div>
+                `;
+            } else {
+                output.innerHTML = `<p style='color: red;'>❌ Invalid query. Try using ALTER TABLE syntax.</p>`;
+            }
+        }
+        
+        function showAlterExamples() {
+            const output = document.getElementById('alterExamplesOutput');
+            const examples = [
+                {
+                    title: '📝 Add Column',
+                    sql: 'ALTER TABLE employees ADD COLUMN phone VARCHAR(15);',
+                    description: 'Adds a phone number column'
+                },
+                {
+                    title: '🔄 Modify Column',
+                    sql: 'ALTER TABLE employees MODIFY COLUMN email VARCHAR(150);',
+                    description: 'Increases email field size'
+                },
+                {
+                    title: '🗑️ Drop Column',
+                    sql: 'ALTER TABLE employees DROP COLUMN temp_field;',
+                    description: 'Removes an unused column'
+                },
+                {
+                    title: '🔗 Add Foreign Key',
+                    sql: 'ALTER TABLE employees ADD CONSTRAINT fk_dept FOREIGN KEY (dept_id) REFERENCES departments(id);',
+                    description: 'Links to departments table'
+                },
+                {
+                    title: '🏷️ Rename Column',
+                    sql: 'ALTER TABLE employees RENAME COLUMN fname TO first_name;',
+                    description: 'Makes column name more descriptive'
+                }
+            ];
+            
+            let html = '<div style="background: rgba(26, 32, 44, 0.8); border: 1px solid #4a5568; border-radius: 8px; padding: 15px; margin-top: 10px;">';
+            html += '<h4 style="color: #00ffff; margin-top: 0;">🔧 ALTER TABLE Examples</h4>';
+            
+            examples.forEach((example, index) => {
+                html += `
+                    <div style="margin-bottom: 15px; padding: 10px; background: rgba(45, 55, 72, 0.6); border-radius: 6px;">
+                        <h5 style="color: #ffd700; margin: 0 0 8px 0;">${example.title}</h5>
+                        <pre style="background: rgba(0, 0, 0, 0.4); padding: 8px; border-radius: 4px; margin: 5px 0; overflow-x: auto;"><code style="color: #e2e8f0;">${example.sql}</code></pre>
+                        <p style="color: #a0aec0; margin: 5px 0 0 0; font-size: 0.9em;">${example.description}</p>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            output.innerHTML = html;
+        }
+        
+        function validateExercise() {
+            const sql = document.getElementById("exerciseInput").value.trim().toLowerCase();
+            const feedback = document.getElementById("exerciseFeedback");
+            
+            if (sql.includes("alter table employees add column salary decimal(10,2)")) {
+                feedback.style.color = "lightgreen";
+                feedback.textContent = "✅ Perfect! You correctly added the salary column with the right data type.";
+            } else if (sql.includes("alter table") && sql.includes("add column salary")) {
+                feedback.style.color = "orange";
+                feedback.textContent = "⚠️ Good structure! Make sure to use DECIMAL(10,2) for the salary data type.";
+            } else if (sql.includes("alter table") && sql.includes("add column")) {
+                feedback.style.color = "orange";
+                feedback.textContent = "⚠️ Good use of ALTER TABLE ADD COLUMN, but make sure to add 'salary' with type DECIMAL(10,2).";
+            } else {
+                feedback.style.color = "red";
+                feedback.textContent = "❌ Try using: ALTER TABLE employees ADD COLUMN salary DECIMAL(10,2);";
+            }
+        }
+        
+        function checkAnswer(btn, opt) {
+            const fb = btn.parentElement.querySelector('.quiz-feedback');
+            const exp = document.getElementById('quizExplanation');
+            const buttons = btn.parentElement.querySelectorAll('button');
+            
+            // Disable all buttons after selection
+            buttons.forEach(b => b.disabled = true);
+            
+            if (opt === 'B') {
+                fb.style.color = 'lightgreen';
+                fb.textContent = '✅ Correct! DROP COLUMN is used to remove columns from a table.';
+                btn.style.backgroundColor = '#28a745';
+                exp.innerHTML = `
+                    <p><strong>🎯 Explanation:</strong></p>
+                    <ul>
+                        <li>🗑️ <code>DROP COLUMN</code> is the correct SQL syntax for removing columns.</li>
+                        <li>🔧 It's part of the ALTER TABLE statement for structural changes.</li>
+                        <li>⚠️ This operation permanently removes the column and all its data.</li>
+                        <li>💾 Always backup your data before dropping columns!</li>
+                    </ul>
+                `;
+            } else {
+                fb.style.color = 'red';
+                fb.textContent = '❌ Incorrect. The correct answer is B.';
+                btn.style.backgroundColor = '#dc3545';
+                // Highlight correct answer
+                buttons[1].style.backgroundColor = '#28a745';
+                exp.innerHTML = `
+                    <p><strong>❌ Explanation:</strong></p>
+                    <ul>
+                        <li>🗑️ Only DROP COLUMN is valid SQL syntax for removing columns.</li>
+                        <li>❌ REMOVE, DELETE, and ERASE are not valid ALTER TABLE operations.</li>
+                        <li>📚 Remember: ALTER TABLE ... DROP COLUMN column_name;</li>
+                    </ul>
+                `;
+            }
+            exp.style.display = 'block';
+            exp.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // Bookmark functionality
+        const lessonId = "ALTER_TABLE";
+        const bookmarkBtn = document.getElementById("bookmarkBtn");
+        const unbookmarkBtn = document.getElementById("unbookmarkBtn");
+        const statusText = document.getElementById("bookmarkStatus");
+
+        function checkBookmarkStatus(retries = 3) {
+            fetch(`http://localhost:5000/bookmark-status?lessonId=${lessonId}`, {
+                credentials: 'include',
+                headers: { "Content-Type": "application/json" }
+            })
+            .then(res => {
+                if (!res.ok) throw new Error('Network response was not ok');
+                return res.json();
+            })
+            .then(data => {
+                if (data.bookmarked) {
+                    bookmarkBtn.style.display = "none";
+                    unbookmarkBtn.style.display = "inline-block";
+                    statusText.textContent = "📌 Bookmarked";
+                } else {
+                    bookmarkBtn.style.display = "inline-block";
+                    unbookmarkBtn.style.display = "none";
+                    statusText.textContent = "";
+                }
+            })
+            .catch(error => {
+                console.error('Error checking bookmark status:', error);
+                if (retries > 0) {
+                    setTimeout(() => checkBookmarkStatus(retries - 1), 1000);
+                }
+            });
+        }
+
+        bookmarkBtn.addEventListener("click", () => {
+            fetch("http://localhost:5000/bookmark", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({ lessonId: lessonId, bookmarked: true })
+            })
+            .then(res => res.json())
+            .then(() => checkBookmarkStatus());
+        });
+
+        unbookmarkBtn.addEventListener("click", () => {
+            fetch("http://localhost:5000/bookmark", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({ lessonId: lessonId, bookmarked: false })
+            })
+            .then(res => res.json())
+            .then(() => checkBookmarkStatus());
+        });
+
+        checkBookmarkStatus();
+    </script>
+</body>
+</html>

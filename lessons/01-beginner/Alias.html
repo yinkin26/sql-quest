@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en" class="pixel-art dark-theme">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Quest - SQL Aliases</title>
+    <link rel="stylesheet" href="../../stylesheets/style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <script src="../../javascripts/loadComponents.js" defer></script>
+    <script src="../../javascripts/script.js" defer></script>
+    <script src="../../javascripts/lessonTracker.js" defer></script>
+
+</head>
+<body class="pixel-art dark-theme">
+    <div id="header"></div>
+    <div class="lesson-layout">
+        <div id="sidebar"></div>
+
+        <section class="lesson-content">
+            <h2>📝 SQL Aliases</h2>
+
+            <!-- Add bookmark buttons here -->
+            <div class="bookmark-container">
+                <button id="bookmarkBtn" style="display: none;">🔖 Bookmark</button>
+                <button id="unbookmarkBtn" style="display: none;">❌ Remove Bookmark</button>
+                <span id="bookmarkStatus"></span>
+            </div>
+
+            <h3>📌 What Are Aliases in SQL?</h3>
+            <p>SQL aliases are temporary names that you can assign to tables or columns for the duration of a query. They make queries more readable and allow for easier reference, especially in complex queries.</p>
+
+            <h3>🧠 Basic Syntax for Column Alias</h3>
+            <p>Column aliases allow you to rename the columns in the result set.</p>
+            <pre><code>SELECT column_name AS alias_name FROM table_name;</code></pre>
+
+            <h3>💡 Example: Column Alias</h3>
+            <pre><code>SELECT first_name AS 'Name', email AS 'Email Address' FROM customers;</code></pre>
+
+            <h3>🧠 Basic Syntax for Table Alias</h3>
+            <p>Table aliases are used to create a shorthand reference to a table. This is especially useful when joining multiple tables.</p>
+            <pre><code>SELECT column1, column2 FROM table_name AS alias_name;</code></pre>
+
+            <h3>💡 Example: Table Alias</h3>
+            <pre><code>SELECT c.first_name, c.email FROM customers AS c;</code></pre>
+
+            <h3>🧪 Try It Yourself</h3>
+            <div class="code-block">
+                <textarea class="code-editor">SELECT name AS 'Customer Name', email AS 'Email Address' FROM customers;</textarea>
+                <button class="neon-button run-btn">Run</button>
+                <div class="query-output"></div>
+            </div>
+
+            <h3>💬 Why Use Aliases?</h3>
+            <p>Aliases are helpful for making complex queries easier to understand. They also make the results more readable, especially when working with multiple tables or columns with similar names.</p>
+
+            <h3>🌍 Real-World Use Case</h3>
+            <p>In an e-commerce platform, you may need to join a <code>products</code> table and an <code>orders</code> table. You can use aliases to simplify the query:</p>
+            <pre><code>SELECT p.product_name, o.order_date FROM products AS p JOIN orders AS o ON p.product_id = o.product_id;</code></pre>
+
+            <h3>💡 Helpful Tips</h3>
+            <ul>
+                <li>Aliases are used to improve readability and avoid confusion.</li>
+                <li>Column aliases are not required but make the output clearer.</li>
+                <li>Aliases only last for the duration of the query; they don't affect the actual table or column names in the database.</li>
+            </ul>
+
+            <h3>🧠 Summary</h3>
+            <ul>
+                <li>Aliases provide temporary names to columns and tables for easier reference in queries.</li>
+                <li>Use <code>AS</code> to define an alias for both columns and tables.</li>
+                <li>Aliases improve query readability, especially in complex queries.</li>
+            </ul>
+
+            <!-- Practice Section -->
+            <h3>🧪 Practice: Use Aliases with Multiple Tables</h3>
+            <p>Your task: Write a SQL query to join the products and orders tables. Retrieve <code>product_name</code> and <code>order_date</code>, using <code>p</code> as an alias for the products table and <code>o</code> as an alias for the orders table.</p>
+
+            <div class="editor-container">
+                <textarea class="code-editor" id="exerciseInput" placeholder="Write your SELECT query here..."></textarea>
+                <button class="neon-button" onclick="validateAliasQuery()">Submit</button>
+                <div id="exerciseFeedback" style="margin-top: 15px;"></div>
+            </div>
+
+            <!-- Mock Table for Displaying After Submit (Product Data) -->
+            <div class="mock-table" id="mockTable" style="display: none;">
+                <h4>Preview: What the table would look like when queried:</h4>
+
+                <h5>After Query (Example Result):</h5>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>product_name</th>
+                            <th>order_date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Laptop</td>
+                            <td>2024-03-01</td>
+                        </tr>
+                        <tr>
+                            <td>Smartphone</td>
+                            <td>2024-03-02</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>🎯 Quiz</h3>
+            <p><strong>Which query correctly uses an alias for the products table?</strong></p>
+            <div class="quiz">
+                <button onclick="checkAnswer(this, true)" title="Incorrect alias syntax">A) SELECT p.product_name FROM products AS p;</button>
+                <button onclick="checkAnswer(this, false)" title="Incorrect alias syntax">B) SELECT product_name FROM products AS p;</button>
+                <button onclick="checkAnswer(this, false)" title="Missing alias for table">C) SELECT product_name FROM products;</button>
+                <button onclick="checkAnswer(this, false)">D) SELECT p.product_name FROM products p;</button>
+                <p class="quiz-feedback"></p>
+                <div id="quizExplanation" class="quiz-explanation" style="display: none;"></div>
+            </div>
+        </section>
+    </div>
+
+    <div id="footer"></div>
+
+        <script>
+            // Function to validate the user's alias query
+            function validateAliasQuery() {
+                const userSQL = document.getElementById("exerciseInput").value.trim().toLowerCase().replace(/\s+/g, " ");
+            const feedback = document.getElementById("exerciseFeedback");
+
+            const expected = "select p.product_name, o.order_date from products as p join orders as o on p.product_id = o.product_id;";
+
+            if (userSQL === expected) {
+                feedback.style.color = "lightgreen";
+            feedback.innerHTML = "✅ Perfect! Your alias query is correct.";
+            document.getElementById("mockTable").style.display = "block";
+            document.getElementById("mockTable").scrollIntoView({behavior: "smooth" });
+                } else {
+                feedback.style.color = "red";
+            feedback.innerHTML = "❌ That's not quite right. Make sure you're using the correct table aliases.";
+                }
+            }
+
+
+            // Function to check the quiz answer
+            let quizCompleted = false;
+            function checkAnswer(button, isCorrect) {
+                if (quizCompleted) return;
+                
+                const feedback = button.parentElement.querySelector(".quiz-feedback");
+                const explanationBox = document.getElementById("quizExplanation");
+                const quizContainer = button.parentElement;
+
+                if (isCorrect) {
+                    // Correct answer - disable all buttons and mark as completed
+                    quizCompleted = true;
+                    const allButtons = quizContainer.querySelectorAll('button');
+                    allButtons.forEach(btn => {
+                        btn.disabled = true;
+                        if (btn === button) {
+                            btn.style.backgroundColor = '#44ff44';
+                            btn.style.boxShadow = '0 0 15px rgba(68, 255, 68, 0.5)';
+                        }
+                    });
+                    
+                    feedback.style.color = "lightgreen";
+                    feedback.innerHTML = "✅ Correct! Quiz completed!";
+                    explanationBox.innerHTML = `
+                    <p><strong>Explanation:</strong></p>
+                    <ul>
+                        <li>This is the correct syntax: <code>AS</code> can be used to alias a table.</li>
+                        <li><code>p.product_name</code> refers to the alias.</li>
+                    </ul>`;
+                } else {
+                    // Incorrect answer - disable this button only
+                    button.disabled = true;
+                    button.style.backgroundColor = '#ff4444';
+                    button.style.opacity = '0.6';
+                    button.style.cursor = 'not-allowed';
+                    
+                    feedback.style.color = "red";
+                    feedback.innerHTML = "❌ Incorrect. Try another answer!";
+                    
+                    // Add retry message if not already present
+                    let retryMsg = quizContainer.querySelector('.retry-message');
+                    if (!retryMsg) {
+                        retryMsg = document.createElement('p');
+                        retryMsg.className = 'retry-message';
+                        retryMsg.style.color = '#ffd700';
+                        retryMsg.style.fontWeight = 'bold';
+                        retryMsg.style.marginTop = '10px';
+                        retryMsg.innerHTML = '💡 Keep trying! Choose another answer.';
+                        feedback.parentNode.insertBefore(retryMsg, feedback.nextSibling);
+                    }
+                    
+                    const buttonText = button.textContent;
+                    if (buttonText.includes('SELECT product_name FROM products AS p')) {
+                        explanationBox.innerHTML = `
+                        <p><strong>Explanation:</strong></p>
+                        <ul>
+                            <li><code>AS</code> is required for creating an alias in SQL.</li>
+                        </ul>`;
+                    } else if (buttonText.includes('SELECT product_name FROM products;')) {
+                        explanationBox.innerHTML = `
+                        <p><strong>Explanation:</strong></p>
+                        <ul>
+                            <li>An alias is missing in this query.</li>
+                        </ul>`;
+                    } else if (buttonText.includes('SELECT p.product_name FROM products p')) {
+                        explanationBox.innerHTML = `
+                        <p><strong>Explanation:</strong></p>
+                        <ul>
+                            <li>While <code>products p</code> without <code>AS</code> works in many systems, it can be confusing and is not as clear as using <code>AS</code>.</li>
+                        </ul>`;
+                    }
+                }
+
+                explanationBox.style.display = "block";
+                explanationBox.scrollIntoView({behavior: "smooth", block: "center" });
+            }
+         
+            // Bookmark functionality
+            const lessonId = "Alias";
+            const bookmarkBtn = document.getElementById("bookmarkBtn");
+            const unbookmarkBtn = document.getElementById("unbookmarkBtn");
+            const statusText = document.getElementById("bookmarkStatus");
+
+            // Function to check bookmark status with retry
+            function checkBookmarkStatus(retries = 3) {
+                fetch(`http://localhost:5000/bookmark-status?lessonId=${lessonId}`, {
+                    credentials: 'include',
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                })
+                    .then(res => {
+                        if (!res.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return res.json();
+                    })
+                    .then(data => {
+                        if (data.bookmarked) {
+                            bookmarkBtn.style.display = "none";
+                            unbookmarkBtn.style.display = "inline-block";
+                            statusText.textContent = "📌 Bookmarked";
+                        } else {
+                            bookmarkBtn.style.display = "inline-block";
+                            unbookmarkBtn.style.display = "none";
+                            statusText.textContent = "";
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error checking bookmark status:', error);
+                        if (retries > 0) {
+                            setTimeout(() => checkBookmarkStatus(retries - 1), 1000);
+                        }
+                    });
+            }
+
+            // Add bookmark
+            bookmarkBtn.addEventListener("click", () => {
+                fetch("http://localhost:5000/bookmark", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    credentials: "include",
+                    body: JSON.stringify({
+                        lessonId: lessonId,
+                        bookmarked: true
+                    })
+                })
+                    .then(res => res.json())
+                    .then(() => {
+                        checkBookmarkStatus();
+                    });
+            });
+
+            // Remove bookmark
+            unbookmarkBtn.addEventListener("click", () => {
+                fetch("http://localhost:5000/bookmark", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    credentials: "include",
+                    body: JSON.stringify({
+                        lessonId: lessonId,
+                        bookmarked: false
+                    })
+                })
+                    .then(res => res.json())
+                    .then(() => {
+                        checkBookmarkStatus();
+                    });
+            });
+
+            // Check initial status when page loads
+            checkBookmarkStatus();
+        </script>
+</body>
+</html>
+        

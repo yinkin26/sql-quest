@@ -1,0 +1,274 @@
+:root {
+    --primary-neon: #00ffcc;
+    --secondary-neon: #f0f;
+    --background-dark: #0a0a1a;
+    --card-background: #111;
+    --text-primary: #00ffcc;
+    --text-secondary: #f0f;
+    --hover-glow: rgba(0, 255, 204, 0.2);
+}
+
+.profile-container {
+    max-width: 1200px;
+    width: 90%;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: var(--background-dark);
+    border: 4px dashed var(--secondary-neon);
+    border-radius: 20px;
+    box-shadow: 0 0 30px rgba(255, 0, 255, 0.3);
+    color: var(--text-primary);
+    font-family: 'Press Start 2P', monospace;
+}
+
+.profile-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: var(--card-background);
+    border: 3px solid var(--primary-neon);
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    transition: all 0.3s ease;
+}
+
+.profile-card:hover {
+    box-shadow: 0 0 20px var(--hover-glow);
+    transform: scale(1.02);
+}
+
+.profile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 1.5rem;
+}
+
+.profile-header h2 {
+    color: var(--primary-neon);
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.profile-badge-container {
+    position: relative;
+    width: 80px; /* Even smaller */
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 0;
+}
+
+.badge {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+    .badge:hover {
+        transform: scale(1.1) rotate(5deg);
+    }
+
+.badge-glow {
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    right: -1px;
+    bottom: -1px;
+    background: radial-gradient(circle, rgba(255,0,255,0.2) 0%, transparent 70%);
+    border-radius: 50%;
+    z-index: -1;
+    animation: pulse 2s infinite alternate;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(0.95);
+        opacity: 0.7;
+    }
+
+    100% {
+        transform: scale(1.05);
+        opacity: 1;
+    }
+}
+
+
+
+.profile-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    width: 100%;
+    margin-bottom: 1.5rem;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: rgba(0, 255, 204, 0.1);
+    padding: 1rem;
+    border-radius: 10px;
+    border: 1px solid var(--primary-neon);
+    transition: all 0.3s ease;
+}
+
+.stat-item:hover {
+    background-color: rgba(0, 255, 204, 0.2);
+    transform: translateY(-5px);
+}
+
+.stat-icon {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    color: var(--secondary-neon);
+    font-size: 0.8rem;
+    margin-bottom: 0.5rem;
+}
+
+.stat-value {
+    color: var(--primary-neon);
+    font-weight: bold;
+}
+
+.xp-bar-container {
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+
+.xp-bar-fill {
+    height: 20px;
+    background: linear-gradient(to right, var(--primary-neon), var(--secondary-neon));
+    transition: width 0.5s ease-in-out;
+}
+
+.progress-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+.progress-card {
+    background-color: var(--card-background);
+    border: 2px solid var(--primary-neon);
+    border-radius: 15px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.progress-card:hover {
+    box-shadow: 0 0 15px var(--hover-glow);
+}
+
+.progress-card h3 {
+    color: var(--primary-neon);
+    text-align: center;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid var(--secondary-neon);
+    padding-bottom: 0.5rem;
+}
+
+.scroll-container {
+    max-height: 300px;
+    overflow-y: auto;
+    padding-right: 1rem;
+}
+
+.progress-list {
+    list-style: none;
+    padding: 0;
+}
+
+.progress-list li {
+    background-color: rgba(0, 255, 204, 0.1);
+    border: 1px solid var(--primary-neon);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 0.8rem;
+    transition: all 0.3s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.progress-list li:hover {
+    transform: translateX(10px);
+    background-color: rgba(0, 255, 204, 0.2);
+    box-shadow: 0 0 10px var(--hover-glow);
+}
+
+.completed-lesson {
+    color: var(--primary-neon);
+}
+
+.completed-lesson:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .progress-section {
+        grid-template-columns: 1fr;
+    }
+    .profile-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .profile-container {
+        padding: 1rem;
+        width: 95%;
+    }
+    .profile-card {
+        padding: 1rem;
+    }
+    .profile-stats {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Scrollbar Styling */
+.scroll-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.scroll-container::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+}
+
+.scroll-container::-webkit-scrollbar-thumb {
+    background: var(--primary-neon);
+    border-radius: 4px;
+    box-shadow: 0 0 5px var(--primary-neon);
+}
+
+/* Loading Animation */
+.loading {
+    position: relative;
+    color: var(--secondary-neon);
+}
+
+.loading::after {
+    content: "...";
+    animation: loadingDots 1.5s infinite;
+}
+
+@keyframes loadingDots {
+    0% { content: "."; }
+    33% { content: ".."; }
+    66% { content: "..."; }
+}

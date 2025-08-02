@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en" class="pixel-art dark-theme">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Quest - SQL LIKE & Wildcards</title>
+    <link rel="stylesheet" href="stylesheets/style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <script src="javascripts/loadComponents.js" defer></script>
+    <script src="javascripts/script.js" defer></script>
+    <script src="javascripts/lessonTracker.js" defer></script>
+</head>
+<body class="pixel-art dark-theme">
+    <div id="header"></div>
+    <div class="lesson-layout">
+        <section class="lesson">
+            <div class="lesson-header">
+                <h1>🔍 SQL LIKE & Wildcards</h1>
+                <div class="bookmark-container">
+                    <button id="bookmarkBtn" class="bookmark-btn" onclick="toggleBookmark('like_wildcards')">
+                        <span class="bookmark-icon">🔖</span>
+                        <span class="bookmark-text">Bookmark</span>
+                    </button>
+                    <span id="bookmarkStatus"></span>
+                </div>
+            </div>
+
+            <h3>🤔 What is LIKE?</h3>
+            <p>The <strong>LIKE</strong> operator is a powerful SQL pattern matching tool that allows you to search for specific patterns in text data. Unlike exact matches with the equals operator (=), LIKE enables flexible searching using wildcards, making it essential for data exploration, user search functionality, and data analysis.</p>
+            
+            <p><strong>LIKE is essential for:</strong></p>
+            <ul>
+                <li><strong>Pattern Matching</strong>: Find records that match specific text patterns</li>
+                <li><strong>Flexible Searching</strong>: Search for partial matches, prefixes, suffixes, and complex patterns</li>
+                <li><strong>Data Exploration</strong>: Discover data patterns and inconsistencies</li>
+                <li><strong>User Interfaces</strong>: Implement search functionality in applications</li>
+                <li><strong>Data Validation</strong>: Find records that don't conform to expected patterns</li>
+                <li><strong>Text Analysis</strong>: Analyze text content for specific characteristics</li>
+            </ul>
+            
+            <p><strong>Wildcard Characters:</strong></p>
+            <div class="code-block">
+                <pre><code>-- % (Percent): Matches zero or more characters
+-- _ (Underscore): Matches exactly one character
+-- [] (Brackets): Matches any single character within brackets (SQL Server, Access)
+-- [^] or [!]: Matches any character NOT in brackets (SQL Server, Access)
+-- \ (Backslash): Escape character for literal wildcards</code></pre>
+            </div>
+            
+            <p><strong>Real-World Applications:</strong></p>
+            <div class="code-block">
+                <pre><code>-- E-commerce: Find products by partial name
+SELECT * FROM products WHERE product_name LIKE '%phone%';
+
+-- HR: Find employees with specific email domains
+SELECT * FROM employees WHERE email LIKE '%@company.com';
+
+-- Analytics: Find customers from specific regions
+SELECT * FROM customers WHERE city LIKE 'New %';</code></pre>
+            </div>
+
+            <h3>📝 Basic Syntax</h3>
+            <div class="code-block">
+                <pre><code>-- Basic LIKE syntax
+SELECT column1, column2
+FROM table_name
+WHERE column_name LIKE 'pattern';
+
+-- NOT LIKE syntax
+SELECT column1, column2
+FROM table_name
+WHERE column_name NOT LIKE 'pattern';
+
+-- Case sensitivity (varies by database)
+-- MySQL: LIKE is case-insensitive by default
+-- PostgreSQL: LIKE is case-sensitive, use ILIKE for case-insensitive
+-- SQL Server: Depends on collation settings</code></pre>
+            </div>
+            
+            <p><strong>Wildcard Pattern Examples:</strong></p>
+            <div class="code-block">
+                <pre><code>-- % Wildcard Examples
+'A%'     -- Starts with 'A': Apple, Amazon, Alphabet
+'%ing'   -- Ends with 'ing': Running, Swimming, Coding
+'%data%' -- Contains 'data': Database, Metadata, Big Data
+'%'      -- Matches everything (all records)
+
+-- _ Wildcard Examples
+'A_'     -- 'A' + exactly 1 character: At, An, As
+'A__'    -- 'A' + exactly 2 characters: App, Art, Age
+'_at'    -- 1 character + 'at': Cat, Bat, Hat
+'__at'   -- 2 characters + 'at': Chat, Flat, That
+
+-- Combined Wildcards
+'A_%'    -- Starts with 'A' + at least 1 more character
+'%_ing'  -- Ends with 'ing' + at least 1 character before
+'_a%'    -- Second character is 'a'</code></pre>
+            </div>
+            
+            <p><strong>Performance Considerations:</strong></p>
+            <ul>
+                <li><strong>Leading Wildcards</strong>: Patterns starting with % can't use indexes efficiently</li>
+                <li><strong>Full-Text Search</strong>: Consider full-text search for complex text queries</li>
+                <li><strong>Index Strategy</strong>: Create indexes on frequently searched columns</li>
+                <li><strong>LIMIT Results</strong>: Use LIMIT/TOP to prevent large result sets</li>
+            </ul>
+
+            <h3>🧪 Try It Yourself</h3>
+            <div class="code-block">
+                <div class="editor-container">
+                    <div class="editor-header">
+                        <span>SQL Editor</span>
+                        <button onclick="runQuery()" class="run-btn">▶ Run Query</button>
+                    </div>
+                    <textarea id="sqlEditor" placeholder="-- Try writing a LIKE query here\nSELECT name FROM customers WHERE name LIKE '%son';">SELECT name FROM customers WHERE name LIKE '%son';</textarea>
+                </div>
+                <div class="result-container">
+                    <div class="result-header">Query Result</div>
+                    <div id="queryResult" class="result-content">
+                        <p>Click "Run Query" to see results</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3>💡 Examples</h3>
+            
+            <h4>1. E-commerce Product Search</h4>
+            <div class="code-block">
+                <pre><code>-- Find all smartphone products
+SELECT 
+    product_id,
+    product_name,
+    category,
+    price,
+    brand
+FROM products
+WHERE product_name LIKE '%phone%'
+   OR product_name LIKE '%smartphone%'
+   OR product_name LIKE '%mobile%'
+ORDER BY price DESC;
+
+-- Find products from specific brands starting with 'Sam'
+SELECT product_name, brand, price
+FROM products
+WHERE brand LIKE 'Sam%'  -- Samsung, etc.
+  AND price BETWEEN 200 AND 1000
+ORDER BY brand, price;</code></pre>
+            </div>
+            
+            <h4>2. Customer Data Analysis</h4>
+            <div class="code-block">
+                <pre><code>-- Find customers with Gmail addresses
+SELECT 
+    customer_id,
+    first_name,
+    last_name,
+    email,
+    registration_date
+FROM customers
+WHERE email LIKE '%@gmail.com'
+ORDER BY registration_date DESC;
+
+-- Find customers from New York area
+SELECT 
+    customer_id,
+    CONCAT(first_name, ' ', last_name) as full_name,
+    city,
+    state,
+    phone
+FROM customers
+WHERE city LIKE 'New %'  -- New York, New Jersey, etc.
+   OR city LIKE '%New%'   -- Any city containing 'New'
+ORDER BY state, city;</code></pre>
+            </div>
+            
+            <h4>3. Employee Management System</h4>
+            <div class="code-block">
+                <pre><code>-- Find employees with specific job titles
+SELECT 
+    employee_id,
+    first_name,
+    last_name,
+    job_title,
+    department,
+    salary
+FROM employees
+WHERE job_title LIKE '%Manager%'
+   OR job_title LIKE '%Director%'
+   OR job_title LIKE '%Lead%'
+ORDER BY department, salary DESC;
+
+-- Find employees with phone numbers from specific area codes
+SELECT 
+    employee_id,
+    CONCAT(first_name, ' ', last_name) as full_name,
+    phone,
+    department
+FROM employees
+WHERE phone LIKE '(555)%'  -- Area code 555
+   OR phone LIKE '555-%'    -- Alternative format
+   OR phone LIKE '+1-555-%' -- International format
+ORDER BY department;</code></pre>
+            </div>
+            
+            <h4>4. Data Quality and Validation</h4>
+            <div class="code-block">
+                <pre><code>-- Find potentially invalid email addresses
+SELECT 
+    customer_id,
+    email,
+    registration_date
+FROM customers
+WHERE email NOT LIKE '%@%.%'  -- Missing @ or domain
+   OR email LIKE '%..%'        -- Double dots
+   OR email LIKE '.%'          -- Starts with dot
+   OR email LIKE '%.'          -- Ends with dot
+   OR email LIKE '% %'         -- Contains spaces
+ORDER BY registration_date DESC;
+
+-- Find products with inconsistent naming patterns
+SELECT 
+    product_id,
+    product_name,
+    category
+FROM products
+WHERE product_name LIKE '%  %'  -- Double spaces
+   OR product_name LIKE ' %'    -- Leading space
+   OR product_name LIKE '% '    -- Trailing space
+ORDER BY category, product_name;</code></pre>
+            </div>
+            
+            <h4>5. Advanced Pattern Matching</h4>
+            <div class="code-block">
+                <pre><code>-- Find products with model numbers (specific patterns)
+SELECT 
+    product_id,
+    product_name,
+    model_number,
+    category
+FROM products
+WHERE model_number LIKE '[A-Z][A-Z][0-9][0-9][0-9]'  -- Two letters + three digits
+   OR model_number LIKE '[A-Z]_[0-9]%'                -- Letter + any char + digit + more
+ORDER BY category, model_number;
+
+-- Complex search with multiple conditions
+SELECT 
+    o.order_id,
+    c.customer_name,
+    p.product_name,
+    o.order_date
+FROM orders o
+JOIN customers c ON o.customer_id = c.customer_id
+JOIN order_items oi ON o.order_id = oi.order_id
+JOIN products p ON oi.product_id = p.product_id
+WHERE (c.customer_name LIKE '%John%' OR c.customer_name LIKE '%Jane%')
+  AND p.product_name LIKE '%Pro%'
+  AND o.order_date >= '2024-01-01'
+ORDER BY o.order_date DESC;</code></pre>
+            </div>
+            
+            <h4>6. Text Analysis and Reporting</h4>
+            <div class="code-block">
+                <pre><code>-- Analyze product names by length and patterns
+SELECT 
+    CASE 
+        WHEN product_name LIKE '% %' THEN 'Multi-word'
+        ELSE 'Single-word'
+    END as name_type,
+    CASE 
+        WHEN LENGTH(product_name) <= 10 THEN 'Short'
+        WHEN LENGTH(product_name) <= 20 THEN 'Medium'
+        ELSE 'Long'
+    END as name_length,
+    COUNT(*) as product_count,
+    AVG(price) as avg_price
+FROM products
+GROUP BY 
+    CASE 
+        WHEN product_name LIKE '% %' THEN 'Multi-word'
+        ELSE 'Single-word'
+    END,
+    CASE 
+        WHEN LENGTH(product_name) <= 10 THEN 'Short'
+        WHEN LENGTH(product_name) <= 20 THEN 'Medium'
+        ELSE 'Long'
+    END
+ORDER BY name_type, name_length;</code></pre>
+            </div>
+
+            <h3>💡 Helpful Tips</h3>
+            <ul>
+                <li><strong>Case Sensitivity</strong>: Be aware of your database's case sensitivity rules for LIKE operations</li>
+                <li><strong>Escape Characters</strong>: Use backslash (\) to search for literal % or _ characters</li>
+                <li><strong>Performance Impact</strong>: Leading wildcards (%) prevent index usage - avoid when possible</li>
+                <li><strong>Alternative Solutions</strong>: Consider full-text search for complex text queries</li>
+                <li><strong>NULL Values</strong>: LIKE doesn't match NULL values - use IS NULL separately</li>
+                <li><strong>Unicode Support</strong>: Modern databases support Unicode patterns for international text</li>
+                <li><strong>Regular Expressions</strong>: Some databases offer REGEXP/RLIKE for more complex patterns</li>
+                <li><strong>Indexing Strategy</strong>: Create partial indexes or use full-text indexes for better performance</li>
+                <li><strong>Data Validation</strong>: Use LIKE patterns to validate data formats (emails, phone numbers)</li>
+                <li><strong>Combine with Functions</strong>: Use with UPPER(), LOWER(), TRIM() for more flexible matching</li>
+                <li><strong>Multiple Patterns</strong>: Use OR conditions or IN with multiple LIKE patterns</li>
+                <li><strong>Negation</strong>: NOT LIKE is useful for excluding specific patterns</li>
+            </ul>
+
+            <h3>🧠 Summary</h3>
+            <ul>
+                <li><strong>Flexibility</strong>: LIKE provides powerful pattern matching capabilities for text data</li>
+                <li><strong>Wildcards</strong>: % matches any number of characters, _ matches exactly one character</li>
+                <li><strong>Applications</strong>: Essential for search functionality, data validation, and text analysis</li>
+                <li><strong>Performance</strong>: Be mindful of leading wildcards and consider indexing strategies</li>
+                <li><strong>Versatility</strong>: Combine with other SQL features for complex data analysis and reporting</li>
+                <li><strong>Best Practices</strong>: Use appropriate patterns, consider case sensitivity, and optimize for performance</li>
+            </ul>
+
+            <h3>🧪 Practice: Find Customers with 'son' in Their Name</h3>
+            <div class="mock-table" id="mockTable" style="display: none;">
+                <h4>Preview: What the table would look like when queried:</h4>
+                <h5>After Query (Example Result):</h5>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Jackson</td>
+                        </tr>
+                        <tr>
+                            <td>Emerson</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>🎯 Quiz</h3>
+            <p><strong>Which pattern matches any string ending with 'son'?</strong></p>
+            <div class="quiz">
+                <button onclick="checkAnswer(this, false)">A) 'son%'</button>
+                <button onclick="checkAnswer(this, true)">B) '%son'</button>
+                <button onclick="checkAnswer(this, false)">C) '%son%'</button>
+                <button onclick="checkAnswer(this, false)">D) '_son'</button>
+                <p class="quiz-feedback"></p>
+                <div id="quizExplanation" class="quiz-explanation" style="display: none;"></div>
+            </div>
+        </section>
+    </div>
+    <div id="footer"></div>
+</body>
+</html>

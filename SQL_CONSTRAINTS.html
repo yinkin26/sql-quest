@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en" class="pixel-art dark-theme">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Quest - SQL Constraints Overview</title>
+    <link rel="stylesheet" href="stylesheets/style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <script src="javascripts/loadComponents.js" defer></script>
+    <script src="javascripts/script.js" defer></script>
+    <script src="javascripts/lessonTracker.js" defer></script>
+</head>
+<body class="pixel-art dark-theme">
+    <div id="header"></div>
+    <div class="lesson-layout">
+        <div id="sidebar"></div>
+
+        <section class="lesson-content">
+            <h2>🛡️ SQL Constraints Overview</h2>
+
+            <!-- Bookmark buttons -->
+            <div class="bookmark-container">
+                <button id="bookmarkBtn" style="display: none;">🔖 Bookmark</button>
+                <button id="unbookmarkBtn" style="display: none;">❌ Remove Bookmark</button>
+                <span id="bookmarkStatus"></span>
+            </div>
+
+            <div class="callout-box">
+                <p>🛡️ Master the guardians of data integrity! Constraints are your database's security system.</p>
+            </div>
+
+            <h3>📌 What are SQL Constraints?</h3>
+            <p>SQL <code class="tooltip" title="Rules that enforce data integrity">constraints</code> are rules applied to table columns to enforce data integrity and ensure the accuracy and reliability of data in the database. Think of them as 🚦 traffic rules for your data - they prevent invalid data from entering your tables and maintain consistency across your database.</p>
+
+            <h3>🎯 Why Use Constraints?</h3>
+            <ul>
+                <li>🛡️ <strong>Data Integrity</strong> - Ensure data follows business rules</li>
+                <li>🚫 <strong>Prevent Invalid Data</strong> - Stop bad data before it enters the database</li>
+                <li>🔗 <strong>Maintain Relationships</strong> - Keep related tables synchronized</li>
+                <li>⚡ <strong>Improve Performance</strong> - Some constraints create indexes automatically</li>
+                <li>📋 <strong>Document Business Rules</strong> - Constraints serve as living documentation</li>
+            </ul>
+
+            <h3>🗂️ Types of SQL Constraints</h3>
+
+            <div class="constraint-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; margin: 20px 0;">
+                
+                <div class="constraint-card" style="background: rgba(26, 32, 44, 0.8); border: 2px solid #4a5568; border-radius: 8px; padding: 15px;">
+                    <h4 style="color: #00ffff; margin-top: 0;">🔑 PRIMARY KEY</h4>
+                    <p style="color: #e2e8f0; font-size: 0.9em;">Uniquely identifies each row in a table. Only one per table.</p>
+                    <pre style="background: rgba(0, 0, 0, 0.4); padding: 8px; border-radius: 4px; font-size: 0.8em;"><code>id INT PRIMARY KEY</code></pre>
+                </div>
+
+                <div class="constraint-card" style="background: rgba(26, 32, 44, 0.8); border: 2px solid #4a5568; border-radius: 8px; padding: 15px;">
+                    <h4 style="color: #ffd700; margin-top: 0;">🔗 FOREIGN KEY</h4>
+                    <p style="color: #e2e8f0; font-size: 0.9em;">Links two tables together, ensuring referential integrity.</p>
+                    <pre style="background: rgba(0, 0, 0, 0.4); padding: 8px; border-radius: 4px; font-size: 0.8em;"><code>FOREIGN KEY (dept_id) REFERENCES departments(id)</code></pre>
+                </div>
+
+                <div class="constraint-card" style="background: rgba(26, 32, 44, 0.8); border: 2px solid #4a5568; border-radius: 8px; padding: 15px;">
+                    <h4 style="color: #98fb98; margin-top: 0;">⭐ UNIQUE</h4>
+                    <p style="color: #e2e8f0; font-size: 0.9em;">Ensures all values in a column are different.</p>
+                    <pre style="background: rgba(0, 0, 0, 0.4); padding: 8px; border-radius: 4px; font-size: 0.8em;"><code>email VARCHAR(100) UNIQUE</code></pre>
+                </div>
+
+                <div class="constraint-card" style="background: rgba(26, 32, 44, 0.8); border: 2px solid #4a5568; border-radius: 8px; padding: 15px;">
+                    <h4 style="color: #ff6b6b; margin-top: 0;">🚫 NOT NULL</h4>
+                    <p style="color: #e2e8f0; font-size: 0.9em;">Prevents empty values in a column.</p>
+                    <pre style="background: rgba(0, 0, 0, 0.4); padding: 8px; border-radius: 4px; font-size: 0.8em;"><code>name VARCHAR(50) NOT NULL</code></pre>
+                </div>
+
+                <div class="constraint-card" style="background: rgba(26, 32, 44, 0.8); border: 2px solid #4a5568; border-radius: 8px; padding: 15px;">
+                    <h4 style="color: #dda0dd; margin-top: 0;">✅ CHECK</h4>
+                    <p style="color: #e2e8f0; font-size: 0.9em;">Validates data against a specific condition.</p>
+                    <pre style="background: rgba(0, 0, 0, 0.4); padding: 8px; border-radius: 4px; font-size: 0.8em;"><code>CHECK (age >= 18)</code></pre>
+                </div>
+
+                <div class="constraint-card" style="background: rgba(26, 32, 44, 0.8); border: 2px solid #4a5568; border-radius: 8px; padding: 15px;">
+                    <h4 style="color: #ffa500; margin-top: 0;">🎯 DEFAULT</h4>
+                    <p style="color: #e2e8f0; font-size: 0.9em;">Provides a default value when none is specified.</p>
+                    <pre style="background: rgba(0, 0, 0, 0.4); padding: 8px; border-radius: 4px; font-size: 0.8em;"><code>status VARCHAR(20) DEFAULT 'active'</code></pre>
+                </div>
+
+            </div>
+
+
+
+            <h3>📊 Mock Table: users (With Constraints)</h3>
+            <div class="mock-table">
+                <h4>Table Structure with Constraints</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Column</th>
+                            <th>Data Type</th>
+                            <th>Constraints</th>
+                            <th>Purpose</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>id</td>
+                            <td>INT</td>
+                            <td>PRIMARY KEY, AUTO_INCREMENT</td>
+                            <td>🔑 Unique identifier</td>
+                        </tr>
+                        <tr>
+                            <td>username</td>
+                            <td>VARCHAR(50)</td>
+                            <td>UNIQUE, NOT NULL</td>
+                            <td>⭐ Unique user identifier</td>
+                        </tr>
+                        <tr>
+                            <td>email</td>
+                            <td>VARCHAR(100)</td>
+                            <td>UNIQUE, NOT NULL</td>
+                            <td>📧 Contact information</td>
+                        </tr>
+                        <tr>
+                            <td>age</td>
+                            <td>INT</td>
+                            <td>CHECK (age >= 13)</td>
+                            <td>✅ Age validation</td>
+                        </tr>
+                        <tr>
+                            <td>status</td>
+                            <td>VARCHAR(20)</td>
+                            <td>DEFAULT 'active'</td>
+                            <td>🎯 Account status</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>🔧 Adding Constraints to Existing Tables</h3>
+            <p>You can add constraints to existing tables using ALTER TABLE:</p>
+            <pre><code>-- Add a primary key
+ALTER TABLE <span style="color: #00ffff;">table_name</span>
+ADD CONSTRAINT <span style="color: #98fb98;">pk_id</span> PRIMARY KEY (<span style="color: #ffd700;">id</span>);
+
+-- Add a foreign key
+ALTER TABLE <span style="color: #00ffff;">orders</span>
+ADD CONSTRAINT <span style="color: #98fb98;">fk_customer</span>
+FOREIGN KEY (<span style="color: #ffd700;">customer_id</span>) REFERENCES <span style="color: #00ffff;">customers</span>(<span style="color: #ffd700;">id</span>);
+
+-- Add a check constraint
+ALTER TABLE <span style="color: #00ffff;">products</span>
+ADD CONSTRAINT <span style="color: #98fb98;">chk_price</span>
+CHECK (<span style="color: #ffd700;">price</span> > 0);</code></pre>
+
+            <h3>📋 Constraint Examples Showcase</h3>
+            <button class="neon-button" onclick="showConstraintExamples()">Show Constraint Examples</button>
+            <div id="constraintExamplesOutput" class="query-output" style="margin-top: 10px;"></div>
+
+            <h3>🌍 Real-World Constraint Scenarios</h3>
+            
+            <h4>🛒 E-commerce Database</h4>
+            <pre><code>-- Products table with business rules
+CREATE TABLE products (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    sku VARCHAR(50) UNIQUE NOT NULL,           -- 📦 Unique product code
+    name VARCHAR(200) NOT NULL,                -- 📝 Required product name
+    price DECIMAL(10,2) CHECK (price > 0),     -- 💰 Price must be positive
+    stock_quantity INT DEFAULT 0,              -- 📊 Default stock level
+    category_id INT,                           -- 🗂️ Link to categories
+    is_active BOOLEAN DEFAULT TRUE,            -- 🎯 Product status
+    FOREIGN KEY (category_id) REFERENCES categories(id)
+);</code></pre>
+
+            <h4>👥 User Management System</h4>
+            <pre><code>-- Users table with validation rules
+CREATE TABLE users (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(50) UNIQUE NOT NULL,      -- ⭐ Unique username
+    email VARCHAR(100) UNIQUE NOT NULL,        -- 📧 Unique email
+    password_hash VARCHAR(255) NOT NULL,       -- 🔒 Required password
+    age INT CHECK (age >= 13 AND age <= 120),  -- ✅ Age validation
+    role VARCHAR(20) DEFAULT 'user',           -- 👤 Default role
+    is_verified BOOLEAN DEFAULT FALSE,         -- ✅ Email verification
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);</code></pre>
+
+            <h3>⚠️ Constraint Considerations</h3>
+            <div style="background: rgba(255, 193, 7, 0.2); border: 2px solid #ffc107; border-radius: 8px; padding: 15px; margin: 15px 0;">
+                <h4 style="color: #ffc107; margin-top: 0;">🚨 Important Notes</h4>
+                <ul style="color: #fff3cd;">
+                    <li>⚡ <strong>Performance Impact</strong> - Constraints add validation overhead</li>
+                    <li>🔒 <strong>Data Migration</strong> - Existing data must satisfy new constraints</li>
+                    <li>🚫 <strong>Constraint Violations</strong> - Invalid data insertions will be rejected</li>
+                    <li>🔗 <strong>Cascading Effects</strong> - Foreign key constraints can prevent deletions</li>
+                    <li>📝 <strong>Naming Conventions</strong> - Use descriptive constraint names</li>
+                </ul>
+            </div>
+
+            <h3>💡 Best Practices</h3>
+            <ul>
+                <li>🎯 <strong>Plan constraints early</strong> - Design them with your table structure</li>
+                <li>📝 <strong>Use descriptive names</strong> - pk_users_id, fk_orders_customer_id</li>
+                <li>🧪 <strong>Test with sample data</strong> - Ensure constraints work as expected</li>
+                <li>📚 <strong>Document business rules</strong> - Constraints should reflect real requirements</li>
+                <li>⚡ <strong>Consider performance</strong> - Too many constraints can slow operations</li>
+                <li>🔄 <strong>Review regularly</strong> - Business rules change over time</li>
+            </ul>
+
+            <h3>🧠 Summary</h3>
+            <ul>
+                <li>🛡️ <strong>Constraints enforce data integrity</strong> and business rules</li>
+                <li>🔑 <strong>Primary keys</strong> uniquely identify rows</li>
+                <li>🔗 <strong>Foreign keys</strong> maintain relationships between tables</li>
+                <li>⭐ <strong>Unique constraints</strong> prevent duplicate values</li>
+                <li>🚫 <strong>NOT NULL</strong> ensures required data is provided</li>
+                <li>✅ <strong>CHECK constraints</strong> validate data against conditions</li>
+                <li>🎯 <strong>DEFAULT values</strong> provide fallback data</li>
+            </ul>
+
+            <h3>🧪 Practice</h3>
+            <p>📚 Create a constraint that ensures a column called <code>"price"</code> is always greater than 0. Use a CHECK constraint.</p>
+            <div class="editor-container">
+                <textarea class="code-editor" id="exerciseInput" placeholder="Write your CHECK constraint here..."></textarea>
+                <button class="neon-button" onclick="validateExercise()">Submit</button>
+                <div id="exerciseFeedback" style="margin-top:15px;"></div>
+            </div>
+
+            <h3>🎯 Quiz</h3>
+            <p><strong>Which constraint would you use to ensure no duplicate values in a column?</strong></p>
+            <div class="quiz">
+                <button onclick="checkAnswer(this,'A')">A) NOT NULL</button>
+                <button onclick="checkAnswer(this,'B')">B) UNIQUE</button>
+                <button onclick="checkAnswer(this,'C')">C) CHECK</button>
+                <button onclick="checkAnswer(this,'D')">D) DEFAULT</button>
+                <p class="quiz-feedback"></p>
+                <div id="quizExplanation" class="quiz-explanation" style="display:none;"></div>
+            </div>
+        </section>
+    </div>
+
+    <div id="footer"></div>
+
+    <script>
+        function runConstraintDemo() {
+            const textarea = document.querySelector('.code-editor');
+            const output = document.querySelector('.query-output');
+            const query = textarea.value.trim().toLowerCase();
+            
+            if (query.includes('create table')) {
+                const constraints = [];
+                if (query.includes('primary key')) constraints.push('🔑 PRIMARY KEY');
+                if (query.includes('unique')) constraints.push('⭐ UNIQUE');
+                if (query.includes('not null')) constraints.push('🚫 NOT NULL');
+                if (query.includes('check')) constraints.push('✅ CHECK');
+                if (query.includes('default')) constraints.push('🎯 DEFAULT');
+                if (query.includes('foreign key')) constraints.push('🔗 FOREIGN KEY');
+                
+                output.innerHTML = `
+                    <div style='background: rgba(40, 167, 69, 0.2); border: 1px solid #28a745; border-radius: 8px; padding: 15px;'>
+                        <p style='color: #28a745; margin: 0;'>✅ <strong>Table created successfully with constraints!</strong></p>
+                        <p style='color: #d4edda; margin: 8px 0 0 0;'>🛡️ <strong>Applied Constraints:</strong></p>
+                        <ul style='color: #d4edda; margin: 5px 0 0 20px;'>
+                            ${constraints.map(c => `<li>${c}</li>`).join('')}
+                        </ul>
+                        <p style='color: #a0a0a0; margin: 8px 0 0 0; font-size: 0.8em;'>💡 Your data is now protected by these integrity rules!</p>
+                    </div>
+                `;
+            } else {
+                output.innerHTML = `<p style='color: red;'>❌ Invalid query. Try using CREATE TABLE with constraints.</p>`;
+            }
+        }
+        
+        function showConstraintExamples() {
+            const output = document.getElementById('constraintExamplesOutput');
+            const examples = [
+                {
+                    title: '🔑 Primary Key Example',
+                    sql: 'CREATE TABLE customers (\n    id INT PRIMARY KEY AUTO_INCREMENT,\n    name VARCHAR(100) NOT NULL\n);',
+                    description: 'Unique identifier for each customer'
+                },
+                {
+                    title: '🔗 Foreign Key Example',
+                    sql: 'CREATE TABLE orders (\n    id INT PRIMARY KEY,\n    customer_id INT,\n    FOREIGN KEY (customer_id) REFERENCES customers(id)\n);',
+                    description: 'Links orders to customers'
+                },
+                {
+                    title: '✅ Check Constraint Example',
+                    sql: 'CREATE TABLE employees (\n    id INT PRIMARY KEY,\n    salary DECIMAL(10,2) CHECK (salary > 0),\n    age INT CHECK (age BETWEEN 18 AND 65)\n);',
+                    description: 'Validates salary and age ranges'
+                },
+                {
+                    title: '⭐ Unique Constraint Example',
+                    sql: 'CREATE TABLE users (\n    id INT PRIMARY KEY,\n    email VARCHAR(100) UNIQUE,\n    username VARCHAR(50) UNIQUE\n);',
+                    description: 'Prevents duplicate emails and usernames'
+                }
+            ];
+            
+            let html = '<div style="background: rgba(26, 32, 44, 0.8); border: 1px solid #4a5568; border-radius: 8px; padding: 15px; margin-top: 10px;">';
+            html += '<h4 style="color: #00ffff; margin-top: 0;">🛡️ Constraint Examples</h4>';
+            
+            examples.forEach((example, index) => {
+                html += `
+                    <div style="margin-bottom: 15px; padding: 10px; background: rgba(45, 55, 72, 0.6); border-radius: 6px;">
+                        <h5 style="color: #ffd700; margin: 0 0 8px 0;">${example.title}</h5>
+                        <pre style="background: rgba(0, 0, 0, 0.4); padding: 8px; border-radius: 4px; margin: 5px 0; overflow-x: auto; white-space: pre-wrap;"><code style="color: #e2e8f0;">${example.sql}</code></pre>
+                        <p style="color: #a0aec0; margin: 5px 0 0 0; font-size: 0.9em;">${example.description}</p>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            output.innerHTML = html;
+        }
+        
+        function validateExercise() {
+            const sql = document.getElementById("exerciseInput").value.trim().toLowerCase();
+            const feedback = document.getElementById("exerciseFeedback");
+            
+            if (sql.includes("check") && sql.includes("price") && sql.includes("> 0")) {
+                feedback.style.color = "lightgreen";
+                feedback.textContent = "✅ Perfect! You correctly created a CHECK constraint for price validation.";
+            } else if (sql.includes("check") && sql.includes("price")) {
+                feedback.style.color = "orange";
+                feedback.textContent = "⚠️ Good use of CHECK constraint! Make sure to include the condition 'price > 0'.";
+            } else if (sql.includes("check")) {
+                feedback.style.color = "orange";
+                feedback.textContent = "⚠️ Good use of CHECK constraint, but make sure to validate the 'price' column.";
+            } else {
+                feedback.style.color = "red";
+                feedback.textContent = "❌ Try using: CHECK (price > 0)";
+            }
+        }
+        
+        function checkAnswer(btn, opt) {
+            const fb = btn.parentElement.querySelector('.quiz-feedback');
+            const exp = document.getElementById('quizExplanation');
+            const buttons = btn.parentElement.querySelectorAll('button');
+            
+            // Disable all buttons after selection
+            buttons.forEach(b => b.disabled = true);
+            
+            if (opt === 'B') {
+                fb.style.color = 'lightgreen';
+                fb.textContent = '✅ Correct! UNIQUE constraint prevents duplicate values in a column.';
+                btn.style.backgroundColor = '#28a745';
+                exp.innerHTML = `
+                    <p><strong>🎯 Explanation:</strong></p>
+                    <ul>
+                        <li>⭐ <code>UNIQUE</code> constraint ensures all values in a column are different.</li>
+                        <li>🚫 It prevents duplicate entries while allowing NULL values (unless combined with NOT NULL).</li>
+                        <li>📧 Commonly used for email addresses, usernames, and product codes.</li>
+                        <li>🔍 Automatically creates an index for faster lookups.</li>
+                    </ul>
+                `;
+            } else {
+                fb.style.color = 'red';
+                fb.textContent = '❌ Incorrect. The correct answer is B.';
+                btn.style.backgroundColor = '#dc3545';
+                // Highlight correct answer
+                buttons[1].style.backgroundColor = '#28a745';
+                exp.innerHTML = `
+                    <p><strong>❌ Explanation:</strong></p>
+                    <ul>
+                        <li>🚫 NOT NULL prevents empty values, not duplicates.</li>
+                        <li>✅ CHECK validates data against conditions.</li>
+                        <li>🎯 DEFAULT provides fallback values.</li>
+                        <li>⭐ Only UNIQUE prevents duplicate values!</li>
+                    </ul>
+                `;
+            }
+            exp.style.display = 'block';
+            exp.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // Bookmark functionality
+        const lessonId = "SQL_CONSTRAINTS";
+        const bookmarkBtn = document.getElementById("bookmarkBtn");
+        const unbookmarkBtn = document.getElementById("unbookmarkBtn");
+        const statusText = document.getElementById("bookmarkStatus");
+
+        function checkBookmarkStatus(retries = 3) {
+            fetch(`http://localhost:5000/bookmark-status?lessonId=${lessonId}`, {
+                credentials: 'include',
+                headers: { "Content-Type": "application/json" }
+            })
+            .then(res => {
+                if (!res.ok) throw new Error('Network response was not ok');
+                return res.json();
+            })
+            .then(data => {
+                if (data.bookmarked) {
+                    bookmarkBtn.style.display = "none";
+                    unbookmarkBtn.style.display = "inline-block";
+                    statusText.textContent = "📌 Bookmarked";
+                } else {
+                    bookmarkBtn.style.display = "inline-block";
+                    unbookmarkBtn.style.display = "none";
+                    statusText.textContent = "";
+                }
+            })
+            .catch(error => {
+                console.error('Error checking bookmark status:', error);
+                if (retries > 0) {
+                    setTimeout(() => checkBookmarkStatus(retries - 1), 1000);
+                }
+            });
+        }
+
+        bookmarkBtn.addEventListener("click", () => {
+            fetch("http://localhost:5000/bookmark", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({ lessonId: lessonId, bookmarked: true })
+            })
+            .then(res => res.json())
+            .then(() => checkBookmarkStatus());
+        });
+
+        unbookmarkBtn.addEventListener("click", () => {
+            fetch("http://localhost:5000/bookmark", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({ lessonId: lessonId, bookmarked: false })
+            })
+            .then(res => res.json())
+            .then(() => checkBookmarkStatus());
+        });
+
+        checkBookmarkStatus();
+    </script>
+</body>
+</html>

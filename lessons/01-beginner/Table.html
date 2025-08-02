@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en" class="pixel-art dark-theme">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SQL Quest - SQL CREATE TABLE</title>
+    <link rel="stylesheet" href="../../stylesheets/style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <script src="../../javascripts/loadComponents.js" defer></script>
+    <script src="../../javascripts/script.js" defer></script>
+    <script src="../../javascripts/lessonTracker.js" defer></script>
+
+</head>
+<body class="pixel-art dark-theme">
+    <div id="header"></div>
+    <div class="lesson-layout">
+        <div id="sidebar"></div>
+
+        <section class="lesson-content">
+            <h2>🛠️ SQL CREATE TABLE</h2>
+
+            <!-- Add bookmark buttons -->
+            <div class="bookmark-container">
+                <button id="bookmarkBtn" style="display: none;">🔖 Bookmark</button>
+                <button id="unbookmarkBtn" style="display: none;">❌ Remove Bookmark</button>
+                <span id="bookmarkStatus"></span>
+            </div>
+
+            <h3>📌 What is the CREATE TABLE Statement?</h3>
+            <p>The <code class="tooltip" title="Used to create a new table in a database">CREATE TABLE</code> statement is used to create a new table in a database. You define the table structure, including column names and data types, so the database knows how to store the data.</p>
+
+            <h3>🧠 Basic Syntax</h3>
+            <pre><code>CREATE TABLE table_name (
+  column1 datatype,
+  column2 datatype,
+  column3 datatype
+);</code></pre>
+
+            <h3>💡 Example (User Table)</h3>
+            <pre><code>CREATE TABLE users (
+  user_id INT PRIMARY KEY,
+  username VARCHAR(100),
+  email VARCHAR(100),
+  created_at DATETIME
+);</code></pre>
+
+            <!-- Try a Query Section (User Table) -->
+            <h3>🧪 Try a Query (User Table)</h3>
+            <p><strong>Note:</strong> Semicolon <code>;</code> is optional in many systems but required when running multiple statements.</p>
+            <p>✍️ Edit the SQL query below and press "Run" to see the result. This feature will display mock data from the table after the `CREATE TABLE` query runs.</p>
+            <div class="code-block">
+                <textarea class="code-editor">CREATE TABLE users (
+  user_id INT PRIMARY KEY,
+  username VARCHAR(100),
+  email VARCHAR(100),
+  created_at DATETIME
+);</textarea>
+                <button class="neon-button" onclick="displayMockTable('user')">View Mock Table</button>
+                <div class="query-output" id="mockTableOutput"></div>
+            </div>
+
+            <h3>🌍 Real-World Use Case</h3>
+            <p>SQL CREATE TABLE is commonly used in web applications to structure data. For example, an e-commerce platform might use the CREATE TABLE statement to define a <code>products</code> table with columns like <code>product_name</code>, <code>price</code>, and <code>quantity</code>.</p>
+            <pre><code>CREATE TABLE products (
+  product_id INT PRIMARY KEY,
+  product_name VARCHAR(100),
+  price DECIMAL(8, 2),
+  quantity INT
+);</code></pre>
+
+            <h3>💡 Helpful Tips</h3>
+            <ul>
+                <li>Use <code>PRIMARY KEY</code> to uniquely identify records in the table.</li>
+                <li><code>VARCHAR</code> is great for storing text, while <code>INT</code> and <code>DECIMAL</code> are ideal for numeric data.</li>
+                <li>Don’t forget to specify column data types accurately based on the type of data you intend to store.</li>
+            </ul>
+
+            <h3>🧠 Summary</h3>
+            <ul>
+                <li><code>CREATE TABLE</code> is used to create a new table in the database.</li>
+                <li>Column names and data types are defined to specify the structure of the table.</li>
+                <li><code>PRIMARY KEY</code> ensures that each row in the table is unique.</li>
+            </ul>
+
+            <!-- Practice Section (Product Table) -->
+            <h3>🧪 Practice: Create the Products Table</h3>
+            <p>Write a <code>CREATE TABLE</code> statement to create the <code>products</code> table with:</p>
+            <ul>
+                <li><code>product_id</code> (INT PRIMARY KEY)</li>
+                <li><code>product_name</code> (VARCHAR(100))</li>
+                <li><code>price</code> (DECIMAL(8,2))</li>
+                <li><code>release_date</code> (DATE)</li>
+            </ul>
+
+            <div class="editor-container">
+                <textarea class="code-editor" id="exerciseInput" placeholder="Write your CREATE TABLE query here..."></textarea>
+                <button class="neon-button" onclick="validateCreateTable()">Submit</button>
+                <div id="exerciseFeedback" style="margin-top: 15px;"></div>
+            </div>
+
+            <!-- Mock Table for Displaying After Submit (Product Data) -->
+            <div class="mock-table" id="mockTable" style="display: none;">
+                <h4>Preview: What the table would look like when created:</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>product_id</th>
+                            <th>product_name</th>
+                            <th>price</th>
+                            <th>release_date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>Laptop</td>
+                            <td>999.99</td>
+                            <td>2024-05-01</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Smartphone</td>
+                            <td>799.49</td>
+                            <td>2024-06-15</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>Headphones</td>
+                            <td>120.99</td>
+                            <td>2024-07-25</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>🎯 Quiz</h3>
+            <p><strong>What does the <code>CREATE TABLE</code> statement do in SQL?</strong></p>
+            <div class="quiz">
+                <button onclick="checkAnswer(this, false)">A) Deletes a table</button>
+                <button onclick="checkAnswer(this, true)">B) Creates a new table</button>
+                <button onclick="checkAnswer(this, false)">C) Updates a table</button>
+                <button onclick="checkAnswer(this, false)">D) Selects data from a table</button>
+                <p class="quiz-feedback"></p>
+                <div id="quizExplanation" class="quiz-explanation neon-box" style="display: none;"></div>
+            </div>
+        </section>
+    </div>
+
+    <div id="footer"></div>
+
+    <script>
+        // Function to validate the user's CREATE TABLE query
+        function validateCreateTable() {
+            const userSQL = document.getElementById("exerciseInput").value.trim().toLowerCase().replace(/\s+/g, " ");
+            const feedback = document.getElementById("exerciseFeedback");
+
+            const expected =
+                "create table products ( product_id int primary key, product_name varchar(100), price decimal(8, 2), release_date date );";
+
+            if (userSQL === expected) {
+                feedback.style.color = "lightgreen";
+                feedback.innerHTML = "✅ Perfect! Your CREATE TABLE syntax is correct.";
+                // Show the mock table after a correct submission
+                document.getElementById("mockTable").style.display = "block";
+                // Scroll the mock table into view
+                document.getElementById("mockTable").scrollIntoView({ behavior: "smooth" });
+            } else if (userSQL.includes("create table") && userSQL.includes("products")) {
+                feedback.style.color = "orange";
+                feedback.innerHTML = "⚠️ You're close! Double-check the order of columns, spacing, and value formats.";
+            } else {
+                feedback.style.color = "red";
+                feedback.innerHTML = "❌ That's not quite right. Make sure you're creating the `products` table with the correct columns.";
+            }
+        }
+
+        // Function to display the mock table
+        function displayMockTable() {
+            const output = document.getElementById("mockTableOutput");
+            output.innerHTML = `
+                            <table>
+                                <caption>Mock Table: Users</caption>
+                                <thead>
+                                    <tr>
+                                        <th>user_id</th>
+                                        <th>username</th>
+                                        <th>email</th>
+                                        <th>created_at</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>john_doe</td>
+                                        <td>john@example.com</td>
+                                        <td>2024-05-01 10:30:00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>jane_smith</td>
+                                        <td>jane@example.com</td>
+                                        <td>2024-06-15 11:45:00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td>alice_wong</td>
+                                        <td>alice@example.com</td>
+                                        <td>2024-07-20 14:00:00</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        `;
+        }
+
+        let quizCompleted = false;
+        
+        // Function to check the quiz answer
+        function checkAnswer(button, isCorrect) {
+            // If quiz is already completed, don't allow further clicks
+            if (quizCompleted) {
+                return;
+            }
+
+            const feedback = button.parentElement.querySelector(".quiz-feedback");
+            const quizContainer = button.parentElement;
+
+            let explanationBox = document.getElementById("quizExplanation");
+            if (!explanationBox) {
+                explanationBox = document.createElement("div");
+                explanationBox.id = "quizExplanation";
+                explanationBox.className = "quiz-explanation";
+                const lessonSection = button.closest(".lesson-content");
+                lessonSection.appendChild(explanationBox);
+            }
+
+            feedback.innerHTML = "";
+            explanationBox.style.display = "block";
+
+            if (isCorrect) {
+                // Correct answer - disable all buttons and mark as completed
+                quizCompleted = true;
+                const allButtons = quizContainer.querySelectorAll('button');
+                allButtons.forEach(btn => {
+                    btn.disabled = true;
+                    if (btn === button) {
+                        btn.style.backgroundColor = '#44ff44';
+                        btn.style.boxShadow = '0 0 15px rgba(68, 255, 68, 0.5)';
+                    }
+                });
+                
+                feedback.style.color = "lightgreen";
+                feedback.innerHTML = "✅ Correct! Quiz completed!";
+                explanationBox.innerHTML = `
+                                    <p><strong>Explanation:</strong></p>
+                                    <ul>
+                                        <li><code>CREATE TABLE</code> is used to create a new table in a database.</li>
+                                    </ul>
+                                `;
+            } else {
+                // Incorrect answer - disable this button only
+                button.disabled = true;
+                button.style.backgroundColor = '#ff4444';
+                button.style.opacity = '0.6';
+                button.style.cursor = 'not-allowed';
+                
+                feedback.style.color = "red";
+                feedback.innerHTML = "❌ Incorrect. Try another answer!";
+                
+                // Add retry message if not already present
+                let retryMsg = quizContainer.querySelector('.retry-message');
+                if (!retryMsg) {
+                    retryMsg = document.createElement('p');
+                    retryMsg.className = 'retry-message';
+                    retryMsg.style.color = '#ffd700';
+                    retryMsg.style.fontWeight = 'bold';
+                    retryMsg.style.marginTop = '10px';
+                    retryMsg.innerHTML = '💡 Keep trying! Choose another answer.';
+                    feedback.parentNode.insertBefore(retryMsg, feedback.nextSibling);
+                }
+                
+                let explanation = "";
+                switch (button.innerText.trim().charAt(0)) {
+                    case "A":
+                        explanation = `
+                                            <p><strong>Explanation:</strong></p>
+                                            <ul>
+                                                <li><code>DELETE</code> is used to remove data, not create a table.</li>
+                                            </ul>
+                                        `;
+                        break;
+                    case "C":
+                        explanation = `
+                                            <p><strong>Explanation:</strong></p>
+                                            <ul>
+                                                <li><code>UPDATE</code> modifies data but does not create a table.</li>
+                                            </ul>
+                                        `;
+                        break;
+                    case "D":
+                        explanation = `
+                                            <p><strong>Explanation:</strong></p>
+                                            <ul>
+                                                <li><code>SELECT</code> retrieves data, but it does not create a table.</li>
+                                            </ul>
+                                        `;
+                        break;
+                }
+                explanationBox.innerHTML = explanation;
+            }
+        }
+
+        // Bookmark functionality
+        const lessonId = "Table";
+        const bookmarkBtn = document.getElementById("bookmarkBtn");
+        const unbookmarkBtn = document.getElementById("unbookmarkBtn");
+        const statusText = document.getElementById("bookmarkStatus");
+
+        // Function to check bookmark status with retry
+        function checkBookmarkStatus(retries = 3) {
+            fetch(`http://localhost:5000/bookmark-status?lessonId=${lessonId}`, {
+                credentials: 'include',
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+                .then(res => {
+                    if (!res.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return res.json();
+                })
+                .then(data => {
+                    if (data.bookmarked) {
+                        bookmarkBtn.style.display = "none";
+                        unbookmarkBtn.style.display = "inline-block";
+                        statusText.textContent = "📌 Bookmarked";
+                    } else {
+                        bookmarkBtn.style.display = "inline-block";
+                        unbookmarkBtn.style.display = "none";
+                        statusText.textContent = "";
+                    }
+                })
+                .catch(error => {
+                    console.error('Error checking bookmark status:', error);
+                    if (retries > 0) {
+                        setTimeout(() => checkBookmarkStatus(retries - 1), 1000);
+                    }
+                });
+        }
+
+        // Add bookmark
+        bookmarkBtn.addEventListener("click", () => {
+            fetch("http://localhost:5000/bookmark", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                    lessonId: lessonId,
+                    bookmarked: true
+                })
+            })
+                .then(res => res.json())
+                .then(() => {
+                    checkBookmarkStatus();
+                });
+        });
+
+        // Remove bookmark
+        unbookmarkBtn.addEventListener("click", () => {
+            fetch("http://localhost:5000/bookmark", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                    lessonId: lessonId,
+                    bookmarked: false
+                })
+            })
+                .then(res => res.json())
+                .then(() => {
+                    checkBookmarkStatus();
+                });
+        });
+
+        // Check initial status when page loads
+        checkBookmarkStatus();
+    </script>
+</body>
+</html>
+
+

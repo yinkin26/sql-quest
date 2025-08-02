@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en" class="pixel-art dark-theme">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Quest - Indexes</title>
+    <link rel="stylesheet" href="stylesheets/style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <script src="javascripts/loadComponents.js" defer></script>
+    <script src="javascripts/script.js" defer></script>
+    <script src="javascripts/lessonTracker.js" defer></script>
+    <script type="module" src="javascripts/mockTables.js"></script>
+</head>
+<body class="pixel-art dark-theme">
+    <div id="header"></div>
+    <div class="lesson-layout">
+        <div id="sidebar"></div>
+
+        <section class="lesson-content">
+            <h2>🚀 SQL Indexes</h2>
+
+            <!-- Bookmark buttons -->
+            <div class="bookmark-container">
+                <button id="bookmarkBtn" style="display: none;">🔖 Bookmark</button>
+                <button id="unbookmarkBtn" style="display: none;">❌ Remove Bookmark</button>
+                <span id="bookmarkStatus"></span>
+            </div>
+
+            <div class="callout-box">
+                <p>🚀 The speed boosters! Indexes are like a book's index - they help find data quickly without scanning every page.</p>
+            </div>
+
+            <h3>📌 What are Indexes?</h3>
+            <p>An <code class="tooltip" title="Database performance optimization tool">INDEX</code> is a data structure that improves the speed of data retrieval operations on a table. Think of it like a 📚 library catalog that helps you find books quickly without searching every shelf!</p>
+
+            <h3>🎯 Index Features</h3>
+            <div style="background: rgba(34, 139, 34, 0.1); border: 2px solid #228b22; border-radius: 8px; padding: 15px; margin: 15px 0;">
+                <h4 style="color: #228b22; margin-top: 0;">🔍 Key Features</h4>
+                <ul style="color: #90ee90;">
+                    <li>⚡ <strong>FASTER QUERIES</strong> - Dramatically speeds up SELECT operations</li>
+                    <li>🎯 <strong>EFFICIENT SORTING</strong> - Speeds up ORDER BY clauses</li>
+                    <li>🔍 <strong>QUICK SEARCHES</strong> - Accelerates WHERE clause filtering</li>
+                    <li>🔗 <strong>FASTER JOINS</strong> - Improves performance of table joins</li>
+                    <li>📊 <strong>UNIQUE ENFORCEMENT</strong> - Can enforce uniqueness constraints</li>
+                </ul>
+            </div>
+
+            <h3>🧠 Index Types</h3>
+
+            <h4>1. Primary Index (Clustered)</h4>
+            <pre><code>-- Automatically created with PRIMARY KEY
+CREATE TABLE <span style="color: #00ffff;">users</span> (
+    <span style="color: #ffd700;">user_id</span> INT PRIMARY KEY AUTO_INCREMENT,  -- 🔑 Clustered index
+    username VARCHAR(50) NOT NULL,
+    email VARCHAR(100) NOT NULL
+);</code></pre>
+
+            <h4>2. Secondary Index (Non-Clustered)</h4>
+            <pre><code>-- Create index on frequently searched columns
+CREATE INDEX <span style="color: #dc3545;">idx_username</span> ON <span style="color: #00ffff;">users</span>(<span style="color: #ffd700;">username</span>);
+CREATE INDEX <span style="color: #dc3545;">idx_email</span> ON <span style="color: #00ffff;">users</span>(<span style="color: #ffd700;">email</span>);</code></pre>
+
+            <h4>3. Unique Index</h4>
+            <pre><code>-- Ensures uniqueness and provides fast lookups
+CREATE UNIQUE INDEX <span style="color: #dc3545;">idx_unique_email</span> ON <span style="color: #00ffff;">users</span>(<span style="color: #ffd700;">email</span>);
+
+-- Alternative: Add unique constraint (creates unique index automatically)
+ALTER TABLE <span style="color: #00ffff;">users</span> ADD CONSTRAINT <span style="color: #dc3545;">uk_username</span> UNIQUE (<span style="color: #ffd700;">username</span>);</code></pre>
+
+            <h4>4. Composite Index (Multi-Column)</h4>
+            <pre><code>-- Index on multiple columns (order matters!)
+CREATE INDEX <span style="color: #dc3545;">idx_name_age</span> ON <span style="color: #00ffff;">users</span>(<span style="color: #ffd700;">last_name</span>, <span style="color: #ffd700;">first_name</span>, <span style="color: #ffd700;">age</span>);
+
+-- Good for queries like:
+-- WHERE last_name = 'Smith'
+-- WHERE last_name = 'Smith' AND first_name = 'John'
+-- WHERE last_name = 'Smith' AND first_name = 'John' AND age = 25</code></pre>
+
+            <h4>5. Partial Index</h4>
+            <pre><code>-- Index only specific rows (with WHERE condition)
+CREATE INDEX <span style="color: #dc3545;">idx_active_users</span> ON <span style="color: #00ffff;">users</span>(<span style="color: #ffd700;">username</span>) 
+WHERE status = 'active';
+
+-- Index only non-NULL values
+CREATE INDEX <span style="color: #dc3545;">idx_phone_not_null</span> ON <span style="color: #00ffff;">users</span>(<span style="color: #ffd700;">phone</span>) 
+WHERE phone IS NOT NULL;</code></pre>
+
+
+
+            <h3>📊 Performance Comparison: With vs Without Indexes</h3>
+            <div class="mock-table">
+                <h4>Query Performance Analysis</h4>
+                <button class="neon-button" onclick="displayMockTable('indexPerformance')">View Index Performance</button>
+                <div class="query-output" id="query-output"></div>
+                <div style="background: rgba(34, 139, 34, 0.1); border: 1px solid #228b22; border-radius: 6px; padding: 10px; margin-top: 10px;">
+                    <h5 style="color: #228b22; margin: 0 0 5px 0;">🚀 Performance Impact:</h5>
+                    <ul style="color: #90ee90; margin: 5px 0 0 20px; font-size: 0.9em;">
+                        <li>⚡ Queries can be 100x to 1,000,000x faster with proper indexes</li>
+                        <li>🎯 Most effective on columns used in WHERE, ORDER BY, and JOIN clauses</li>
+                        <li>📊 Especially important for large tables (>10K rows)</li>
+                        <li>🔍 Can turn unusable queries into lightning-fast operations</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>🔧 Index Management Commands</h3>
+            <button class="neon-button" onclick="showIndexManagement()">Show Index Management</button>
+            <div id="indexManagementOutput" class="query-output" style="margin-top: 10px;"></div>
+
+            <h3>🌍 Real-World Index Examples</h3>
+            
+            <h4>👥 User Management System</h4>
+            <pre><code>CREATE TABLE <span style="color: #00ffff;">users</span> (
+    user_id INT PRIMARY KEY AUTO_INCREMENT,     -- 🔑 Clustered index (automatic)
+    username VARCHAR(50) UNIQUE NOT NULL,       -- 🎯 Unique index (automatic)
+    email VARCHAR(100) UNIQUE NOT NULL,         -- 🎯 Unique index (automatic)
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    date_of_birth DATE,
+    status VARCHAR(20) DEFAULT 'active',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    last_login TIMESTAMP
+);
+
+-- Additional indexes for performance
+CREATE INDEX <span style="color: #dc3545;">idx_users_name</span> ON <span style="color: #00ffff;">users</span>(<span style="color: #ffd700;">last_name</span>, <span style="color: #ffd700;">first_name</span>);  -- 👤 Name searches
+CREATE INDEX <span style="color: #dc3545;">idx_users_status</span> ON <span style="color: #00ffff;">users</span>(<span style="color: #ffd700;">status</span>);                    -- 📊 Status filtering
+CREATE INDEX <span style="color: #dc3545;">idx_users_created</span> ON <span style="color: #00ffff;">users</span>(<span style="color: #ffd700;">created_at</span>);                -- 📅 Date range queries
+CREATE INDEX <span style="color: #dc3545;">idx_users_last_login ON users(last_login);              -- 🕐 Login tracking
+CREATE INDEX idx_users_birth_year ON users(YEAR(date_of_birth));     -- 🎂 Age-based queries</code></pre>
+
+            <h4>🛒 E-commerce Product System</h4>
+            <pre><code>CREATE TABLE products (
+    product_id INT PRIMARY KEY AUTO_INCREMENT,  -- 🔑 Clustered index
+    sku VARCHAR(50) UNIQUE NOT NULL,            -- 🎯 Unique index
+    name VARCHAR(200) NOT NULL,
+    description TEXT,
+    price DECIMAL(10,2) NOT NULL,
+    category_id INT NOT NULL,
+    brand_id INT NOT NULL,
+    stock_quantity INT DEFAULT 0,
+    status VARCHAR(20) DEFAULT 'active',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- Performance indexes
+CREATE INDEX idx_products_category ON products(category_id);         -- 📂 Category filtering
+CREATE INDEX idx_products_brand ON products(brand_id);               -- 🏢 Brand filtering
+CREATE INDEX idx_products_price ON products(price);                  -- 💰 Price sorting/filtering
+CREATE INDEX idx_products_status ON products(status);                -- 📊 Status filtering
+CREATE INDEX idx_products_name ON products(name);                    -- 🔍 Name searching
+CREATE INDEX idx_products_stock ON products(stock_quantity);         -- 📦 Inventory queries
+
+-- Composite indexes for common query patterns
+CREATE INDEX idx_products_cat_price ON products(category_id, price); -- 📂💰 Category + price
+CREATE INDEX idx_products_brand_status ON products(brand_id, status); -- 🏢📊 Brand + status
+CREATE INDEX idx_products_price_stock ON products(price, stock_quantity); -- 💰📦 Price + stock</code></pre>
+
+            <h3>⚠️ Index Best Practices</h3>
+            <div style="background: rgba(40, 167, 69, 0.2); border: 2px solid #28a745; border-radius: 8px; padding: 15px; margin: 15px 0;">
+                <h4 style="color: #28a745; margin-top: 0;">✅ Do's</h4>
+                <ul style="color: #d4edda;">
+                    <li>🎯 <strong>Index WHERE columns</strong> - columns frequently used in WHERE clauses</li>
+                    <li>🔗 <strong>Index JOIN columns</strong> - foreign keys and join conditions</li>
+                    <li>📊 <strong>Index ORDER BY columns</strong> - columns used for sorting</li>
+                    <li>🎪 <strong>Composite indexes</strong> - for multi-column queries (order matters!)</li>
+                    <li>📈 <strong>Monitor performance</strong> - use EXPLAIN to verify index usage</li>
+                    <li>🔍 <strong>Selective columns</strong> - index columns with high cardinality</li>
+                </ul>
+            </div>
+
+            <div style="background: rgba(220, 53, 69, 0.2); border: 2px solid #dc3545; border-radius: 8px; padding: 15px; margin: 15px 0;">
+                <h4 style="color: #dc3545; margin-top: 0;">❌ Don'ts</h4>
+                <ul style="color: #f8d7da;">
+                    <li>🚫 <strong>Don't over-index</strong> - too many indexes slow down INSERT/UPDATE/DELETE</li>
+                    <li>📝 <strong>Don't index small tables</strong> - overhead may outweigh benefits</li>
+                    <li>🔄 <strong>Don't index frequently changing columns</strong> - high maintenance cost</li>
+                    <li>📊 <strong>Don't index low-cardinality columns</strong> - like boolean or status with few values</li>
+                    <li>🎯 <strong>Don't ignore composite index order</strong> - leftmost prefix rule applies</li>
+                    <li>💾 <strong>Don't forget storage cost</strong> - indexes consume disk space</li>
+                </ul>
+            </div>
+
+            <h3>💡 Helpful Tips</h3>
+            <ul>
+                <li>🔍 Use <code>SHOW INDEX FROM table_name;</code> to see all indexes</li>
+                <li>⚡ <strong>Composite index order</strong> - most selective column first</li>
+                <li>🛡️ <strong>Leftmost prefix rule</strong> - composite indexes work left-to-right</li>
+                <li>🎯 <strong>Covering indexes</strong> - include all columns needed by query</li>
+                <li>🔄 <strong>Index maintenance</strong> - MySQL automatically maintains indexes</li>
+                <li>📊 <strong>Monitor usage</strong> - remove unused indexes to improve write performance</li>
+                <li>🚨 <strong>Index size</strong> - keep an eye on index storage overhead</li>
+            </ul>
+
+            <h3>🧠 Summary</h3>
+            <ul>
+                <li>🚀 <strong>Indexes</strong> dramatically improve query performance</li>
+                <li>🎯 <strong>Strategic placement</strong> - index columns used in WHERE, JOIN, ORDER BY</li>
+                <li>⚡ <strong>Multiple types</strong> - single, composite, unique, partial indexes</li>
+                <li>🛡️ <strong>Automatic maintenance</strong> - MySQL keeps indexes up-to-date</li>
+                <li>📊 <strong>Trade-offs</strong> - faster reads vs slower writes and more storage</li>
+                <li>🔧 <strong>Optimization tool</strong> - use EXPLAIN to verify index usage</li>
+            </ul>
+
+            <h3>🧪 Practice</h3>
+            <p>📚 Create an index on the <code>"products"</code> table for the columns <code>"category_id"</code> and <code>"price"</code> (composite index).</p>
+            <div class="editor-container">
+                <textarea class="code-editor" id="exerciseInput" placeholder="Write your CREATE INDEX statement here..."></textarea>
+                <button class="neon-button" onclick="validateExercise()">Submit</button>
+                <div id="exerciseFeedback" style="margin-top:15px;"></div>
+            </div>
+
+            <h3>🎯 Quiz</h3>
+            <p><strong>Which type of query benefits MOST from having an index on the searched column?</strong></p>
+            <div class="quiz">
+                <button onclick="checkAnswer(this,'A')">A) INSERT INTO table VALUES (...)</button>
+                <button onclick="checkAnswer(this,'B')">B) SELECT * FROM table WHERE column = 'value'</button>
+                <button onclick="checkAnswer(this,'C')">C) UPDATE table SET column = 'value'</button>
+                <button onclick="checkAnswer(this,'D')">D) DELETE FROM table</button>
+                <p class="quiz-feedback"></p>
+                <div id="quizExplanation" class="quiz-explanation" style="display:none;"></div>
+            </div>
+        </section>
+    </div>
+
+    <div id="footer"></div>
+
+    <script>
+        function runIndexDemo() {
+            const textarea = document.querySelector('.code-editor');
+            const output = document.querySelector('.query-output');
+            const query = textarea.value.trim().toLowerCase();
+            
+            if (query.includes('create index') || query.includes('create unique index')) {
+                const indexCount = (query.match(/create\s+(unique\s+)?index/g) || []).length;
+                const hasComposite = query.includes(',') && query.includes('(');
+                const hasUnique = query.includes('unique index');
+                
+                output.innerHTML = `
+                    <div style='background: rgba(40, 167, 69, 0.2); border: 1px solid #28a745; border-radius: 8px; padding: 15px;'>
+                        <p style='color: #28a745; margin: 0;'>✅ <strong>${indexCount} index${indexCount > 1 ? 'es' : ''} created successfully!</strong></p>
+                        <p style='color: #d4edda; margin: 8px 0 0 0;'>🚀 <strong>Performance Benefits:</strong></p>
+                        <ul style='color: #d4edda; margin: 5px 0 0 20px;'>
+                            <li>⚡ Queries on indexed columns will be much faster</li>
+                            <li>🔍 WHERE clause filtering optimized</li>
+                            ${hasComposite ? '<li>🎯 Composite index optimizes multi-column queries</li>' : ''}
+                            ${hasUnique ? '<li>🛡️ Unique index enforces data integrity</li>' : ''}
+                            <li>📊 JOIN operations will be more efficient</li>
+                        </ul>
+                        <p style='color: #a0a0a0; margin: 8px 0 0 0; font-size: 0.8em;'>💡 Your database performance is now optimized!</p>
+                    </div>
+                `;
+            } else {
+                output.innerHTML = `<p style='color: red;'>❌ Invalid query. Try using CREATE INDEX statements.</p>`;
+            }
+        }
+        
+        function showIndexManagement() {
+            const output = document.getElementById('indexManagementOutput');
+            const examples = [
+                {
+                    title: '📋 Show All Indexes',
+                    sql: 'SHOW INDEX FROM users;',
+                    description: 'Lists all indexes on the users table with details',
+                    result: 'Shows index names, columns, cardinality, and type'
+                },
+                {
+                    title: '🔍 Check Index Usage',
+                    sql: 'EXPLAIN SELECT * FROM users WHERE email = "john@email.com";',
+                    description: 'Shows query execution plan and index usage',
+                    result: 'Displays if index is used and query cost'
+                },
+                {
+                    title: '🗑️ Drop Index',
+                    sql: 'DROP INDEX idx_username ON users;',
+                    description: 'Removes an index from the table',
+                    result: 'Index is deleted, queries may become slower'
+                },
+                {
+                    title: '📊 Index Statistics',
+                    sql: 'ANALYZE TABLE users;',
+                    description: 'Updates index statistics for better query optimization',
+                    result: 'Refreshes cardinality and distribution stats'
+                },
+                {
+                    title: '🔧 Optimize Table',
+                    sql: 'OPTIMIZE TABLE users;',
+                    description: 'Rebuilds table and indexes for optimal performance',
+                    result: 'Defragments table and rebuilds indexes'
+                }
+            ];
+            
+            let html = '<div style="background: rgba(26, 32, 44, 0.8); border: 1px solid #4a5568; border-radius: 8px; padding: 15px; margin-top: 10px;">';
+            html += '<h4 style="color: #dc3545; margin-top: 0;">🔧 Index Management Examples</h4>';
+            
+            examples.forEach((example, index) => {
+                html += `
+                    <div style="margin-bottom: 15px; padding: 10px; background: rgba(45, 55, 72, 0.6); border-radius: 6px;">
+                        <h5 style="color: #ffd700; margin: 0 0 8px 0;">${example.title}</h5>
+                        <pre style="background: rgba(0, 0, 0, 0.4); padding: 8px; border-radius: 4px; margin: 5px 0; overflow-x: auto; white-space: pre-wrap;"><code style="color: #e2e8f0;">${example.sql}</code></pre>
+                        <p style="color: #a0aec0; margin: 5px 0; font-size: 0.9em;">${example.description}</p>
+                        <p style="color: #68d391; margin: 0; font-size: 0.8em; font-weight: bold;">📈 Result: ${example.result}</p>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            output.innerHTML = html;
+        }
+        
+        function validateExercise() {
+            const sql = document.getElementById("exerciseInput").value.trim().toLowerCase();
+            const feedback = document.getElementById("exerciseFeedback");
+            
+            if (sql.includes("create index") && sql.includes("products") && 
+                sql.includes("category_id") && sql.includes("price") && 
+                sql.includes("(") && sql.includes(",")) {
+                feedback.style.color = "lightgreen";
+                feedback.textContent = "✅ Perfect! You created a composite index on products(category_id, price) for optimal query performance.";
+            } else if (sql.includes("create index") && sql.includes("products") && 
+                      (sql.includes("category_id") || sql.includes("price"))) {
+                feedback.style.color = "orange";
+                feedback.textContent = "⚠️ Good start! For a composite index, include both columns: CREATE INDEX idx_name ON products(category_id, price).";
+            } else if (sql.includes("create index") && sql.includes("products")) {
+                feedback.style.color = "orange";
+                feedback.textContent = "⚠️ Good table reference! Make sure to include both category_id and price columns in the index.";
+            } else {
+                feedback.style.color = "red";
+                feedback.textContent = "❌ Try: CREATE INDEX idx_category_price ON products(category_id, price);";
+            }
+        }
+        
+        function checkAnswer(btn, opt) {
+            const fb = btn.parentElement.querySelector('.quiz-feedback');
+            const exp = document.getElementById('quizExplanation');
+            const buttons = btn.parentElement.querySelectorAll('button');
+            
+            // Disable all buttons after selection
+            buttons.forEach(b => b.disabled = true);
+            
+            if (opt === 'B') {
+                fb.style.color = 'lightgreen';
+                fb.textContent = '✅ Correct! SELECT queries with WHERE clauses benefit most from indexes.';
+                btn.style.backgroundColor = '#28a745';
+                exp.innerHTML = `
+                    <p><strong>🎯 Explanation:</strong></p>
+                    <ul>
+                        <li>🔍 <strong>SELECT with WHERE</strong> - indexes allow direct lookup instead of full table scan.</li>
+                        <li>⚡ Can improve performance by 100x to 1,000,000x for large tables.</li>
+                        <li>🎯 Indexes are specifically designed to speed up data retrieval operations.</li>
+                        <li>📊 INSERT, UPDATE, DELETE operations actually become slightly slower with indexes due to maintenance overhead.</li>
+                    </ul>
+                `;
+            } else {
+                fb.style.color = 'red';
+                fb.textContent = '❌ Incorrect. The correct answer is B.';
+                btn.style.backgroundColor = '#dc3545';
+                // Highlight correct answer
+                buttons[1].style.backgroundColor = '#28a745';
+                exp.innerHTML = `
+                    <p><strong>❌ Explanation:</strong></p>
+                    <ul>
+                        <li>🚫 INSERT, UPDATE, DELETE operations don't benefit from indexes on searched columns.</li>
+                        <li>📝 These operations actually become slightly slower due to index maintenance.</li>
+                        <li>🔍 Only SELECT queries with WHERE, ORDER BY, or JOIN clauses benefit significantly from indexes.</li>
+                    </ul>
+                `;
+            }
+            exp.style.display = 'block';
+            exp.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // Bookmark functionality
+        const lessonId = "INDEXES";
+        const bookmarkBtn = document.getElementById("bookmarkBtn");
+        const unbookmarkBtn = document.getElementById("unbookmarkBtn");
+        const statusText = document.getElementById("bookmarkStatus");
+
+        function checkBookmarkStatus(retries = 3) {
+            fetch(`http://localhost:5000/bookmark-status?lessonId=${lessonId}`, {
+                credentials: 'include',
+                headers: { "Content-Type": "application/json" }
+            })
+            .then(res => {
+                if (!res.ok) throw new Error('Network response was not ok');
+                return res.json();
+            })
+            .then(data => {
+                if (data.bookmarked) {
+                    bookmarkBtn.style.display = "none";
+                    unbookmarkBtn.style.display = "inline-block";
+                    statusText.textContent = "📌 Bookmarked";
+                } else {
+                    bookmarkBtn.style.display = "inline-block";
+                    unbookmarkBtn.style.display = "none";
+                    statusText.textContent = "";
+                }
+            })
+            .catch(error => {
+                console.error('Error checking bookmark status:', error);
+                if (retries > 0) {
+                    setTimeout(() => checkBookmarkStatus(retries - 1), 1000);
+                }
+            });
+        }
+
+        bookmarkBtn.addEventListener("click", () => {
+            fetch("http://localhost:5000/bookmark", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({ lessonId: lessonId, bookmarked: true })
+            })
+            .then(res => res.json())
+            .then(() => checkBookmarkStatus());
+        });
+
+        unbookmarkBtn.addEventListener("click", () => {
+            fetch("http://localhost:5000/bookmark", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({ lessonId: lessonId, bookmarked: false })
+            })
+            .then(res => res.json())
+            .then(() => checkBookmarkStatus());
+        });
+
+        checkBookmarkStatus();
+    </script>
+</body>
+</html>

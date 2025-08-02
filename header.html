@@ -1,0 +1,46 @@
+<!-- header.html -->
+<link rel="stylesheet" href="stylesheets/light-theme.css">
+    <!-- Floating Pixel Particles -->
+    <div class="pixel-particles" style="--x: 0.1; --y: 0.2;"></div>
+    <div class="pixel-particles" style="--x: 0.3; --y: 0.4;"></div>
+    <div class="pixel-particles" style="--x: 0.5; --y: 0.1;"></div>
+    <div class="pixel-particles" style="--x: 0.7; --y: 0.3;"></div>
+    <div class="pixel-particles" style="--x: 0.9; --y: 0.2;"></div>
+    <div class="pixel-particles" style="--x: 0.2; --y: 0.6;"></div>
+    <div class="pixel-particles" style="--x: 0.4; --y: 0.8;"></div>
+    <div class="pixel-particles" style="--x: 0.6; --y: 0.5;"></div>
+    <div class="pixel-particles" style="--x: 0.8; --y: 0.7;"></div>
+    <div class="pixel-particles" style="--x: 0.95; --y: 0.9;"></div>
+
+    <nav class="nav-bar">
+        <div class="logo-container">
+            <img src="images/logo.png" alt="SQL Quest Logo" class="logo">
+            <h1 class="logo-text pixel-font">SQL Quest</h1>
+        </div>
+        <div class="nav-controls">
+            <button id="globalThemeToggle" class="theme-toggle-global" title="Switch Theme">
+                <span class="theme-icon">🌙</span>
+                <span class="theme-text">Plain Mode</span>
+            </button>
+            <button class="neon-button pixel-font menu-button">Menu</button>
+        </div>
+    </nav>
+
+    <!-- Navigation Menu (Hidden by Default) -->
+    <div id="menuContainer" class="menu hidden">
+        <ul>
+            <li><a href="index.html">🏠 Home</a></li>
+            <li><a href="Intro.html">📖 Lessons</a></li>
+            <li><a href="sql-validator.html">🤖 SQL Validator</a></li>
+            <li><a href="chat.html">💬 Chat Assistant</a></li>
+            <li><a href="challenges.html">🎮 Challenges</a></li>
+            <li><a href="leaderboard.html">🏆 Leaderboard</a></li>
+            <li id="profileLink"><a href="profile.html">👤 Profile</a></li>
+            <li id="loginLink"><a href="login.html">📝 Login</a></li>
+            <li id="registerLink"><a href="register.html">📝 Register</a></li>
+            <li id="logoutLink" style="display: none;"><a href="#" onclick="logout()">Logout</a></li>
+        </ul>
+    </div>
+
+
+    <!-- JavaScript files are loaded by loadComponents.js -->

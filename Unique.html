@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en" class="pixel-art dark-theme">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Quest - UNIQUE Constraint</title>
+    <link rel="stylesheet" href="stylesheets/style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <script src="javascripts/loadComponents.js" defer></script>
+    <script src="javascripts/script.js" defer></script>
+    <script src="javascripts/lessonTracker.js" defer></script>
+    <script type="module" src="javascripts/mockTables.js"></script>
+</head>
+<body class="pixel-art dark-theme">
+    <div id="header"></div>
+    <div class="lesson-layout">
+        <div id="sidebar"></div>
+
+        <section class="lesson-content">
+            <h2>⭐ UNIQUE Constraint</h2>
+
+            <!-- Bookmark buttons -->
+            <div class="bookmark-container">
+                <button id="bookmarkBtn" style="display: none;">🔖 Bookmark</button>
+                <button id="unbookmarkBtn" style="display: none;">❌ Remove Bookmark</button>
+                <span id="bookmarkStatus"></span>
+            </div>
+
+            <div class="callout-box">
+                <p>⭐ The uniqueness enforcer! UNIQUE constraint ensures no duplicate values while allowing multiple NULL values.</p>
+            </div>
+
+            <h3>📌 What is a UNIQUE Constraint?</h3>
+            <p>A <code class="tooltip" title="Prevents duplicate values">UNIQUE</code> constraint ensures that all values in a column (or combination of columns) are different from each other. It's like having a 🎫 VIP list where no name appears twice, but unlike PRIMARY KEY, it allows NULL values and you can have multiple UNIQUE constraints per table!</p>
+
+            <h3>🎯 UNIQUE vs PRIMARY KEY</h3>
+            <div style="background: rgba(138, 43, 226, 0.1); border: 2px solid #8a2be2; border-radius: 8px; padding: 15px; margin: 15px 0;">
+                <h4 style="color: #8a2be2; margin-top: 0;">🔍 Key Differences</h4>
+                <table style="width: 100%; color: #e6e6fa; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background: rgba(138, 43, 226, 0.2);">
+                            <th style="padding: 8px; border: 1px solid #8a2be2;">Feature</th>
+                            <th style="padding: 8px; border: 1px solid #8a2be2;">🔑 PRIMARY KEY</th>
+                            <th style="padding: 8px; border: 1px solid #8a2be2;">⭐ UNIQUE</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #8a2be2;">🔢 Count per table</td>
+                            <td style="padding: 8px; border: 1px solid #8a2be2;">Exactly 1</td>
+                            <td style="padding: 8px; border: 1px solid #8a2be2;">Multiple allowed</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #8a2be2;">🚫 NULL values</td>
+                            <td style="padding: 8px; border: 1px solid #8a2be2;">Not allowed</td>
+                            <td style="padding: 8px; border: 1px solid #8a2be2;">Allowed (multiple)</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #8a2be2;">⚡ Auto index</td>
+                            <td style="padding: 8px; border: 1px solid #8a2be2;">Yes</td>
+                            <td style="padding: 8px; border: 1px solid #8a2be2;">Yes</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #8a2be2;">🔗 Foreign key target</td>
+                            <td style="padding: 8px; border: 1px solid #8a2be2;">Yes</td>
+                            <td style="padding: 8px; border: 1px solid #8a2be2;">Yes</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>🧠 Basic Syntax</h3>
+
+            <h4>Method 1: Column-Level Definition</h4>
+            <pre><code>CREATE TABLE <span style="color: #00ffff;">users</span> (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    <span style="color: #ffd700;">email</span> VARCHAR(100) <span style="color: #8a2be2;">UNIQUE</span>,
+    <span style="color: #ffd700;">username</span> VARCHAR(50) <span style="color: #8a2be2;">UNIQUE</span>,
+    password_hash VARCHAR(255)
+);</code></pre>
+
+            <h4>Method 2: Table-Level Definition</h4>
+            <pre><code>CREATE TABLE <span style="color: #00ffff;">users</span> (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    <span style="color: #ffd700;">email</span> VARCHAR(100),
+    <span style="color: #ffd700;">username</span> VARCHAR(50),
+    password_hash VARCHAR(255),
+    <span style="color: #8a2be2;">UNIQUE</span> (<span style="color: #ffd700;">email</span>),
+    <span style="color: #8a2be2;">UNIQUE</span> (<span style="color: #ffd700;">username</span>)
+);</code></pre>
+
+            <h4>Method 3: Named Constraint</h4>
+            <pre><code>CREATE TABLE <span style="color: #00ffff;">users</span> (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    <span style="color: #ffd700;">email</span> VARCHAR(100),
+    <span style="color: #ffd700;">username</span> VARCHAR(50),
+    password_hash VARCHAR(255),
+    <span style="color: #8a2be2;">CONSTRAINT</span> <span style="color: #98fb98;">uk_users_email</span> <span style="color: #8a2be2;">UNIQUE</span> (<span style="color: #ffd700;">email</span>),
+    <span style="color: #8a2be2;">CONSTRAINT</span> <span style="color: #98fb98;">uk_users_username</span> <span style="color: #8a2be2;">UNIQUE</span> (<span style="color: #ffd700;">username</span>)
+);</code></pre>
+
+
+
+            <h3>📊 Mock Table Preview</h3>
+            <p>🔍 See how UNIQUE constraints work with real data:</p>
+            <button class="neon-button" onclick="displayMockTable('users')">👥 View Users Table</button>
+            <div class="query-output" id="mockTableOutput"></div>
+            <p style="color: #a0a0a0; font-size: 0.9em; margin-top: 10px;">💡 Notice: Each email and username is unique, but NULL values are allowed!</p>
+
+            <h3>🔗 Composite UNIQUE Constraint</h3>
+            <p>Sometimes you need a combination of columns to be unique:</p>
+            <pre><code>CREATE TABLE <span style="color: #00ffff;">course_enrollments</span> (
+    enrollment_id INT PRIMARY KEY AUTO_INCREMENT,
+    <span style="color: #ffd700;">student_id</span> INT,
+    <span style="color: #ffd700;">course_id</span> INT,
+    <span style="color: #ffd700;">semester</span> VARCHAR(20),
+    enrollment_date DATE,
+    -- Student can only enroll in same course once per semester
+    <span style="color: #8a2be2;">UNIQUE</span> (<span style="color: #ffd700;">student_id</span>, <span style="color: #ffd700;">course_id</span>, <span style="color: #ffd700;">semester</span>)
+);</code></pre>
+
+            <h3>📋 UNIQUE Constraint Examples</h3>
+            <button class="neon-button" onclick="showUniqueExamples()">Show UNIQUE Examples</button>
+            <div id="uniqueExamplesOutput" class="query-output" style="margin-top: 10px;"></div>
+
+            <h3>🔧 Adding UNIQUE to Existing Table</h3>
+            <pre><code>-- Add unique constraint to existing table
+ALTER TABLE <span style="color: #00ffff;">users</span>
+ADD CONSTRAINT <span style="color: #98fb98;">uk_users_email</span> UNIQUE (<span style="color: #ffd700;">email</span>);
+
+-- Add composite unique constraint
+ALTER TABLE <span style="color: #00ffff;">products</span>
+ADD CONSTRAINT <span style="color: #98fb98;">uk_products_name_category</span> UNIQUE (<span style="color: #ffd700;">name</span>, <span style="color: #ffd700;">category_id</span>);
+
+-- Drop unique constraint
+ALTER TABLE <span style="color: #00ffff;">users</span>
+DROP INDEX <span style="color: #98fb98;">uk_users_email</span>;</code></pre>
+
+            <h3>🌍 Real-World UNIQUE Examples</h3>
+            
+            <h4>👥 User Management System</h4>
+            <pre><code>CREATE TABLE <span style="color: #00ffff;">users</span> (
+    user_id INT PRIMARY KEY AUTO_INCREMENT,
+    <span style="color: #ffd700;">email</span> VARCHAR(100) <span style="color: #8a2be2;">UNIQUE</span> NOT NULL,      -- 📧 Unique email for login
+    <span style="color: #ffd700;">username</span> VARCHAR(50) <span style="color: #8a2be2;">UNIQUE</span> NOT NULL,    -- 👤 Unique display name
+    <span style="color: #ffd700;">phone</span> VARCHAR(15) <span style="color: #8a2be2;">UNIQUE</span>,              -- 📱 Unique phone (optional)
+    password_hash VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);</code></pre>
+
+            <h4>🏢 Employee Management</h4>
+            <pre><code>CREATE TABLE <span style="color: #00ffff;">employees</span> (
+    employee_id INT PRIMARY KEY AUTO_INCREMENT,
+    <span style="color: #ffd700;">employee_number</span> VARCHAR(10) <span style="color: #8a2be2;">UNIQUE</span> NOT NULL,  -- 🆔 Unique employee ID
+    <span style="color: #ffd700;">email</span> VARCHAR(100) <span style="color: #8a2be2;">UNIQUE</span> NOT NULL,           -- 📧 Work email
+    <span style="color: #ffd700;">badge_id</span> VARCHAR(20) <span style="color: #8a2be2;">UNIQUE</span>,                -- 🏷️ Access badge ID
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    department VARCHAR(50),
+    hire_date DATE
+);</code></pre>
+
+            <h4>📦 Product Catalog</h4>
+            <pre><code>CREATE TABLE <span style="color: #00ffff;">products</span> (
+    product_id INT PRIMARY KEY AUTO_INCREMENT,
+    <span style="color: #ffd700;">sku</span> VARCHAR(50) <span style="color: #8a2be2;">UNIQUE</span> NOT NULL,            -- 📦 Stock Keeping Unit
+    <span style="color: #ffd700;">barcode</span> VARCHAR(20) <span style="color: #8a2be2;">UNIQUE</span>,                -- 📊 Product barcode
+    name VARCHAR(100) NOT NULL,
+    description TEXT,
+    price DECIMAL(10,2),
+    category_id INT,
+    -- Product name must be unique within each category
+    <span style="color: #8a2be2;">CONSTRAINT</span> <span style="color: #98fb98;">uk_product_name_category</span> <span style="color: #8a2be2;">UNIQUE</span> (<span style="color: #ffd700;">name</span>, <span style="color: #ffd700;">category_id</span>)
+);</code></pre>
+
+            <h4>🏦 Banking System</h4>
+            <pre><code>CREATE TABLE <span style="color: #00ffff;">accounts</span> (
+    account_id INT PRIMARY KEY AUTO_INCREMENT,
+    <span style="color: #ffd700;">account_number</span> VARCHAR(20) <span style="color: #8a2be2;">UNIQUE</span> NOT NULL,    -- 🏦 Unique account number
+    <span style="color: #ffd700;">iban</span> VARCHAR(34) <span style="color: #8a2be2;">UNIQUE</span>,                      -- 🌍 International identifier
+    customer_id INT NOT NULL,
+    account_type VARCHAR(20),
+    balance DECIMAL(15,2) DEFAULT 0.00,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (customer_id) REFERENCES customers(customer_id)
+);</code></pre>
+
+            <h4>🎫 Event Booking</h4>
+            <pre><code>CREATE TABLE <span style="color: #00ffff;">bookings</span> (
+    booking_id INT PRIMARY KEY AUTO_INCREMENT,
+    event_id INT,
+    customer_id INT,
+    <span style="color: #ffd700;">seat_number</span> VARCHAR(10),
+    booking_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    -- Each seat can only be booked once per event
+    <span style="color: #8a2be2;">CONSTRAINT</span> <span style="color: #98fb98;">uk_event_seat</span> <span style="color: #8a2be2;">UNIQUE</span> (<span style="color: #ffd700;">event_id</span>, <span style="color: #ffd700;">seat_number</span>),
+    -- Each customer can only book once per event
+    <span style="color: #8a2be2;">CONSTRAINT</span> <span style="color: #98fb98;">uk_event_customer</span> <span style="color: #8a2be2;">UNIQUE</span> (<span style="color: #ffd700;">event_id</span>, <span style="color: #ffd700;">customer_id</span>)
+);</code></pre>
+
+            <h3>🔍 NULL Values and UNIQUE</h3>
+            <div style="background: rgba(255, 193, 7, 0.1); border: 2px solid #ffc107; border-radius: 8px; padding: 15px; margin: 15px 0;">
+                <h4 style="color: #ffc107; margin-top: 0;">⚠️ Important: NULL Behavior</h4>
+                <ul style="color: #fff3cd;">
+                    <li>✅ <strong>Multiple NULLs allowed</strong> - UNIQUE constraint allows multiple NULL values</li>
+                    <li>🔍 <strong>NULL ≠ NULL</strong> - Each NULL is considered different from other NULLs</li>
+                    <li>🎯 <strong>Composite constraints</strong> - If any column in composite UNIQUE is NULL, the row is allowed</li>
+                    <li>🚫 <strong>NOT NULL + UNIQUE</strong> - Combine for stricter control</li>
+                </ul>
+            </div>
+
+            <h4>Example: NULL Behavior</h4>
+            <pre><code>-- This table allows multiple NULL emails
+CREATE TABLE <span style="color: #00ffff;">contacts</span> (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100),
+    <span style="color: #ffd700;">email</span> VARCHAR(100) <span style="color: #8a2be2;">UNIQUE</span>  -- ✅ Multiple NULLs allowed
+);
+
+-- Valid inserts:
+INSERT INTO contacts (name, email) VALUES ('John', 'john@email.com');
+INSERT INTO contacts (name, email) VALUES ('Jane', NULL);  -- ✅ First NULL
+INSERT INTO contacts (name, email) VALUES ('Bob', NULL);   -- ✅ Second NULL
+-- INSERT INTO contacts (name, email) VALUES ('Alice', 'john@email.com'); -- ❌ Duplicate!</code></pre>
+
+            <h3>⚠️ UNIQUE Constraint Best Practices</h3>
+            <div style="background: rgba(40, 167, 69, 0.2); border: 2px solid #28a745; border-radius: 8px; padding: 15px; margin: 15px 0;">
+                <h4 style="color: #28a745; margin-top: 0;">✅ Do's</h4>
+                <ul style="color: #d4edda;">
+                    <li>📝 <strong>Name constraints</strong> - use descriptive names like 'uk_users_email'</li>
+                    <li>🎯 <strong>Business logic</strong> - apply UNIQUE where business rules require uniqueness</li>
+                    <li>📊 <strong>Performance benefit</strong> - UNIQUE constraints create indexes automatically</li>
+                    <li>🔍 <strong>Data validation</strong> - use for natural business identifiers</li>
+                    <li>🚫 <strong>Combine with NOT NULL</strong> when appropriate</li>
+                </ul>
+            </div>
+
+            <div style="background: rgba(220, 53, 69, 0.2); border: 2px solid #dc3545; border-radius: 8px; padding: 15px; margin: 15px 0;">
+                <h4 style="color: #dc3545; margin-top: 0;">❌ Don'ts</h4>
+                <ul style="color: #f8d7da;">
+                    <li>🚫 <strong>Don't overuse</strong> - only apply where truly needed</li>
+                    <li>📏 <strong>Don't make long composites</strong> - impacts performance</li>
+                    <li>🔄 <strong>Don't ignore case sensitivity</strong> - 'Email' ≠ 'email' in some databases</li>
+                    <li>🎯 <strong>Don't forget business rules</strong> - understand what should be unique</li>
+                    <li>🔍 <strong>Don't assume NULL behavior</strong> - test NULL handling</li>
+                </ul>
+            </div>
+
+            <h3>💡 Helpful Tips</h3>
+            <ul>
+                <li>🔍 Use <code>SHOW INDEX FROM table_name;</code> to see unique constraints</li>
+                <li>⚡ <strong>Performance boost</strong> - UNIQUE constraints automatically create indexes</li>
+                <li>🔗 <strong>Foreign key target</strong> - foreign keys can reference UNIQUE columns</li>
+                <li>🎯 <strong>Business identifiers</strong> - perfect for emails, usernames, SKUs</li>
+                <li>🔄 <strong>Case sensitivity</strong> - depends on database collation settings</li>
+                <li>📊 <strong>Query optimization</strong> - database engines optimize queries using unique indexes</li>
+            </ul>
+
+            <h3>🧠 Summary</h3>
+            <ul>
+                <li>⭐ <strong>UNIQUE</strong> ensures no duplicate values in specified columns</li>
+                <li>🔢 <strong>Multiple allowed</strong> - can have many UNIQUE constraints per table</li>
+                <li>🚫 <strong>NULL friendly</strong> - allows multiple NULL values</li>
+                <li>🔗 <strong>Composite support</strong> - can span multiple columns</li>
+                <li>⚡ <strong>Auto indexing</strong> - creates indexes for performance</li>
+                <li>🎯 <strong>Business logic</strong> - enforces real-world uniqueness requirements</li>
+            </ul>
+
+            <h3>🧪 Practice</h3>
+            <p>📚 Create a table called <code>"products"</code> with a unique SKU and a composite unique constraint on name and category.</p>
+            <div class="editor-container">
+                <textarea class="code-editor" id="exerciseInput" placeholder="Write your CREATE TABLE statement with UNIQUE constraints here..."></textarea>
+                <button class="neon-button" onclick="validateExercise()">Submit</button>
+                <div id="exerciseFeedback" style="margin-top:15px;"></div>
+            </div>
+
+            <h3>🎯 Quiz</h3>
+            <p><strong>How many NULL values can a UNIQUE constraint column contain?</strong></p>
+            <div class="quiz">
+                <button onclick="checkAnswer(this,'A')">A) None - NULL values are not allowed</button>
+                <button onclick="checkAnswer(this,'B')">B) Exactly one NULL value</button>
+                <button onclick="checkAnswer(this,'C')">C) Multiple NULL values are allowed</button>
+                <button onclick="checkAnswer(this,'D')">D) It depends on the database system</button>
+                <p class="quiz-feedback"></p>
+                <div id="quizExplanation" class="quiz-explanation" style="display:none;"></div>
+            </div>
+        </section>
+    </div>
+
+    <div id="footer"></div>
+
+    <script>
+        function runUniqueDemo() {
+            const textarea = document.querySelector('.code-editor');
+            const output = document.querySelector('.query-output');
+            const query = textarea.value.trim().toLowerCase();
+            
+            if (query.includes('create table') && query.includes('unique')) {
+                const tableName = query.match(/create table\s+(\w+)/)?.[1] || 'table';
+                const uniqueCount = (query.match(/unique/g) || []).length;
+                const hasComposite = query.includes('unique (') && query.includes(',');
+                
+                output.innerHTML = `
+                    <div style='background: rgba(40, 167, 69, 0.2); border: 1px solid #28a745; border-radius: 8px; padding: 15px;'>
+                        <p style='color: #28a745; margin: 0;'>✅ <strong>Table '${tableName}' created with UNIQUE constraints!</strong></p>
+                        <p style='color: #d4edda; margin: 8px 0 0 0;'>⭐ <strong>Uniqueness Features:</strong></p>
+                        <ul style='color: #d4edda; margin: 5px 0 0 20px;'>
+                            <li>🚫 Prevents duplicate values</li>
+                            <li>✅ Allows multiple NULL values</li>
+                            <li>⚡ Automatic index creation</li>
+                            <li>🔢 ${uniqueCount} UNIQUE constraint${uniqueCount > 1 ? 's' : ''} defined</li>
+                            ${hasComposite ? '<li>🔗 Composite UNIQUE constraint included</li>' : ''}
+                        </ul>
+                        <p style='color: #a0a0a0; margin: 8px 0 0 0; font-size: 0.8em;'>💡 Your data integrity is now protected!</p>
+                    </div>
+                `;
+            } else if (query.includes('create table')) {
+                output.innerHTML = `
+                    <div style='background: rgba(255, 193, 7, 0.2); border: 1px solid #ffc107; border-radius: 8px; padding: 15px;'>
+                        <p style='color: #ffc107; margin: 0;'>⚠️ <strong>Table created, but no UNIQUE constraints found!</strong></p>
+                        <p style='color: #fff3cd; margin: 5px 0 0 0;'>⭐ Consider adding UNIQUE constraints for data integrity.</p>
+                    </div>
+                `;
+            } else {
+                output.innerHTML = `<p style='color: red;'>❌ Invalid query. Try using CREATE TABLE with UNIQUE constraints.</p>`;
+            }
+        }
+        
+        function showUniqueExamples() {
+            const output = document.getElementById('uniqueExamplesOutput');
+            const examples = [
+                {
+                    title: '📧 Single Column UNIQUE',
+                    sql: 'CREATE TABLE users (\n    id INT PRIMARY KEY,\n    email VARCHAR(100) UNIQUE,\n    name VARCHAR(50)\n);',
+                    description: 'Ensures each email address is unique'
+                },
+                {
+                    title: '🔗 Composite UNIQUE',
+                    sql: 'CREATE TABLE enrollments (\n    student_id INT,\n    course_id INT,\n    semester VARCHAR(20),\n    UNIQUE (student_id, course_id, semester)\n);',
+                    description: 'Student can only enroll in same course once per semester'
+                },
+                {
+                    title: '📝 Named UNIQUE Constraint',
+                    sql: 'CREATE TABLE products (\n    id INT PRIMARY KEY,\n    sku VARCHAR(50),\n    name VARCHAR(100),\n    CONSTRAINT uk_product_sku UNIQUE (sku)\n);',
+                    description: 'Named constraint for easier management'
+                },
+                {
+                    title: '🔧 Adding UNIQUE Later',
+                    sql: 'ALTER TABLE existing_table\nADD CONSTRAINT uk_email\nUNIQUE (email);',
+                    description: 'Adding unique constraint to existing table'
+                }
+            ];
+            
+            let html = '<div style="background: rgba(26, 32, 44, 0.8); border: 1px solid #4a5568; border-radius: 8px; padding: 15px; margin-top: 10px;">';
+            html += '<h4 style="color: #8a2be2; margin-top: 0;">⭐ UNIQUE Constraint Examples</h4>';
+            
+            examples.forEach((example, index) => {
+                html += `
+                    <div style="margin-bottom: 15px; padding: 10px; background: rgba(45, 55, 72, 0.6); border-radius: 6px;">
+                        <h5 style="color: #ffd700; margin: 0 0 8px 0;">${example.title}</h5>
+                        <pre style="background: rgba(0, 0, 0, 0.4); padding: 8px; border-radius: 4px; margin: 5px 0; overflow-x: auto; white-space: pre-wrap;"><code style="color: #e2e8f0;">${example.sql}</code></pre>
+                        <p style="color: #a0aec0; margin: 5px 0 0 0; font-size: 0.9em;">${example.description}</p>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            output.innerHTML = html;
+        }
+        
+        function validateExercise() {
+            const sql = document.getElementById("exerciseInput").value.trim().toLowerCase();
+            const feedback = document.getElementById("exerciseFeedback");
+            
+            if (sql.includes("create table products") && sql.includes("sku") && 
+                sql.includes("unique") && sql.includes("name") && sql.includes("category") &&
+                (sql.includes("unique (name, category") || sql.includes("unique(name,category"))) {
+                feedback.style.color = "lightgreen";
+                feedback.textContent = "✅ Perfect! You created products table with unique SKU and composite unique constraint on name and category.";
+            } else if (sql.includes("create table products") && sql.includes("sku") && sql.includes("unique")) {
+                feedback.style.color = "orange";
+                feedback.textContent = "⚠️ Good! Don't forget the composite unique constraint on name and category.";
+            } else if (sql.includes("create table products") && sql.includes("unique")) {
+                feedback.style.color = "orange";
+                feedback.textContent = "⚠️ Good table creation! Make sure to include unique SKU and composite constraint.";
+            } else {
+                feedback.style.color = "red";
+                feedback.textContent = "❌ Try: CREATE TABLE products with UNIQUE constraints on SKU and (name, category).";
+            }
+        }
+        
+        function checkAnswer(btn, opt) {
+            const fb = btn.parentElement.querySelector('.quiz-feedback');
+            const exp = document.getElementById('quizExplanation');
+            const buttons = btn.parentElement.querySelectorAll('button');
+            
+            // Disable all buttons after selection
+            buttons.forEach(b => b.disabled = true);
+            
+            if (opt === 'C') {
+                fb.style.color = 'lightgreen';
+                fb.textContent = '✅ Correct! UNIQUE constraints allow multiple NULL values.';
+                btn.style.backgroundColor = '#28a745';
+                exp.innerHTML = `
+                    <p><strong>🎯 Explanation:</strong></p>
+                    <ul>
+                        <li>✅ <strong>Multiple NULLs allowed</strong> - UNIQUE constraint permits multiple NULL values.</li>
+                        <li>🔍 <strong>NULL ≠ NULL</strong> - Each NULL is considered different from other NULLs.</li>
+                        <li>🎯 <strong>Business logic</strong> - This allows for optional unique fields.</li>
+                        <li>🚫 <strong>Combine with NOT NULL</strong> if you want to prevent NULLs entirely.</li>
+                    </ul>
+                `;
+            } else {
+                fb.style.color = 'red';
+                fb.textContent = '❌ Incorrect. The correct answer is C.';
+                btn.style.backgroundColor = '#dc3545';
+                // Highlight correct answer
+                buttons[2].style.backgroundColor = '#28a745';
+                exp.innerHTML = `
+                    <p><strong>❌ Explanation:</strong></p>
+                    <ul>
+                        <li>🚫 UNIQUE constraints do allow NULL values, unlike PRIMARY KEY.</li>
+                        <li>🔢 Multiple NULL values are permitted in UNIQUE columns.</li>
+                        <li>🌍 This behavior is consistent across most database systems.</li>
+                    </ul>
+                `;
+            }
+            exp.style.display = 'block';
+            exp.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // Bookmark functionality
+        const lessonId = "UNIQUE";
+        const bookmarkBtn = document.getElementById("bookmarkBtn");
+        const unbookmarkBtn = document.getElementById("unbookmarkBtn");
+        const statusText = document.getElementById("bookmarkStatus");
+
+        function checkBookmarkStatus(retries = 3) {
+            fetch(`http://localhost:5000/bookmark-status?lessonId=${lessonId}`, {
+                credentials: 'include',
+                headers: { "Content-Type": "application/json" }
+            })
+            .then(res => {
+                if (!res.ok) throw new Error('Network response was not ok');
+                return res.json();
+            })
+            .then(data => {
+                if (data.bookmarked) {
+                    bookmarkBtn.style.display = "none";
+                    unbookmarkBtn.style.display = "inline-block";
+                    statusText.textContent = "📌 Bookmarked";
+                } else {
+                    bookmarkBtn.style.display = "inline-block";
+                    unbookmarkBtn.style.display = "none";
+                    statusText.textContent = "";
+                }
+            })
+            .catch(error => {
+                console.error('Error checking bookmark status:', error);
+                if (retries > 0) {
+                    setTimeout(() => checkBookmarkStatus(retries - 1), 1000);
+                }
+            });
+        }
+
+        bookmarkBtn.addEventListener("click", () => {
+            fetch("http://localhost:5000/bookmark", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({ lessonId: lessonId, bookmarked: true })
+            })
+            .then(res => res.json())
+            .then(() => checkBookmarkStatus());
+        });
+
+        unbookmarkBtn.addEventListener("click", () => {
+            fetch("http://localhost:5000/bookmark", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({ lessonId: lessonId, bookmarked: false })
+            })
+            .then(res => res.json())
+            .then(() => checkBookmarkStatus());
+        });
+
+        checkBookmarkStatus();
+    </script>
+</body>
+</html>

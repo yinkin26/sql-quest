@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SQL Quest - Challenge Levels</title>
+
+    <link rel="stylesheet" href="stylesheets/style.css" />
+    
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <!-- Make sure challengeEngine.js is a module -->
+    <script type="module" src="javascripts/challengeEngine.js" defer></script>
+    <script src="javascripts/soundEngine.js" defer></script>
+    <script src="javascripts/xpTracker.js" defer></script>
+    <script src="javascripts/loadComponents.js" defer></script>
+</head>
+<body class="pixel-art dark-theme">
+    <div id="header"></div>
+
+    <main class="challenge-wrapper">
+        <div id="authLoading" style="text-align: center; padding: 50px;">
+            <p>🌀 Checking authentication...</p>
+        </div>
+
+        <div id="protectedContent" style="display: none;">
+            <div class="xp-tracker">
+                <div class="xp-bar-container">
+                    <div id="xpBar" class="xp-bar-fill"></div>
+                    <span id="xpLabel">0 XP</span>
+                </div>
+                <img id="badgeIcon" class="xp-badge" src="/images/badges/none.png" alt="No Badge" />
+                <div id="badgeName" class="xp-badge-name">No Badge</div>
+            </div>
+
+            <!-- SET SELECTOR -->
+            <div id="setSelector">
+                <h3>📚 Choose Challenge Set</h3>
+                <button onclick="selectSet('set1')">Set 1: SQL Basics</button>
+                <button onclick="selectSet('set2')">Set 2: Tables & Insert</button>
+                <button onclick="selectSet('set3')">Set 3: Filtering & Logic</button>
+                <button onclick="selectSet('set4')">Set 4: Sort, NULL & Alias</button>
+            </div>
+
+            <!-- DIFFICULTY SELECTOR -->
+            <div id="difficultySelector" style="display: none;">
+                <h2>🎯 Select Challenge Difficulty</h2>
+                <div class="grid-container">
+                    <button onclick="startLevel('easy')">🟢 Easy</button>
+                    <button onclick="startLevel('medium')">🟡 Medium</button>
+                    <button onclick="startLevel('hard')">🔴 Hard</button>
+                </div>
+            </div>
+
+            <!-- CHALLENGE UI -->
+            <div id="challengeSection" style="margin-top: 40px; display: none;">
+                <div class="progress-bar">
+                    <span id="progressInfo">Challenge 1 of X</span>
+                </div>
+                <h2 id="chapterTitle"></h2>
+                <div id="challengeContainer"></div>
+                <div id="challengeFeedback"></div>
+                <button id="nextChallengeBtn" style="display:none;">➡️ Next Challenge</button>
+            </div>
+        </div>
+    </main>
+
+    <div id="footer"></div>
+</body>
+</html>

@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en" class="pixel-art dark-theme">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Quest - SQL SELECT DISTINCT</title>
+    <link rel="stylesheet" href="../../stylesheets/style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <script src="../../javascripts/loadComponents.js" defer></script>
+    <script src="../../javascripts/script.js" defer></script>
+    <script src="../../javascripts/lessonTracker.js" defer></script>
+
+</head>
+<body class="pixel-art dark-theme">
+    <div id="header"></div>
+    <div class="lesson-layout">
+        <div id="sidebar"></div>
+
+        <section class="lesson-content">
+            <h2>🔎 SQL SELECT DISTINCT</h2>
+
+            <!-- Add bookmark buttons -->
+            <div class="bookmark-container">
+                <button id="bookmarkBtn" style="display: none;">🔖 Bookmark</button>
+                <button id="unbookmarkBtn" style="display: none;">❌ Remove Bookmark</button>
+                <span id="bookmarkStatus"></span>
+            </div>
+
+            <h3>📌 What is SELECT DISTINCT?</h3>
+            <p>The <code class="tooltip" title="Used to return only different (unique) values">SELECT DISTINCT</code> statement is used to return only unique (non-duplicate) values from a column in a table.</p>
+
+            <h3>🧠 Basic Syntax</h3>
+            <p>You can use SELECT DISTINCT to get unique values from a single column:</p>
+            <pre><code>SELECT DISTINCT column1 FROM table_name;</code></pre>
+
+            <p>You can also select multiple columns:</p>
+            <pre><code>SELECT DISTINCT column1, column2 FROM table_name;</code></pre>
+
+            <h3>💡 Example</h3>
+            <pre><code>SELECT DISTINCT city FROM customers;</code></pre>
+
+            <h3>🧪 Try It Yourself</h3>
+            <div class="code-block">
+                <textarea class="code-editor">SELECT DISTINCT city FROM customers;</textarea>
+                <button class="neon-button run-btn">Run</button>
+                <div class="query-output"></div>
+            </div>
+
+            <h3>💬 Why Use DISTINCT?</h3>
+            <p>Sometimes tables have repeated values in columns. If you want to find out which different values exist, <code>DISTINCT</code> helps filter out duplicates.</p>
+
+            <p>For example, if multiple customers live in the same city, <code>SELECT city</code> will list the same city multiple times, but <code>SELECT DISTINCT city</code> will only show each city once.</p>
+
+            <h3>🌍 Real-World Use Case</h3>
+            <p>Imagine you're analyzing a customer list and want to know how many different cities your customers come from. Instead of counting all rows, use:</p>
+            <pre><code>SELECT COUNT(DISTINCT city) FROM customers;</code></pre>
+            <p>This will return the number of <strong>unique cities</strong> only.</p>
+
+            <h3>💡 Helpful Tips</h3>
+            <ul>
+                <li><code>DISTINCT</code> applies to all columns listed after it.</li>
+                <li>If you SELECT DISTINCT with multiple columns, rows must be unique across all listed columns to appear.</li>
+                <li>Can be used with <code>ORDER BY</code> to sort results.</li>
+                <li>Use <code>DISTINCT</code> early in analysis to quickly explore available values in a column.</li>
+            </ul>
+
+            <h3>🧠 Summary</h3>
+            <ul>
+                <li><code>SELECT DISTINCT</code> removes duplicates from the results</li>
+                <li>It’s useful for getting unique values in a column</li>
+                <li>You can use it with one or more columns</li>
+            </ul>
+
+            <!-- Practice Section -->
+            <h3>🧪 Practice: Select Unique Product Info</h3>
+            <p>🧠 Your task: Write a SQL <code>SELECT DISTINCT</code> query to display the unique <strong>product_name</strong> and <strong>price</strong> from the <code>products</code> table:</p>
+            <ul>
+                <li><code>product_name</code> (VARCHAR(100))</li>
+                <li><code>price</code> (DECIMAL(8, 2))</li>
+            </ul>
+
+            <div class="editor-container">
+                <textarea class="code-editor" id="exerciseInput" placeholder="Write your SELECT query here..."></textarea>
+                <button class="neon-button" onclick="validateSelectDistinctQuery()">Submit</button>
+                <div id="exerciseFeedback" style="margin-top: 15px;"></div>
+            </div>
+
+            <!-- Mock Table for Displaying After Submit (Product Data) -->
+            <div class="mock-table" id="mockTable" style="display: none;">
+                <h4>Preview: What the table would look like when queried:</h4>
+
+                <h5>After Query (Example Result):</h5>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>product_name</th>
+                            <th>price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Laptop</td>
+                            <td>999.99</td>
+                        </tr>
+                        <tr>
+                            <td>Smartphone</td>
+                            <td>799.49</td>
+                        </tr>
+                        <tr>
+                            <td>Headphones</td>
+                            <td>120.99</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+
+            <h3>🎯 Quiz</h3>
+            <p><strong>Which query returns all different cities from the customers table?</strong></p>
+            <div class="quiz">
+                <button onclick="checkAnswer(this, false)" title="ALL is not valid in this context">A) SELECT ALL city FROM customers;</button>
+                <button onclick="checkAnswer(this, false)" title="UNIQUE is not valid in this context">B) SELECT UNIQUE city FROM customers;</button>
+                <button onclick="checkAnswer(this, true)">C) SELECT DISTINCT city FROM customers;</button>
+                <button onclick="checkAnswer(this, false)">D) SELECT city WHERE unique FROM customers;</button>
+                <p class="quiz-feedback"></p>
+                <div id="quizExplanation" class="quiz-explanation" style="display: none;"></div>
+            </div>
+        </section>
+    </div>
+
+
+    <div id="footer"></div>
+
+ 
+  
+    <script>
+        // Function to validate the user's SELECT DISTINCT query
+        function validateSelectDistinctQuery() {
+            const userSQL = document.getElementById("exerciseInput").value.trim().toLowerCase().replace(/\s+/g, " ");
+            const feedback = document.getElementById("exerciseFeedback");
+
+            const expected =
+                "select distinct product_name, price from products;";
+
+            if (userSQL === expected) {
+                feedback.style.color = "lightgreen";
+                feedback.innerHTML = "✅ Perfect! Your SELECT DISTINCT query is correct.";
+
+                // Show the mock table after a correct submission
+                document.getElementById("mockTable").style.display = "block";
+                // Scroll the mock table into view
+                document.getElementById("mockTable").scrollIntoView({ behavior: "smooth" });
+            } else if (userSQL.includes("select") && userSQL.includes("distinct") && userSQL.includes("from products")) {
+                feedback.style.color = "orange";
+                feedback.innerHTML = "⚠️ You're close! Double-check the column names and syntax.";
+            } else {
+                feedback.style.color = "red";
+                feedback.innerHTML = "❌ That's not quite right. Make sure you're selecting the correct columns from the `products` table.";
+            }
+        }
+
+        // Function to check the quiz answer
+        let quizCompleted = false;
+        
+        function checkAnswer(button, isCorrect) {
+            // If quiz is already completed, don't allow further clicks
+            if (quizCompleted) {
+                return;
+            }
+
+            const feedback = button.parentElement.querySelector(".quiz-feedback");
+            const explanationBox = document.getElementById("quizExplanation");
+            const quizContainer = button.parentElement;
+            
+            feedback.innerHTML = "";
+            explanationBox.style.display = "block";
+
+            if (isCorrect) {
+                // Correct answer - disable all buttons and mark as completed
+                quizCompleted = true;
+                const allButtons = quizContainer.querySelectorAll('button');
+                allButtons.forEach(btn => {
+                    btn.disabled = true;
+                    if (btn === button) {
+                        btn.style.backgroundColor = '#44ff44';
+                        btn.style.boxShadow = '0 0 15px rgba(68, 255, 68, 0.5)';
+                    }
+                });
+                
+                feedback.style.color = "lightgreen";
+                feedback.innerHTML = "✅ Correct! Quiz completed!";
+                explanationBox.innerHTML = `
+                          <p><strong>Explanation:</strong></p>
+                          <ul>
+                            <li><code>SELECT DISTINCT city FROM customers;</code> is the correct way to return unique city names from the table.</li>
+                          </ul>`;
+            } else {
+                // Incorrect answer - disable this button only
+                button.disabled = true;
+                button.style.backgroundColor = '#ff4444';
+                button.style.opacity = '0.6';
+                button.style.cursor = 'not-allowed';
+                
+                feedback.style.color = "red";
+                feedback.innerHTML = "❌ Incorrect. Try another answer!";
+                
+                // Add retry message if not already present
+                let retryMsg = quizContainer.querySelector('.retry-message');
+                if (!retryMsg) {
+                    retryMsg = document.createElement('p');
+                    retryMsg.className = 'retry-message';
+                    retryMsg.style.color = '#ffd700';
+                    retryMsg.style.fontWeight = 'bold';
+                    retryMsg.style.marginTop = '10px';
+                    retryMsg.innerHTML = '💡 Keep trying! Choose another answer.';
+                    feedback.parentNode.insertBefore(retryMsg, feedback.nextSibling);
+                }
+                
+                let explanation = "";
+                switch (button.innerText.trim().charAt(0)) {
+                    case "A":
+                        explanation = `
+                                  <p><strong>Explanation:</strong></p>
+                                  <ul>
+                                    <li><code>ALL</code> is not a valid keyword in standard SQL for this purpose.</li>
+                                    <li>The correct keyword to return only different values is <code>DISTINCT</code>.</li>
+                                  </ul>`;
+                        break;
+                    case "B":
+                        explanation = `
+                                  <p><strong>Explanation:</strong></p>
+                                  <ul>
+                                    <li><code>UNIQUE</code> is not valid SQL syntax for selecting values.</li>
+                                    <li>Use <code>SELECT DISTINCT</code> to return unique results.</li>
+                                  </ul>`;
+                        break;
+                    case "D":
+                        explanation = `
+                                  <p><strong>Explanation:</strong></p>
+                                  <ul>
+                                    <li><code>WHERE unique</code> is invalid SQL syntax.</li>
+                                    <li>The <code>WHERE</code> clause is used for filtering, not for retrieving unique records.</li>
+                                  </ul>`;
+                        break;
+                }
+                explanationBox.innerHTML = explanation;
+            }
+
+            explanationBox.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+
+        // Bookmark functionality
+        const lessonId = "Select_Distinct";
+        const bookmarkBtn = document.getElementById("bookmarkBtn");
+        const unbookmarkBtn = document.getElementById("unbookmarkBtn");
+        const statusText = document.getElementById("bookmarkStatus");
+
+        // Function to check bookmark status with retry
+        function checkBookmarkStatus(retries = 3) {
+            fetch(`http://localhost:5000/bookmark-status?lessonId=${lessonId}`, {
+                credentials: 'include',
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+                .then(res => {
+                    if (!res.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return res.json();
+                })
+                .then(data => {
+                    if (data.bookmarked) {
+                        bookmarkBtn.style.display = "none";
+                        unbookmarkBtn.style.display = "inline-block";
+                        statusText.textContent = "📌 Bookmarked";
+                    } else {
+                        bookmarkBtn.style.display = "inline-block";
+                        unbookmarkBtn.style.display = "none";
+                        statusText.textContent = "";
+                    }
+                })
+                .catch(error => {
+                    console.error('Error checking bookmark status:', error);
+                    if (retries > 0) {
+                        setTimeout(() => checkBookmarkStatus(retries - 1), 1000);
+                    }
+                });
+        }
+
+        // Add bookmark
+        bookmarkBtn.addEventListener("click", () => {
+            fetch("http://localhost:5000/bookmark", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                    lessonId: lessonId,
+                    bookmarked: true
+                })
+            })
+                .then(res => res.json())
+                .then(() => {
+                    checkBookmarkStatus();
+                });
+        });
+
+        // Remove bookmark
+        unbookmarkBtn.addEventListener("click", () => {
+            fetch("http://localhost:5000/bookmark", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                    lessonId: lessonId,
+                    bookmarked: false
+                })
+            })
+                .then(res => res.json())
+                .then(() => {
+                    checkBookmarkStatus();
+                });
+        });
+
+        // Check initial status when page loads
+        checkBookmarkStatus();
+    </script>
+</body>
+</html>
+
+
+

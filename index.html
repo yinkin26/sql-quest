@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SQL Quest</title>
+    <link rel="stylesheet" href="stylesheets/style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Move script.js after loadComponents.js and remove defer from loadComponents.js -->
+    <script src="javascripts/loadComponents.js"></script>
+    <script src="javascripts/script.js" defer></script>
+</head>
+<body class="pixel-art dark-theme" onload="initializeNavigation()">
+    <div id="header"></div>
+
+    <!-- Floating Pixel Particles -->
+    <div class="pixel-particles"></div>
+    <div class="pixel-particles"></div>
+    <div class="pixel-particles"></div>
+    <div class="pixel-particles"></div>
+    <div class="pixel-particles"></div>
+
+    <!-- Main Section -->
+    <section class="hero">
+        <h1>Welcome to SQL Quest</h1>
+        <p>Learn SQL in an interactive way!</p>
+    </section>
+
+    <div class="main-content">
+        <p>Master SQL through lessons, challenges, and exercises.</p>
+    </div>
+
+    <div id="footer"></div>
+
+    <script>
+    function initializeNavigation() {
+        // Ensure navigation is initialized after components are loaded
+        if (document.readyState === 'complete') {
+            const navLinks = document.querySelectorAll('nav a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    // Your navigation handling code here
+                    console.log('Navigation link clicked:', this.href);
+                });
+            });
+        }
+    }
+    </script>
+</body>
+</html>
