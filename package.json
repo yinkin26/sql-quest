@@ -1,0 +1,36 @@
+{
+    "name": "sql-learning-platform",
+    "version": "0.0.0",
+    "private": true,
+    "scripts": {
+        "start": "node server.js",
+        "dev": "nodemon server.js"
+    },
+    "description": "sql-learning-platform",
+    "author": "",
+    "dependencies": {
+        "@google/generative-ai": "^0.2.1",
+        "axios": "^1.10.0",
+        "bcryptjs": "^3.0.2",
+        "body-parser": "^1.20.3",
+        "cookie-parser": "^1.4.0",
+        "cors": "^2.8.5",
+        "debug": "^2.2.0",
+        "dotenv": "^16.0.0",
+        "express": "^4.21.2",
+        "express-session": "^1.18.1",
+        "morgan": "^1.7.0",
+        "mysql": "^2.18.1",
+        "openai": "^4.0.0",
+        "pug": "^2.0.0-beta6",
+        "serve-favicon": "^2.3.0",
+        "three": "^0.174.0"
+    },
+    "devDependencies": {
+        "eslint": "^8.21.0"
+    },
+    "eslintConfig": {},
+    "main": "app.js",
+    "keywords": [],
+    "license": "ISC"
+}
